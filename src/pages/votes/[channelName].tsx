@@ -39,7 +39,7 @@ const VoteIcon = ({ canVote }: { canVote: boolean }) =>
 
 const Votes = () => {
   // const router = useRouter();
-  const client = useClient();
+  const supabase = useClient();
 
   const [winners, setWinners] = useState<any[]>([]);
   const [userVotes, setUserVotes] = useState<any[]>([]);
@@ -48,11 +48,40 @@ const Votes = () => {
   const channelName = process.env.NEXT_PUBLIC_CHANNEL;
   // const channelName = router.query.channelName as string;
 
+  supabase
+    .from(`user_vote:channelName=eq.${channelName}`)
+    .on("*", (payload) => {
+      if (payload.eventType === "INSERT") {
+        setUserVotes((prev) => [...prev, payload.new]);
+
+        return;
+      }
+
+      if (payload.eventType === "UPDATE") {
+        setUserVotes((prev) =>
+          prev.map((userVote) =>
+            userVote.userName === payload.new.userName ? payload.new : userVote
+          )
+        );
+
+        return;
+      }
+
+      if (payload.eventType === "DELETE") {
+        setUserVotes((prev) =>
+          prev.filter((userVote) => userVote.userName !== payload.old.userName)
+        );
+
+        return;
+      }
+    })
+    .subscribe();
+
   useEffect(() => {
     (async () => {
       const [userVotes, channelVoting] = await Promise.all([
-        client.from("user_vote").select().match({ channelName }),
-        client.from("channel_voting").select().match({ channelName }),
+        supabase.from("user_vote").select().match({ channelName }),
+        supabase.from("channel_voting").select().match({ channelName }),
       ]);
 
       setUserVotes(userVotes.data || []);
@@ -146,13 +175,13 @@ const Votes = () => {
           <TableBody>
             {R.sort(R.descend(R.prop("updatedAt")), userVotes).map(
               ({ content, userName, displayName, updatedAt }) => (
-              <TableRow key={userName}>
-                <TableCell>{content}</TableCell>
-                <TableCell title={userName}>
-                  {displayName || userName}
-                </TableCell>
-                <TableCell>{new Date(updatedAt).toLocaleString()}</TableCell>
-              </TableRow>
+                <TableRow key={userName}>
+                  <TableCell>{content}</TableCell>
+                  <TableCell title={userName}>
+                    {displayName || userName}
+                  </TableCell>
+                  <TableCell>{new Date(updatedAt).toLocaleString()}</TableCell>
+                </TableRow>
               )
             )}
           </TableBody>
