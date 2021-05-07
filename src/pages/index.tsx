@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import NextLink from "next/link";
 import {
   Box,
@@ -66,14 +64,6 @@ const StreamerCard = ({ nickname, image, name }: typeof streamers[0]) => {
 };
 
 const Home = () => {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push("/votes/lasqa");
-  }, []);
-
-  return <Layout />;
-
   return (
     <Layout>
       <Box my={4} alignContent="center">
