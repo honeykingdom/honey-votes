@@ -1,0 +1,47 @@
+name: Deploy
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - '.gitignore'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Publish to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies (with cache)
+        uses: bahmutov/npm-install@v1
+
+      # - name: Test
+      #   run: yarn test --ci --coverage --maxWorkers=2
+
+      - name: Build
+        run: yarn build && yarn export
+        env:
+          NEXT_PUBLIC_CHANNEL: ${{ secrets.CHANNEL }}
+          NEXT_PUBLIC_SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
+          NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: ${{ secrets.SUPABASE_PUBLIC_ANON_KEY }}
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: './out'
+          production-deploy: true
+          enable-commit-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
