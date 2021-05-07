@@ -8,8 +8,20 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.4.0",
+    "@emotion/server": "^11.4.0",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^5.0.0-alpha.32",
+    "@material-ui/icons": "^5.0.0-alpha.29",
+    "@supabase/supabase-js": "^1.11.10",
     "next": "10.2.0",
+    "next-seo": "^4.24.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-supabase": "^0.1.6",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "@types/gtag.js": "^0.0.4"
   }
 }
