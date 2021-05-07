@@ -35,6 +35,9 @@ jobs:
           NEXT_PUBLIC_SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
           NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: ${{ secrets.SUPABASE_PUBLIC_ANON_KEY }}
 
+      - name: Copy _redirects file
+        run: cp "./_redirects" "./out/_redirects"
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
         with:
