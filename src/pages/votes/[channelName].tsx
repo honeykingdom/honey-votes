@@ -2,7 +2,7 @@ import * as R from "ramda";
 import { useEffect, useState } from "react";
 // import { useRouter } from "next/router";
 import Head from "next/head";
-import { useClient } from "react-supabase";
+import { useClient, useSubscription } from "react-supabase";
 import {
   Typography,
   Table,
@@ -48,34 +48,30 @@ const Votes = () => {
   const channelName = process.env.NEXT_PUBLIC_CHANNEL;
   // const channelName = router.query.channelName as string;
 
-  supabase
-    .from(`user_vote:channelName=eq.${channelName}`)
-    .on("*", (payload) => {
-      if (payload.eventType === "INSERT") {
-        setUserVotes((prev) => [...prev, payload.new]);
+  const table = `user_vote:channelName=eq.${channelName}`;
 
-        return;
-      }
+  useSubscription((payload) => setUserVotes((prev) => [...prev, payload.new]), {
+    event: "INSERT",
+    table,
+  });
 
-      if (payload.eventType === "UPDATE") {
-        setUserVotes((prev) =>
-          prev.map((userVote) =>
-            userVote.userName === payload.new.userName ? payload.new : userVote
-          )
-        );
+  useSubscription(
+    (payload) =>
+      setUserVotes((prev) =>
+        prev.map((userVote) =>
+          userVote.userName === payload.new.userName ? payload.new : userVote
+        )
+      ),
+    { event: "UPDATE", table }
+  );
 
-        return;
-      }
-
-      if (payload.eventType === "DELETE") {
-        setUserVotes((prev) =>
-          prev.filter((userVote) => userVote.userName !== payload.old.userName)
-        );
-
-        return;
-      }
-    })
-    .subscribe();
+  useSubscription(
+    (payload) =>
+      setUserVotes((prev) =>
+        prev.filter((userVote) => userVote.userName !== payload.old.userName)
+      ),
+    { event: "DELETE", table }
+  );
 
   useEffect(() => {
     (async () => {
