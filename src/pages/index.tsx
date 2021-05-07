@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
 import {
   Box,
   Typography,
@@ -9,7 +12,6 @@ import {
   useTheme,
 } from "@material-ui/core";
 import Layout from "components/Layout";
-import NextLink from "next/link";
 
 const streamers = [
   {
@@ -64,6 +66,12 @@ const StreamerCard = ({ nickname, image, name }: typeof streamers[0]) => {
 };
 
 const Home = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/votes/lasqa");
+  }, []);
+
   return (
     <Layout>
       <Box my={4} alignContent="center">
