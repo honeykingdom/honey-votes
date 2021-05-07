@@ -1,4 +1,13 @@
-import { AppBar, Toolbar, Typography, Container } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Box,
+  Tooltip,
+  IconButton,
+} from "@material-ui/core";
+import GitHubIcon from "@material-ui/icons/GitHub";
 
 const Layout = ({ children }: any) => {
   return (
@@ -8,6 +17,20 @@ const Layout = ({ children }: any) => {
           <Typography variant="h6" style={{ marginRight: 16 }}>
             HoneyVotes
           </Typography>
+
+          <Box sx={{ ml: "auto" }}>
+            <Tooltip title="Репозиторий на GitHub">
+              <IconButton
+                color="inherit"
+                sx={{ mr: 1 }}
+                href="//github.com/honeykingdom/honey-votes"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <GitHubIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
       <Container>{children}</Container>
