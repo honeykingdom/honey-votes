@@ -1,5 +1,6 @@
 import * as R from "ramda";
 import { useEffect, useState } from "react";
+import { GetStaticPaths, GetStaticProps } from "next";
 // import { useRouter } from "next/router";
 import Head from "next/head";
 import { useClient, useSubscription } from "react-supabase";
@@ -185,6 +186,21 @@ const Votes = () => {
       </TableContainer>
     </Layout>
   );
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const voteChannels = process.env.NEXT_PUBLIC_CHANNEL.split(";");
+
+  return {
+    paths: voteChannels.map((channelName) => ({
+      params: { channelName },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  return { props: {} };
 };
 
 export default Votes;
