@@ -1,3 +1,4 @@
+import * as R from "ramda";
 import { useEffect, useState } from "react";
 // import { useRouter } from "next/router";
 import Head from "next/head";
@@ -143,7 +144,8 @@ const Votes = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {userVotes.map(({ content, userName, displayName, updatedAt }) => (
+            {R.sort(R.descend(R.prop("updatedAt")), userVotes).map(
+              ({ content, userName, displayName, updatedAt }) => (
               <TableRow key={userName}>
                 <TableCell>{content}</TableCell>
                 <TableCell title={userName}>
@@ -151,7 +153,8 @@ const Votes = () => {
                 </TableCell>
                 <TableCell>{new Date(updatedAt).toLocaleString()}</TableCell>
               </TableRow>
-            ))}
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>
