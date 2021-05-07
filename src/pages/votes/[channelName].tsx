@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 // import { useRouter } from "next/router";
+import Head from "next/head";
 import { useClient } from "react-supabase";
 import {
   Typography,
@@ -84,6 +85,7 @@ const Votes = () => {
 
   return (
     <Layout>
+      <Head>HoneyVotes - {channelVoting.channelName}</Head>
       <Typography sx={{ my: 2 }} variant="h3">
         {channelVoting.channelName}
       </Typography>
