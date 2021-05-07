@@ -72,6 +72,8 @@ const Home = () => {
     router.push("/votes/lasqa");
   }, []);
 
+  return <Layout />;
+
   return (
     <Layout>
       <Box my={4} alignContent="center">
