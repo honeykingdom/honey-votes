@@ -44,17 +44,15 @@ const getNextStep = (
     };
   }
 
-  if (prevStep.movies.length >= 3) {
-    const newMovies = prevStep.movies
-      .filter((m) => m.title)
-      .filter((m) => m.id !== selectedMovieId);
+  const newMovies = prevStep.movies.filter((m) => m.id !== selectedMovieId);
 
+  if (prevStep.movies.length >= 3) {
     return getRandomChoiceStep(newMovies);
   }
 
   return {
     type: "SHOW_WINNER" as const,
-    movies: prevStep.movies,
+    movies: newMovies,
   };
 };
 
