@@ -168,8 +168,12 @@ const Votes = () => {
               <TableRow key={userName}>
                 <TableCell>{content}</TableCell>
                 <TableCell>{displayName || userName}</TableCell>
-                <TableCell align="right">
-                  <Button variant="contained" onClick={removeWinner(userName)}>
+                <TableCell align="right" sx={{ py: 1 }}>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={removeWinner(userName)}
+                  >
                     Убрать
                   </Button>
                 </TableCell>
