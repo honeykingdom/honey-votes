@@ -19,9 +19,7 @@ import {
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
 import Layout from "components/Layout";
-
-const getRandomInt = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min) + min);
+import getRandomInt from "utils/getRandomInt";
 
 const VoteIcon = ({ canVote }: { canVote: boolean }) =>
   canVote ? (
@@ -160,7 +158,7 @@ const Votes = () => {
         Все голоса
       </Typography>
 
-      <TableContainer component={Paper}>
+      <TableContainer sx={{ mb: 2 }} component={Paper}>
         <Table sx={{ tableLayout: "fixed" }}>
           <TableHead>
             <TableRow>
