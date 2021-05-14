@@ -4,19 +4,23 @@ import getRandomInt from "utils/getRandomInt";
 import { KinopoiskMovie } from "api/kinopoisk";
 import { Movie, Step, StepAddMovies } from "./types";
 
-const addMoviesInitialStep: StepAddMovies = {
-  type: "ADD_MOVIES",
-  movies: Array.from({ length: 10 }, (_, i) => ({
-    id: `${i + 1}`,
-    title: "",
-  })),
-};
-
 const choiceStepTypes = [
   "VIEWERS_CHOICE" as const,
   "STREAMER_CHOICE" as const,
   "RANDOM_CHOICE" as const,
 ] as const;
+
+const getInitialSteps = (initialMovies: string[] = []) => {
+  const addMoviesInitialStep: StepAddMovies = {
+    type: "ADD_MOVIES",
+    movies: Array.from({ length: 10 }, (_, i) => ({
+      id: `${i + 1}`,
+      title: initialMovies[i] || "",
+    })),
+  };
+
+  return [addMoviesInitialStep];
+};
 
 const getRandomChoiceStep = (movies: Movie[]): Step => {
   const randomIndex = getRandomInt(0, choiceStepTypes.length);
@@ -56,8 +60,10 @@ const getNextStep = (
 
 const getCurrentStep = (steps: Step[]) => steps[steps.length - 1];
 
-const useTournament = () => {
-  const [steps, setSteps] = useState<Step[]>([addMoviesInitialStep]);
+const useTournament = (initialMovies: string[]) => {
+  const [steps, setSteps] = useState<Step[]>(() =>
+    getInitialSteps(initialMovies)
+  );
 
   const step = getCurrentStep(steps);
   const stepIndex = steps.length - 1;

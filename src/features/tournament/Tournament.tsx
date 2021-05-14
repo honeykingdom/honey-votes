@@ -72,9 +72,14 @@ const SOUND_OPTIONS = { volume: 1 };
 
 type Segment = WheelSegment & { id: string };
 
-const Tournament = () => {
+type Props = {
+  initialMovies: string[];
+};
+
+const Tournament = ({ initialMovies }: Props) => {
   const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
-  const { step, stepIndex, updateInput, nextStep } = useTournament();
+  const { step, stepIndex, updateInput, nextStep } =
+    useTournament(initialMovies);
 
   const currentStepType = useRef<Step["type"]>(step.type);
 

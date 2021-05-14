@@ -1,7 +1,7 @@
 import * as R from "ramda";
 import { useEffect, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import { useClient, useSubscription } from "react-supabase";
 import {
@@ -15,6 +15,7 @@ import {
   Paper,
   Button,
   colors,
+  Tooltip,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
@@ -37,7 +38,7 @@ const VoteIcon = ({ canVote }: { canVote: boolean }) =>
   );
 
 const Votes = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const supabase = useClient();
 
   const [winners, setWinners] = useState<any[]>([]);
@@ -106,6 +107,13 @@ const Votes = () => {
     setWinners((prev) => prev.filter((w) => w.userName !== userName));
   };
 
+  const createTournament = () => {
+    router.push({
+      pathname: "/tournament",
+      query: { movies: winners.map(R.prop("content")).join(";") },
+    });
+  };
+
   if (!channelVoting) return <Layout />;
 
   return (
@@ -132,9 +140,20 @@ const Votes = () => {
         Победители
       </Typography>
 
-      <Button variant="contained" sx={{ mb: 2 }} onClick={getWinner}>
+      <Button variant="contained" sx={{ mb: 2, mr: 2 }} onClick={getWinner}>
         Выбрать победителя
       </Button>
+
+      <Tooltip title="Создать фильмовый турнир с победителями">
+        <Button
+          variant="contained"
+          disabled={winners.length < 2}
+          sx={{ mb: 2 }}
+          onClick={createTournament}
+        >
+          Создать фильмовый турнир
+        </Button>
+      </Tooltip>
 
       <TableContainer component={Paper}>
         <Table>
