@@ -19,6 +19,7 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
+import InfoIcon from "@material-ui/icons/Info";
 import Layout from "components/Layout";
 import getRandomInt from "utils/getRandomInt";
 
@@ -121,11 +122,16 @@ const Votes = () => {
       <Head>HoneyVotes - {channelVoting.channelName}</Head>
       <Typography sx={{ my: 2 }} variant="h3">
         {channelVoting.channelName}
-      </Typography>
-      <Typography variant="body2" sx={{ my: 2 }}>
-        <strong>%название_игры</strong> - проголосовать. <br />
-        <strong>!clearvotes</strong> - очистить все голоса (только владелец
-        канала).
+        <Tooltip
+          title={
+            <>
+              <em>%название_игры</em> - проголосовать. <br />
+              <em>!clearvotes</em> - очистить все голоса (только модеры).
+            </>
+          }
+        >
+          <InfoIcon sx={{ ml: 2 }} />
+        </Tooltip>
       </Typography>
       <Typography variant="body2" sx={{ my: 2 }}>
         Голосовать могут:{" "}
