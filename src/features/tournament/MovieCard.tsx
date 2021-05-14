@@ -209,7 +209,7 @@ const MovieCard = ({
           flexDirection="column"
           sx={{
             flexGrow: 1,
-            width: mode === "view" ? "calc(100% - 76px)" : "auto",
+            // width: mode === "view" ? "calc(100% - 76px)" : "auto",
           }}
         >
           <CardContent
@@ -229,7 +229,7 @@ const MovieCard = ({
         </Box>
       </CardActionArea>
 
-      {mode === "view" && renderActions()}
+      {/* {mode === "view" && renderActions()} */}
       {/* {mode === "edit" && renderDoneButton()} */}
     </Card>
   );
