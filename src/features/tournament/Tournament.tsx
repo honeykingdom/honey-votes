@@ -137,11 +137,12 @@ const Tournament = ({ initialMovies }: Props) => {
 
   let isNextButtonDisabled = false;
 
-  if (step.type === "ADD_MOVIES") {
-    if (step.movies.filter((m) => m.title).length < 2) {
-      isNextButtonDisabled = true;
-    }
-  }
+  // TODO: button doesn't updates after ssr when initial movies are set
+  // if (step.type === "ADD_MOVIES") {
+  //   if (step.movies.filter((m) => m.title).length < 2) {
+  //     isNextButtonDisabled = true;
+  //   }
+  // }
 
   if (step.type === "SHOW_WINNER") {
     isNextButtonDisabled = true;
@@ -162,6 +163,8 @@ const Tournament = ({ initialMovies }: Props) => {
 
   const handleNextButton = () => {
     if (step.type === "ADD_MOVIES") {
+      if (step.movies.filter((m) => m.title).length < 2) return;
+
       playBegin();
       nextStep();
 
