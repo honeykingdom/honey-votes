@@ -6,6 +6,7 @@ import {
   Box,
   Tooltip,
   IconButton,
+  Button,
 } from "@material-ui/core";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import PersonIcon from "@material-ui/icons/Person";
@@ -18,6 +19,13 @@ const Layout = ({ children }: any) => {
           <Typography variant="h6" style={{ marginRight: 16 }}>
             HoneyVotes
           </Typography>
+
+          <Button href="/votes/lasqa" color="inherit">
+            Голосование в чате
+          </Button>
+          <Button href="/tournament" color="inherit">
+            Фильмовый турнир
+          </Button>
 
           <Box sx={{ ml: "auto" }}>
             <Tooltip title="Автор - DmitryScaletta">
