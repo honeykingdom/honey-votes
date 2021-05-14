@@ -15,6 +15,7 @@
     "@material-ui/core": "5.0.0-alpha.32",
     "@material-ui/icons": "^5.0.0-alpha.29",
     "@supabase/supabase-js": "^1.11.13",
+    "d3-array": "^2.12.1",
     "d3-ease": "^2.0.0",
     "immer": "^9.0.2",
     "next": "10.2.0",
@@ -29,6 +30,7 @@
     "use-sound": "^3.0.1"
   },
   "devDependencies": {
+    "@types/d3-array": "^2.9.0",
     "@types/gtag.js": "^0.0.4",
     "@types/ramda": "^0.27.40"
   }
