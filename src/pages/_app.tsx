@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { AppProps, NextWebVitalsMetric } from "next/app";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CacheProvider } from "@emotion/react";
@@ -22,10 +21,6 @@ const client = createClient(
 const App = ({ Component, pageProps }: AppProps) => {
   return (
     <CacheProvider value={cache}>
-      <Head>
-        <title>My page</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
       <ThemeProvider theme={theme}>
         <SupabaseProvider value={client}>
           <DefaultSeo {...SEO} />
