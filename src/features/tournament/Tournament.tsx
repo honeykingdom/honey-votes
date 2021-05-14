@@ -5,6 +5,7 @@ import { Box, Button, Grid, Typography } from "@material-ui/core";
 
 import SpinningWheel, {
   SpinningWheelRef,
+  WheelSegment,
 } from "../../../react-spinning-wheel-canvas/src";
 import ArrowRightIcon from "icons/arrow-right.svg";
 import getRandomInt from "utils/getRandomInt";
@@ -69,6 +70,8 @@ const getCardSize = (itemsCount: number) => {
 
 const SOUND_OPTIONS = { volume: 1 };
 
+type Segment = WheelSegment & { id: string };
+
 const Tournament = () => {
   const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
   const { step, stepIndex, updateInput, nextStep } = useTournament();
@@ -91,6 +94,8 @@ const Tournament = () => {
   // TODO: hack to prevent material ui render bug
   const [mode, setMode] = useState<"edit" | "view">("view");
 
+  const [wheelSegments, setWheelSegments] = useState<Segment[]>([]);
+
   useEffect(() => {
     if (step.type === "ADD_MOVIES") {
       setMode("edit");
@@ -99,6 +104,14 @@ const Tournament = () => {
     }
 
     if (step.type === "RANDOM_CHOICE") {
+      setWheelSegments(
+        shuffle([...step.movies]).map((m, i) => ({
+          id: m.id,
+          title: m.title,
+          backgroundColor: i % 2 === 0 ? "#2f2f2f" : "#212121",
+        }))
+      );
+
       setTimeout(() => {
         spinningWheelRef.current.startSpinning(30, 4);
         playWheel();
@@ -207,14 +220,11 @@ const Tournament = () => {
       <Box sx={{ position: "relative", width: 540 }}>
         <SpinningWheel
           size={540}
-          segments={shuffle([...step.movies]).map((m, i) => ({
-            title: m.title,
-            backgroundColor: i % 2 === 0 ? "#2f2f2f" : "#212121",
-          }))}
+          segments={wheelSegments}
           wheelColors={WHEEL_COLORS}
           spinningWheelRef={spinningWheelRef}
           onSpinEnd={(index) => {
-            setSelectedMovieId(step.movies[index].id);
+            setSelectedMovieId(wheelSegments[index].id);
             playNoNoNo();
           }}
         />
