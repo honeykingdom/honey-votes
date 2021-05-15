@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import useSound from "use-sound";
 import { shuffle } from "d3-array";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { useWindowSize } from "react-use";
+import Confetti from "react-confetti";
 
 import SpinningWheel, {
   SpinningWheelRef,
@@ -77,6 +79,8 @@ type Props = {
 };
 
 const Tournament = ({ initialMovies }: Props) => {
+  const windowSize = useWindowSize();
+
   const [selectedMovieId, setSelectedMovieId] = useState<string | null>(null);
   const { step, stepIndex, updateInput, nextStep } =
     useTournament(initialMovies);
@@ -266,6 +270,11 @@ const Tournament = ({ initialMovies }: Props) => {
       <audio
         src={process.env.NEXT_PUBLIC_TOURNAMENT_WINNER_SOUND_URL}
         autoPlay
+      />
+      <Confetti
+        width={windowSize.width}
+        height={windowSize.height}
+        gravity={0.05}
       />
     </Box>
   );
