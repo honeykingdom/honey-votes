@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import useSound from "use-sound";
 import { shuffle } from "d3-array";
 import { Box, Button, Grid, Typography } from "@material-ui/core";
@@ -9,6 +9,7 @@ import SpinningWheel, {
   SpinningWheelRef,
   WheelSegment,
 } from "../../../react-spinning-wheel-canvas/src";
+import VolumeControl from "components/VolumeControl";
 import ArrowRightIcon from "icons/arrow-right.svg";
 import getRandomInt from "utils/getRandomInt";
 import MovieCard from "./MovieCard";
@@ -70,8 +71,6 @@ const getCardSize = (itemsCount: number) => {
   return "small";
 };
 
-const SOUND_OPTIONS = { volume: 1 };
-
 type Segment = WheelSegment & { id: string };
 
 type Props = {
@@ -85,21 +84,30 @@ const Tournament = ({ initialMovies }: Props) => {
   const { step, stepIndex, updateInput, nextStep } =
     useTournament(initialMovies);
 
-  const currentStepType = useRef<Step["type"]>(step.type);
+  const [volume, setVolume] = useState(0.5);
+  const volumeRef = useRef(volume);
+  volumeRef.current = volume;
 
+  const currentStepType = useRef<Step["type"]>(step.type);
   currentStepType.current = step.type;
 
   const spinningWheelRef = useRef<SpinningWheelRef>();
   const isWheelStarted = useRef(false);
 
+  const audioElemRef = useRef<HTMLAudioElement>();
+  const audioRef = useCallback((audio: HTMLAudioElement) => {
+    audio.volume = volumeRef.current;
+    audioElemRef.current = audio;
+  }, []);
+
   const cardSize = getCardSize(step.movies.length);
 
-  const [playBegin] = useSound(beginSfx, SOUND_OPTIONS);
-  const [playWheel] = useSound(wheelSfx, SOUND_OPTIONS);
-  const [playNoNoNo] = useSound(noNoNoSfx, SOUND_OPTIONS);
-  const [playOhMy] = useSound(ohMySfx, SOUND_OPTIONS);
-  const [playThreeHundred] = useSound(threeHundredSfx, SOUND_OPTIONS);
-  const [playViewersChoice] = useSound(viewersChoiceSfx, SOUND_OPTIONS);
+  const [playBegin] = useSound(beginSfx, { volume });
+  const [playWheel] = useSound(wheelSfx, { volume });
+  const [playNoNoNo] = useSound(noNoNoSfx, { volume });
+  const [playOhMy] = useSound(ohMySfx, { volume });
+  const [playThreeHundred] = useSound(threeHundredSfx, { volume });
+  const [playViewersChoice] = useSound(viewersChoiceSfx, { volume });
 
   // TODO: hack to prevent material ui render bug
   const [mode, setMode] = useState<"edit" | "view">("view");
@@ -179,7 +187,7 @@ const Tournament = ({ initialMovies }: Props) => {
 
   const handleNextButton = () => {
     if (step.type === "ADD_MOVIES") {
-      if (step.movies.filter((m) => m.title).length < 2) return;
+      if (step.movies.filter((m) => m.title).length < 3) return;
 
       playBegin();
       nextStep();
@@ -195,6 +203,16 @@ const Tournament = ({ initialMovies }: Props) => {
 
     nextStep(selectedMovieId);
     setSelectedMovieId(null);
+  };
+
+  const handleVolumeChange = (v: number) => {
+    const normalizedVolume = v / 100;
+
+    setVolume(normalizedVolume);
+
+    if (audioElemRef.current) {
+      audioElemRef.current.volume = normalizedVolume;
+    }
   };
 
   const renderMoviesList = () => (
@@ -282,6 +300,7 @@ const Tournament = ({ initialMovies }: Props) => {
       <audio
         src={process.env.NEXT_PUBLIC_TOURNAMENT_WINNER_SOUND_URL}
         autoPlay
+        ref={audioRef}
       />
       <Confetti
         width={windowSize.width}
@@ -296,9 +315,13 @@ const Tournament = ({ initialMovies }: Props) => {
       <Typography
         variant="h3"
         textAlign="center"
-        sx={{ mt: 1, mb: 2, fontWeight: 300 }}
+        sx={{ position: "relative", mt: 1, mb: 2, fontWeight: 300 }}
       >
         Фильмовый турнир
+        <VolumeControl
+          sx={{ position: "absolute", right: 0, top: 16, width: 120 }}
+          onChange={handleVolumeChange}
+        />
       </Typography>
 
       <Box sx={{ mb: 2, height: 568 }}>
