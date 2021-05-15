@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Grid, Slider } from "@material-ui/core";
+import { Box, Slider } from "@material-ui/core";
 import VolumeDown from "@material-ui/icons/VolumeDown";
 import VolumeUp from "@material-ui/icons/VolumeUp";
 import VolumeOffIcon from "@material-ui/icons/VolumeOff";
