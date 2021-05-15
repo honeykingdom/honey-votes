@@ -310,26 +310,8 @@ const Tournament = ({ initialMovies }: Props) => {
     </Box>
   );
 
-  return (
+  const renderMainInfo = () => (
     <>
-      <Typography
-        variant="h3"
-        textAlign="center"
-        sx={{ position: "relative", mt: 1, mb: 2, fontWeight: 300 }}
-      >
-        Фильмовый турнир
-        <VolumeControl
-          sx={{ position: "absolute", right: 0, top: 16, width: 120 }}
-          onChange={handleVolumeChange}
-        />
-      </Typography>
-
-      <Box sx={{ mb: 2, height: 568 }}>
-        {showMoviesList && renderMoviesList()}
-        {step.type === "RANDOM_CHOICE" && renderSpinningWheel()}
-        {step.type === "SHOW_WINNER" && renderWinner()}
-      </Box>
-
       <Typography
         variant="h4"
         component="div"
@@ -358,6 +340,30 @@ const Tournament = ({ initialMovies }: Props) => {
           {STEPS_TEXT[step.type].buttonTitle}
         </Button>
       </Box>
+    </>
+  );
+
+  return (
+    <>
+      <Typography
+        variant="h3"
+        textAlign="center"
+        sx={{ position: "relative", mt: 1, mb: 2, fontWeight: 300 }}
+      >
+        Фильмовый турнир
+        <VolumeControl
+          sx={{ position: "absolute", right: 0, top: 16, width: 120 }}
+          onChange={handleVolumeChange}
+        />
+      </Typography>
+
+      <Box sx={{ mb: 2, height: 568 }}>
+        {showMoviesList && renderMoviesList()}
+        {step.type === "RANDOM_CHOICE" && renderSpinningWheel()}
+        {step.type === "SHOW_WINNER" && renderWinner()}
+      </Box>
+
+      {renderMainInfo()}
     </>
   );
 };
