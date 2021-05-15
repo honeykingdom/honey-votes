@@ -90,6 +90,7 @@ const Tournament = ({ initialMovies }: Props) => {
   currentStepType.current = step.type;
 
   const spinningWheelRef = useRef<SpinningWheelRef>();
+  const isWheelStarted = useRef(false);
 
   const cardSize = getCardSize(step.movies.length);
 
@@ -121,9 +122,20 @@ const Tournament = ({ initialMovies }: Props) => {
         }))
       );
 
-      setTimeout(() => {
+      isWheelStarted.current = false;
+
+      const startSpinning = () => {
         spinningWheelRef.current.startSpinning(30, 4);
         playWheel();
+      };
+
+      const interval = setInterval(() => {
+        if (isWheelStarted.current === true) return;
+
+        isWheelStarted.current = true;
+
+        clearInterval(interval);
+        startSpinning();
       }, 1000);
     }
 
