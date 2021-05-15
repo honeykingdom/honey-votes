@@ -23,6 +23,7 @@
     "next-seo": "^4.24.0",
     "ramda": "^0.27.1",
     "react": "17.0.2",
+    "react-confetti": "^6.0.1",
     "react-dom": "17.0.2",
     "react-supabase": "^0.1.6",
     "react-use": "^17.2.4",
