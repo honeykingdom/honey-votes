@@ -44,7 +44,10 @@ const getNextStep = (
     };
   }
 
-  const newMovies = prevStep.movies.filter((m) => m.id !== selectedMovieId);
+  const newMovies =
+    prevStep.type === "START_TOURNAMENT"
+      ? prevStep.movies
+      : prevStep.movies.filter((m) => m.id !== selectedMovieId);
 
   if (prevStep.movies.length >= 3) {
     return getRandomChoiceStep(newMovies);
