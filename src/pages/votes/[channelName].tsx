@@ -151,14 +151,16 @@ const Votes = () => {
       </Button>
 
       <Tooltip title="Создать фильмовый турнир с победителями">
-        <Button
-          variant="contained"
-          disabled={winners.length < 2}
-          sx={{ mb: 2 }}
-          onClick={createTournament}
-        >
-          Создать фильмовый турнир
-        </Button>
+        <span>
+          <Button
+            variant="contained"
+            disabled={winners.length < 2}
+            sx={{ mb: 2 }}
+            onClick={createTournament}
+          >
+            Создать турнир
+          </Button>
+        </span>
       </Tooltip>
 
       <TableContainer component={Paper}>

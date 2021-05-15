@@ -21,10 +21,10 @@ const Layout = ({ children }: any) => {
           </Typography>
 
           <Button href="/votes/lasqa" color="inherit">
-            Голосование в чате
+            Голосование
           </Button>
           <Button href="/tournament" color="inherit">
-            Фильмовый турнир
+            Турнир
           </Button>
 
           <Box sx={{ ml: "auto" }}>
