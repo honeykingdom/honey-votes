@@ -16,6 +16,7 @@ import {
   Button,
   colors,
   Tooltip,
+  Box,
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
@@ -146,22 +147,23 @@ const Votes = () => {
         Победители
       </Typography>
 
-      <Button variant="contained" sx={{ mb: 2, mr: 2 }} onClick={getWinner}>
-        Выбрать победителя
-      </Button>
+      <Box sx={{ mb: 2 }}>
+        <Button variant="contained" sx={{ mr: 2 }} onClick={getWinner}>
+          Выбрать победителя
+        </Button>
 
-      <Tooltip title="Создать фильмовый турнир с победителями">
-        <span>
-          <Button
-            variant="contained"
-            disabled={winners.length < 2}
-            sx={{ mb: 2 }}
-            onClick={createTournament}
-          >
-            Создать турнир
-          </Button>
-        </span>
-      </Tooltip>
+        <Tooltip title="Создать фильмовый турнир с победителями">
+          <Box display="inline-block">
+            <Button
+              variant="contained"
+              disabled={winners.length < 2}
+              onClick={createTournament}
+            >
+              Создать турнир
+            </Button>
+          </Box>
+        </Tooltip>
+      </Box>
 
       <TableContainer component={Paper}>
         <Table>
