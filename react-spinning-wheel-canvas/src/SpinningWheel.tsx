@@ -22,7 +22,6 @@ const normalizeSegments = (
   maxTextWidth: number
 ): WheelSegment[] =>
   segments.map(({ title, ...rest }) => ({
-    // title: sliceTextByMaxWidth(`${i}. ${title} `, textFont, maxTextWidth),
     title: sliceTextByMaxWidth(title, textFont, maxTextWidth),
     ...rest,
   }));
