@@ -49,8 +49,15 @@ const getNextStep = (
       ? prevStep.movies
       : prevStep.movies.filter((m) => m.id !== selectedMovieId);
 
-  if (prevStep.movies.length >= 3) {
+  if (newMovies.length > 2) {
     return getRandomChoiceStep(newMovies);
+  }
+
+  if (newMovies.length === 2) {
+    return {
+      type: "VIEWERS_CHOICE" as const,
+      movies: newMovies,
+    };
   }
 
   return {
