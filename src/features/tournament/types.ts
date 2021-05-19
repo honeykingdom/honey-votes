@@ -6,28 +6,37 @@ export type Movie = {
   info?: KinopoiskMovie;
 };
 
+export enum StepType {
+  ADD_MOVIES,
+  START_TOURNAMENT,
+  VIEWERS_CHOICE,
+  STREAMER_CHOICE,
+  RANDOM_CHOICE,
+  SHOW_WINNER,
+}
+
 export type StepAddMovies = {
-  type: "ADD_MOVIES";
+  type: StepType.ADD_MOVIES;
   movies: Movie[];
 };
 export type StepStartTournament = {
-  type: "START_TOURNAMENT";
+  type: StepType.START_TOURNAMENT;
   movies: Movie[];
 };
 export type StepViewersChoice = {
-  type: "VIEWERS_CHOICE";
+  type: StepType.VIEWERS_CHOICE;
   movies: Movie[];
 };
 export type StepStreamerChoice = {
-  type: "STREAMER_CHOICE";
+  type: StepType.STREAMER_CHOICE;
   movies: Movie[];
 };
 export type StepRandomChoice = {
-  type: "RANDOM_CHOICE";
+  type: StepType.RANDOM_CHOICE;
   movies: Movie[];
 };
 export type StepShowWinner = {
-  type: "SHOW_WINNER";
+  type: StepType.SHOW_WINNER;
   movies: Movie[];
 };
 

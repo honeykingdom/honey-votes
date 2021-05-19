@@ -2,17 +2,17 @@ import { useCallback, useState } from "react";
 import produce from "immer";
 import getRandomInt from "utils/getRandomInt";
 import { KinopoiskMovie } from "api/kinopoisk";
-import { Movie, Step, StepAddMovies } from "./types";
+import { Movie, Step, StepAddMovies, StepType } from "./types";
 
 const choiceStepTypes = [
-  "VIEWERS_CHOICE" as const,
-  "STREAMER_CHOICE" as const,
-  "RANDOM_CHOICE" as const,
-] as const;
+  StepType.VIEWERS_CHOICE,
+  StepType.STREAMER_CHOICE,
+  StepType.RANDOM_CHOICE,
+];
 
 const getInitialSteps = (initialMovies: string[] = []) => {
   const addMoviesInitialStep: StepAddMovies = {
-    type: "ADD_MOVIES",
+    type: StepType.ADD_MOVIES,
     movies: Array.from({ length: 10 }, (_, i) => ({
       id: `${i + 1}`,
       title: initialMovies[i] || "",
@@ -35,17 +35,17 @@ const getNextStep = (
   prevStep: Step,
   selectedMovieId?: number | string
 ): Step => {
-  if (prevStep.type === "SHOW_WINNER") return null;
+  if (prevStep.type === StepType.SHOW_WINNER) return null;
 
-  if (prevStep.type === "ADD_MOVIES") {
+  if (prevStep.type === StepType.ADD_MOVIES) {
     return {
-      type: "START_TOURNAMENT" as const,
+      type: StepType.START_TOURNAMENT,
       movies: prevStep.movies.filter((m) => m.title),
     };
   }
 
   const newMovies =
-    prevStep.type === "START_TOURNAMENT"
+    prevStep.type === StepType.START_TOURNAMENT
       ? prevStep.movies
       : prevStep.movies.filter((m) => m.id !== selectedMovieId);
 
@@ -55,13 +55,13 @@ const getNextStep = (
 
   if (newMovies.length === 2) {
     return {
-      type: "VIEWERS_CHOICE" as const,
+      type: StepType.VIEWERS_CHOICE,
       movies: newMovies,
     };
   }
 
   return {
-    type: "SHOW_WINNER" as const,
+    type: StepType.SHOW_WINNER,
     movies: newMovies,
   };
 };
@@ -81,7 +81,7 @@ const useTournament = (initialMovies: string[]) => {
       produce(prev, (state) => {
         const currentStep = getCurrentStep(state);
 
-        if (currentStep.type !== "ADD_MOVIES") return prev;
+        if (currentStep.type !== StepType.ADD_MOVIES) return prev;
 
         currentStep.movies.push(movie);
       })
@@ -93,7 +93,7 @@ const useTournament = (initialMovies: string[]) => {
       produce(prev, (state) => {
         const currentStep = getCurrentStep(state);
 
-        if (currentStep.type !== "ADD_MOVIES") return state;
+        if (currentStep.type !== StepType.ADD_MOVIES) return state;
 
         const index = currentStep.movies.findIndex((m) => m.id === id);
 
@@ -114,7 +114,7 @@ const useTournament = (initialMovies: string[]) => {
         produce(prev, (state) => {
           const currentStep = getCurrentStep(state);
 
-          if (currentStep.type !== "ADD_MOVIES") return prev;
+          if (currentStep.type !== StepType.ADD_MOVIES) return prev;
 
           if (title !== null) {
             currentStep.movies[index].title = title;

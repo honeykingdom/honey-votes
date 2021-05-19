@@ -15,7 +15,7 @@ import getRandomInt from "utils/getRandomInt";
 import MovieCard from "./MovieCard";
 // import MoviePicker from "./MoviePicker";
 import useTournament from "./useTournament";
-import { Step } from "./types";
+import { Step, StepType } from "./types";
 
 const beginSfx = "/assets/begin.opus";
 const wheelSfx = "/assets/wheel.opus";
@@ -24,33 +24,39 @@ const ohMySfx = "/assets/oh-my.opus";
 const threeHundredSfx = "/assets/three-hundred.opus";
 const viewersChoiceSfx = "/assets/viewers-choice.opus";
 
-const STEPS_TEXT = {
-  ADD_MOVIES: {
+type StepText = {
+  title: string;
+  description: string;
+  buttonTitle: string;
+};
+
+const STEPS_TEXT: Record<StepType, StepText> = {
+  [StepType.ADD_MOVIES]: {
     title: "Добавление фильмов",
     description: "",
     buttonTitle: "Начать турнир",
   },
-  START_TOURNAMENT: {
+  [StepType.START_TOURNAMENT]: {
     title: "Турнир начинается",
     description: "",
     buttonTitle: "Пропустить вступление",
   },
-  VIEWERS_CHOICE: {
+  [StepType.VIEWERS_CHOICE]: {
     title: "Зрители решают",
     description: "Выберите фильм, который нужно убрать",
     buttonTitle: "Далее",
   },
-  STREAMER_CHOICE: {
+  [StepType.STREAMER_CHOICE]: {
     title: "Стример решает",
     description: "Выберите фильм, который нужно убрать",
     buttonTitle: "Далее",
   },
-  RANDOM_CHOICE: {
+  [StepType.RANDOM_CHOICE]: {
     title: "Рандом решает",
     description: "Выпавший в колесе вариант вылетает",
     buttonTitle: "Далее",
   },
-  SHOW_WINNER: {
+  [StepType.SHOW_WINNER]: {
     title: "Победитель",
     description: "",
     buttonTitle: "Турнир окончен",
@@ -115,13 +121,13 @@ const Tournament = ({ initialMovies }: Props) => {
   const [wheelSegments, setWheelSegments] = useState<Segment[]>([]);
 
   useEffect(() => {
-    if (step.type === "ADD_MOVIES") {
+    if (step.type === StepType.ADD_MOVIES) {
       setMode("edit");
     } else {
       setMode("view");
     }
 
-    if (step.type === "RANDOM_CHOICE") {
+    if (step.type === StepType.RANDOM_CHOICE) {
       setWheelSegments(
         shuffle([...step.movies]).map((m, i) => ({
           id: m.id,
@@ -147,11 +153,11 @@ const Tournament = ({ initialMovies }: Props) => {
       }, 1000);
     }
 
-    if (step.type === "VIEWERS_CHOICE") {
+    if (step.type === StepType.VIEWERS_CHOICE) {
       playViewersChoice();
     }
 
-    if (step.type === "STREAMER_CHOICE") {
+    if (step.type === StepType.STREAMER_CHOICE) {
       const i = getRandomInt(0, 2);
 
       if (i === 0) playOhMy();
@@ -162,20 +168,20 @@ const Tournament = ({ initialMovies }: Props) => {
   let isNextButtonDisabled = false;
 
   // TODO: button doesn't updates after ssr when initial movies are set
-  // if (step.type === "ADD_MOVIES") {
+  // if (step.type === StepType.ADD_MOVIES) {
   //   if (step.movies.filter((m) => m.title).length < 2) {
   //     isNextButtonDisabled = true;
   //   }
   // }
 
-  if (step.type === "SHOW_WINNER") {
+  if (step.type === StepType.SHOW_WINNER) {
     isNextButtonDisabled = true;
   }
 
   if (
-    step.type === "VIEWERS_CHOICE" ||
-    step.type === "STREAMER_CHOICE" ||
-    step.type === "RANDOM_CHOICE"
+    step.type === StepType.VIEWERS_CHOICE ||
+    step.type === StepType.STREAMER_CHOICE ||
+    step.type === StepType.RANDOM_CHOICE
   ) {
     if (selectedMovieId === null) {
       isNextButtonDisabled = true;
@@ -183,17 +189,17 @@ const Tournament = ({ initialMovies }: Props) => {
   }
 
   const showMoviesList =
-    step.type !== "RANDOM_CHOICE" && step.type !== "SHOW_WINNER";
+    step.type !== StepType.RANDOM_CHOICE && step.type !== StepType.SHOW_WINNER;
 
   const handleNextButton = () => {
-    if (step.type === "ADD_MOVIES") {
+    if (step.type === StepType.ADD_MOVIES) {
       if (step.movies.filter((m) => m.title).length < 3) return;
 
       playBegin();
       nextStep();
 
       setTimeout(() => {
-        if (currentStepType.current === "START_TOURNAMENT") {
+        if (currentStepType.current === StepType.START_TOURNAMENT) {
           nextStep();
         }
       }, 10000);
@@ -359,8 +365,8 @@ const Tournament = ({ initialMovies }: Props) => {
 
       <Box sx={{ mb: 2, height: 568 }}>
         {showMoviesList && renderMoviesList()}
-        {step.type === "RANDOM_CHOICE" && renderSpinningWheel()}
-        {step.type === "SHOW_WINNER" && renderWinner()}
+        {step.type === StepType.RANDOM_CHOICE && renderSpinningWheel()}
+        {step.type === StepType.SHOW_WINNER && renderWinner()}
       </Box>
 
       {renderMainInfo()}
