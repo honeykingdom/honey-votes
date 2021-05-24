@@ -1,5 +1,5 @@
 import { AppProps, NextWebVitalsMetric } from "next/app";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import createCache from "@emotion/cache";
@@ -11,7 +11,7 @@ import SEO from "../../next-seo.config";
 
 export const cache = createCache({ key: "css", prepend: true });
 
-const theme = createMuiTheme(defaultTheme);
+const theme = createTheme(defaultTheme);
 
 const client = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_HOST,
