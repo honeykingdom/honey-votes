@@ -47,9 +47,7 @@ const Votes = () => {
   const [userVotes, setUserVotes] = useState<any[]>([]);
   const [channelVoting, setChannelVoting] = useState<any>();
 
-  const channelName = process.env.NEXT_PUBLIC_CHANNEL;
-  // const channelName = router.query.channelName as string;
-
+  const channelName = router.query.channelName as string;
   const table = `user_vote:channelName=eq.${channelName}`;
 
   useSubscription((payload) => setUserVotes((prev) => [...prev, payload.new]), {
@@ -120,7 +118,9 @@ const Votes = () => {
 
   return (
     <Layout>
-      <Head>HoneyVotes - {channelVoting.channelName}</Head>
+      <Head>
+        <title>HoneyVotes - {channelVoting.channelName}</title>
+      </Head>
       <Typography sx={{ my: 2 }} variant="h3">
         {channelVoting.channelName}
         <Tooltip
@@ -220,7 +220,7 @@ const Votes = () => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const voteChannels = process.env.NEXT_PUBLIC_CHANNEL.split(";");
+  const voteChannels = process.env.NEXT_PUBLIC_CHANNELS.split(";");
 
   return {
     paths: voteChannels.map((channelName) => ({
