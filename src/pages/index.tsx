@@ -19,6 +19,13 @@ const streamers = [
     image:
       "https://static-cdn.jtvnw.net/jtv_user_pictures/lasqa-profile_image-49dc25f1e724dbd6-300x300.jpeg",
   },
+  {
+    id: "43564820",
+    name: "Krabick",
+    nickname: "krabick",
+    image:
+      "https://static-cdn.jtvnw.net/jtv_user_pictures/40c17b98e5d3bac0-profile_image-300x300.png",
+  },
 ];
 
 const StreamerCard = ({ nickname, image, name }: typeof streamers[0]) => {
