@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: yarn build && yarn export
         env:
-          NEXT_PUBLIC_CHANNEL: ${{ secrets.CHANNEL }}
+          NEXT_PUBLIC_CHANNELS: ${{ secrets.CHANNELS }}
           NEXT_PUBLIC_SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
           NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: ${{ secrets.SUPABASE_PUBLIC_ANON_KEY }}
           NEXT_PUBLIC_TOURNAMENT_WINNER_SOUND_URL: ${{ secrets.TOURNAMENT_WINNER_SOUND_URL }}
