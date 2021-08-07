@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   AppBar,
   Toolbar,
@@ -16,16 +17,28 @@ const Layout = ({ children }: any) => {
     <div style={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" style={{ marginRight: 16 }}>
-            HoneyVotes
-          </Typography>
+          <Link href="/" passHref>
+            <Typography
+              variant="h6"
+              component="a"
+              style={{
+                marginRight: 16,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              HoneyVotes
+            </Typography>
+          </Link>
 
-          <Button href="/votes/lasqa" color="inherit">
-            Голосование
-          </Button>
-          <Button href="/tournament" color="inherit">
-            Турнир
-          </Button>
+          <Link href="/votes/lasqa" passHref>
+            <Button href="/votes/lasqa" color="inherit">
+              Голосование
+            </Button>
+          </Link>
+          <Link href="/tournament" passHref>
+            <Button color="inherit">Турнир</Button>
+          </Link>
 
           <Box sx={{ ml: "auto" }}>
             <Tooltip title="Автор - DmitryScaletta">
