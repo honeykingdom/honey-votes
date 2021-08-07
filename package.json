@@ -14,26 +14,27 @@
     "@emotion/styled": "^11.3.0",
     "@material-ui/core": "^5.0.0-alpha.34",
     "@material-ui/icons": "^5.0.0-alpha.34",
-    "@supabase/supabase-js": "^1.11.13",
-    "d3-array": "^2.12.1",
-    "d3-ease": "^2.0.0",
-    "immer": "^9.0.2",
-    "next": "10.2.0",
-    "next-pwa": "^5.2.21",
-    "next-seo": "^4.24.0",
+    "@material-ui/styles": "^5.0.0-alpha.35",
+    "@supabase/supabase-js": "^1.21.0",
+    "d3-array": "^3.0.1",
+    "d3-ease": "^3.0.1",
+    "immer": "^9.0.5",
+    "next": "11.0.1",
+    "next-pwa": "^5.2.24",
+    "next-seo": "^4.26.0",
     "nookies": "^2.5.2",
     "ramda": "^0.27.1",
     "react": "17.0.2",
     "react-confetti": "^6.0.1",
     "react-dom": "17.0.2",
-    "react-supabase": "^0.1.6",
+    "react-supabase": "^0.2.0",
     "react-use": "^17.2.4",
-    "typescript": "^4.2.4",
-    "use-sound": "^3.0.1"
+    "typescript": "^4.3.5",
+    "use-sound": "^4.0.1"
   },
   "devDependencies": {
-    "@types/d3-array": "^2.9.0",
-    "@types/gtag.js": "^0.0.4",
-    "@types/ramda": "^0.27.40"
+    "@types/d3-array": "^3.0.1",
+    "@types/gtag.js": "^0.0.7",
+    "@types/ramda": "^0.27.44"
   }
 }
