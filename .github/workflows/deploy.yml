@@ -31,6 +31,8 @@ jobs:
       - name: Build
         run: yarn build && yarn export
         env:
+          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+          TWITCH_TOKEN: ${{ secrets.TWITCH_TOKEN }}
           NEXT_PUBLIC_CHANNELS: ${{ secrets.CHANNELS }}
           NEXT_PUBLIC_SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
           NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: ${{ secrets.SUPABASE_PUBLIC_ANON_KEY }}
