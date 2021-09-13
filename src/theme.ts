@@ -1,12 +1,12 @@
-import { ThemeOptions } from "@material-ui/core/styles";
+import { createTheme } from "@mui/material";
 
-const theme: ThemeOptions = {
+const theme = createTheme({
   palette: {
     mode: "dark",
   },
   typography: {
     htmlFontSize: 16,
   },
-};
+});
 
 export default theme;

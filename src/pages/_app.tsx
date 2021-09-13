@@ -1,32 +1,28 @@
-import { AppProps, NextWebVitalsMetric } from "next/app";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { CacheProvider } from "@emotion/react";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import createCache from "@emotion/cache";
+import * as React from "react";
+import { AppProps } from "next/app";
+import { ThemeProvider } from "@mui/material/styles";
 import { DefaultSeo } from "next-seo";
-import { createClient } from "@supabase/supabase-js";
-import { Provider as SupabaseProvider } from "react-supabase";
-import defaultTheme from "theme";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider, EmotionCache } from "@emotion/react";
+import createEmotionCache from "createEmotionCache";
+import theme from "theme";
 import SEO from "../../next-seo.config";
 
-export const cache = createCache({ key: "css", prepend: true });
+// Client-side cache, shared for the whole session of the user in the browser.
+const clientSideEmotionCache = createEmotionCache();
 
-const theme = createTheme(defaultTheme);
+interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache;
+}
 
-const client = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_HOST,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY
-);
-
-const App = ({ Component, pageProps }: AppProps) => {
+const App = (props: MyAppProps) => {
+  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
-    <CacheProvider value={cache}>
+    <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
-        <SupabaseProvider value={client}>
-          <DefaultSeo {...SEO} />
-          <CssBaseline />
-          <Component {...pageProps} />
-        </SupabaseProvider>
+        <DefaultSeo {...SEO} />
+        <CssBaseline />
+        <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>
   );
