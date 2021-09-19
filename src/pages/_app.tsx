@@ -4,8 +4,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { DefaultSeo } from "next-seo";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
-import createEmotionCache from "createEmotionCache";
-import theme from "theme";
+import createEmotionCache from "utils/createEmotionCache";
+import theme from "app/theme";
 import SEO from "../../next-seo.config";
 
 // Client-side cache, shared for the whole session of the user in the browser.
