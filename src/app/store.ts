@@ -1,16 +1,20 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
-import api from "features/api/apiSlice";
+import { api } from "features/api/apiSlice";
 import votes from "features/votes/votesSlice";
 
-export function makeStore() {
+export const makeStore = () => {
   return configureStore({
     reducer: {
-      api,
+      [api.reducerPath]: api.reducer,
       votes,
     },
+    middleware: (getDefaultMiddleware) => [
+      ...getDefaultMiddleware(),
+      api.middleware,
+    ],
   });
-}
+};
 
 const store = makeStore();
 
