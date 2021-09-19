@@ -128,3 +128,5 @@ export const {
   useCreateVoteMutation,
   useDeleteVoteMutation,
 } = api;
+
+export default api.reducer;
