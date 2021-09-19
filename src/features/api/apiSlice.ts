@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { parseCookies } from "nookies";
 import {
   AddVoteDto,
   AddVotingDto,
@@ -24,7 +25,13 @@ const SUPABASE_HEADERS = {
   Authorization: `Bearer ${SUPABASE_KEY}`,
 };
 
-const ACCESS_TOKEN = "access-token";
+const COOKIE_ACCESS_TOKEN = "accessToken";
+
+const getHeaders = () => {
+  const cookies = parseCookies();
+
+  return { Authorization: `Bearer ${cookies[COOKIE_ACCESS_TOKEN]}` };
+};
 
 export const api = createApi({
   reducerPath: "api",
@@ -33,7 +40,7 @@ export const api = createApi({
     me: builder.query<User, void>({
       query: () => ({
         url: `${API_BASE}/users/me`,
-        headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
+        headers: getHeaders(),
       }),
     }),
     getChannelIdByName: builder.query<User, string>({
@@ -56,6 +63,7 @@ export const api = createApi({
       query: (body) => ({
         url: `${API_BASE}/voting`,
         method: "POST",
+        headers: getHeaders(),
         body,
       }),
     }),
@@ -66,6 +74,7 @@ export const api = createApi({
       query: ({ votingId, body }) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: "PUT",
+        headers: getHeaders(),
         body,
       }),
     }),
@@ -73,6 +82,7 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: "DELETE",
+        headers: getHeaders(),
       }),
     }),
 
@@ -86,6 +96,7 @@ export const api = createApi({
       query: (body) => ({
         url: `${API_BASE}/voting-options`,
         method: "POST",
+        headers: getHeaders(),
         body,
       }),
     }),
@@ -93,6 +104,7 @@ export const api = createApi({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: "DELETE",
+        headers: getHeaders(),
       }),
     }),
 
@@ -100,6 +112,7 @@ export const api = createApi({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
         method: "POST",
+        headers: getHeaders(),
         body: { votingOptionId } as AddVoteDto,
       }),
     }),
@@ -107,6 +120,7 @@ export const api = createApi({
       query: (voteId) => ({
         url: `${API_BASE}/votes/${voteId}`,
         method: "DELETE",
+        headers: getHeaders(),
       }),
     }),
   }),
@@ -128,5 +142,3 @@ export const {
   useCreateVoteMutation,
   useDeleteVoteMutation,
 } = api;
-
-export default api.reducer;
