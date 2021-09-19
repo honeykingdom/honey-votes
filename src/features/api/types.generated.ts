@@ -4,14 +4,17 @@
  */
 
 export interface paths {
-  "/api/honey-votes/auth/me": {
-    get: operations["AuthController_me"];
-  };
   "/api/honey-votes/auth/refresh-token": {
     post: operations["AuthController_refreshToken"];
   };
   "/api/honey-votes/users": {
     get: operations["UsersController_getUserByLogin"];
+  };
+  "/api/honey-votes/users/me": {
+    get: operations["UsersController_me"];
+  };
+  "/api/honey-votes/users/me/{channelId}": {
+    get: operations["UsersController_getUserRoles"];
   };
   "/api/honey-votes/voting": {
     get: operations["VotingController_getVotingList"];
@@ -48,6 +51,13 @@ export interface paths {
 
 export interface components {
   schemas: {
+    RefreshTokenDto: {
+      refreshToken: string;
+    };
+    RefreshTokenResponse: {
+      accessToken: string;
+      refreshToken: string;
+    };
     User: {
       id: string;
       login: string;
@@ -57,12 +67,15 @@ export interface components {
       createdAt: string;
       updatedAt: string;
     };
-    RefreshTokenDto: {
-      refreshToken: string;
-    };
-    RefreshTokenResponse: {
-      accessToken: string;
-      refreshToken: string;
+    UserRoles: {
+      isEditor: boolean;
+      isMod: boolean;
+      isVip: boolean;
+      isSubTier1: boolean;
+      isSubTier2: boolean;
+      isSubTier3: boolean;
+      isFollower: boolean;
+      minutesFollowed: number;
     };
     UserTypeParams: {
       canVote: boolean;
@@ -178,19 +191,6 @@ export interface components {
 }
 
 export interface operations {
-  AuthController_me: {
-    parameters: {};
-    responses: {
-      /** OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["User"];
-        };
-      };
-      /** Unauthorized */
-      401: unknown;
-    };
-  };
   AuthController_refreshToken: {
     parameters: {};
     responses: {
@@ -226,6 +226,38 @@ export interface operations {
       };
       /** Bad request */
       400: unknown;
+      /** Not found */
+      404: unknown;
+    };
+  };
+  UsersController_me: {
+    parameters: {};
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["User"];
+        };
+      };
+      /** Unauthorized */
+      401: unknown;
+    };
+  };
+  UsersController_getUserRoles: {
+    parameters: {
+      path: {
+        channelId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserRoles"];
+        };
+      };
+      /** Unauthorized */
+      401: unknown;
       /** Not found */
       404: unknown;
     };
