@@ -4,8 +4,10 @@ import { ThemeProvider } from "@mui/material/styles";
 import { DefaultSeo } from "next-seo";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
+import { Provider as ReduxProvider } from "react-redux";
 import createEmotionCache from "utils/createEmotionCache";
 import theme from "app/theme";
+import store from "app/store";
 import SEO from "../../next-seo.config";
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -20,9 +22,11 @@ const App = (props: MyAppProps) => {
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
-        <DefaultSeo {...SEO} />
-        <CssBaseline />
-        <Component {...pageProps} />
+        <ReduxProvider store={store}>
+          <DefaultSeo {...SEO} />
+          <CssBaseline />
+          <Component {...pageProps} />
+        </ReduxProvider>
       </ThemeProvider>
     </CacheProvider>
   );
