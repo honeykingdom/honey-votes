@@ -12,8 +12,8 @@ import {
 
 const API_BASE =
   process.env.NODE_ENV === "production"
-    ? "https://honeykingdom.herokuapp.com/api"
-    : "http://localhost:3000/api";
+    ? "https://honeykingdom.herokuapp.com/api/honey-votes"
+    : "http://localhost:3000/api/honey-votes";
 const API_BASE_POSTGREST = "https://yhdkhaixlkqcmhovtxsw.supabase.co/rest/v1";
 
 const VOTING_TABLE_NAME = "hv_voting";
