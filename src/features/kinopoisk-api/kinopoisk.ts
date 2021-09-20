@@ -1,3 +1,8 @@
+import searchByKeywordResponse from "features/tournament/searchByKeyword.mock.json";
+
+const sleep = (duration: number) =>
+  new Promise((resolve) => setTimeout(resolve, duration));
+
 const BASE_URL = "https://kinopoiskapiunofficial.tech/api/v2.1/";
 
 const headers = {
@@ -39,4 +44,8 @@ export const searchByKeyword = async (keyword: string) => {
   );
 
   return response.json() as unknown as SearchByKeywordResponse;
+
+  // await sleep(1000);
+
+  // return searchByKeywordResponse as SearchByKeywordResponse;
 };
