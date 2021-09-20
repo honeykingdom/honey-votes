@@ -6,6 +6,7 @@ import {
   AddVotingOptionDto,
   UpdateVotingDto,
   User,
+  UserRoles,
   Voting,
   VotingOption,
 } from "./types";
@@ -19,7 +20,7 @@ const API_BASE_POSTGREST = "https://yhdkhaixlkqcmhovtxsw.supabase.co/rest/v1";
 const VOTING_TABLE_NAME = "hv_voting";
 const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
 
-const SUPABASE_KEY = "supabase-key";
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
 const SUPABASE_HEADERS = {
   apikey: SUPABASE_KEY,
   Authorization: `Bearer ${SUPABASE_KEY}`,
@@ -37,14 +38,23 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery(),
   endpoints: (builder) => ({
-    me: builder.query<User, void>({
+    getMe: builder.query<User, void>({
       query: () => ({
         url: `${API_BASE}/users/me`,
         headers: getHeaders(),
       }),
     }),
-    getChannelIdByName: builder.query<User, string>({
-      query: (channelName) => `${API_BASE}/users/${channelName}`,
+    getMeRoles: builder.query<UserRoles, string>({
+      query: (channelId) => ({
+        url: `${API_BASE}/users/me/${channelId}`,
+        headers: getHeaders(),
+      }),
+    }),
+    getUserByLogin: builder.query<User, string>({
+      query: (channelName) => `${API_BASE}/users?login=${channelName}`,
+    }),
+    getUserById: builder.query<User, string>({
+      query: (channelId) => `${API_BASE}/users?id=${channelId}`,
     }),
 
     getVotingList: builder.query<Voting[], string>({
@@ -58,6 +68,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}?id=eq.${votingId}`,
         headers: SUPABASE_HEADERS,
       }),
+      transformResponse: (response) => response[0],
     }),
     createVoting: builder.mutation<Voting, AddVotingDto>({
       query: (body) => ({
@@ -127,8 +138,10 @@ export const api = createApi({
 });
 
 export const {
-  useMeQuery,
-  useGetChannelIdByNameQuery,
+  useGetMeQuery,
+  useGetMeRolesQuery,
+  useGetUserByLoginQuery,
+  useGetUserByIdQuery,
 
   useGetVotingListQuery,
   useGetVotingQuery,
