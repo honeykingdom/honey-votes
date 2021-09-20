@@ -1,6 +1,7 @@
 import { components } from "./types.generated";
 
 export type User = components["schemas"]["User"];
+export type UserRoles = components["schemas"]["UserRoles"];
 
 export type Voting = components["schemas"]["Voting"];
 export type AddVotingDto = components["schemas"]["AddVotingDto"];
