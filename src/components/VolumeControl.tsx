@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Box, Slider } from "@material-ui/core";
-import VolumeDown from "@material-ui/icons/VolumeDown";
-import VolumeUp from "@material-ui/icons/VolumeUp";
-import VolumeOffIcon from "@material-ui/icons/VolumeOff";
+import { Box, Slider } from "@mui/material";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
 type Props = {
   initialVolume?: number;
