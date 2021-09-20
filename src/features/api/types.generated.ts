@@ -176,6 +176,15 @@ export interface components {
       listening?: boolean;
       broadcasterId: string;
     };
+    ChatVote: {
+      chatVotingId: string;
+      userId: string;
+      userName: string;
+      tags: { [key: string]: any };
+      content: string;
+      createdAt: string;
+      updatedAt: string;
+    };
     ChatVoting: {
       broadcasterId: string;
       restrictions: components["schemas"]["ChatVotingRestrictions"];

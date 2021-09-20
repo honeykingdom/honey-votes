@@ -12,6 +12,12 @@ export type AddVotingOptionDto = components["schemas"]["AddVotingOptionDto"];
 
 export type AddVoteDto = components["schemas"]["AddVoteDto"];
 
+export type ChatVoting = components["schemas"]["ChatVoting"];
+export type AddChatVotingDto = components["schemas"]["AddChatVotingDto"];
+export type UpdateChatVotingDto = components["schemas"]["UpdateChatVotingDto"];
+
+export type ChatVote = components["schemas"]["ChatVote"];
+
 export enum TwitchUserType {
   Admin = "admin",
   Editor = "editor",
