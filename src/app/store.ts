@@ -1,13 +1,13 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import { api } from "features/api/apiSlice";
-import votes from "features/votes/votesSlice";
+import voting from "features/voting/votingSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [api.reducerPath]: api.reducer,
-      votes,
+      voting,
     },
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware(),
