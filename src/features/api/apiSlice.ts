@@ -1,9 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { parseCookies } from "nookies";
 import {
+  AddChatVotingDto,
   AddVoteDto,
   AddVotingDto,
   AddVotingOptionDto,
+  ChatVote,
+  ChatVoting,
+  UpdateChatVotingDto,
   UpdateVotingDto,
   User,
   UserRoles,
@@ -19,6 +23,8 @@ const API_BASE_POSTGREST = "https://yhdkhaixlkqcmhovtxsw.supabase.co/rest/v1";
 
 const VOTING_TABLE_NAME = "hv_voting";
 const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
+const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
+const CHAT_VOTES_TABLE_NAME = "hv_chat_votes";
 
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
 const SUPABASE_HEADERS = {
@@ -134,6 +140,54 @@ export const api = createApi({
         headers: getHeaders(),
       }),
     }),
+
+    getChatVoting: builder.query<ChatVoting, string>({
+      query: (broadcasterId) => ({
+        url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}?broadcasterId=eq.${broadcasterId}`,
+        headers: SUPABASE_HEADERS,
+      }),
+      transformResponse: (response) => response[0],
+    }),
+    createChatVoting: builder.mutation<ChatVoting, AddChatVotingDto>({
+      query: (body) => ({
+        url: `${API_BASE}/chat-votes`,
+        method: "POST",
+        headers: getHeaders(),
+        body,
+      }),
+    }),
+    updateChatVoting: builder.mutation<
+      ChatVoting,
+      { chatVotingId: string; body: UpdateChatVotingDto }
+    >({
+      query: ({ chatVotingId, body }) => ({
+        url: `${API_BASE}/chat-votes/${chatVotingId}`,
+        method: "PUT",
+        headers: getHeaders(),
+        body,
+      }),
+    }),
+    deleteChatVoting: builder.mutation<void, string>({
+      query: (chatVotingId) => ({
+        url: `${API_BASE}/chat-votes/${chatVotingId}`,
+        method: "DELETE",
+        headers: getHeaders(),
+      }),
+    }),
+    clearChatVoting: builder.mutation<void, string>({
+      query: (chatVotingId) => ({
+        url: `${API_BASE}/chat-votes/${chatVotingId}/clear`,
+        method: "POST",
+        headers: getHeaders(),
+      }),
+    }),
+
+    getChatVotes: builder.query<ChatVote[], string>({
+      query: (chatVotingId) => ({
+        url: `${API_BASE_POSTGREST}/${CHAT_VOTES_TABLE_NAME}?chatVotingId=eq.${chatVotingId}`,
+        headers: SUPABASE_HEADERS,
+      }),
+    }),
   }),
 });
 
@@ -154,4 +208,12 @@ export const {
 
   useCreateVoteMutation,
   useDeleteVoteMutation,
+
+  useGetChatVotingQuery,
+  useCreateChatVotingMutation,
+  useUpdateChatVotingMutation,
+  useDeleteChatVotingMutation,
+  useClearChatVotingMutation,
+
+  useGetChatVotesQuery,
 } = api;
