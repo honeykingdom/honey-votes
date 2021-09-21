@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RealtimeSubscription } from "@supabase/realtime-js";
 import { parseCookies } from "nookies";
+import supabase from "utils/supabase";
 import {
   AddChatVotingDto,
   AddVoteDto,
@@ -187,6 +189,46 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTES_TABLE_NAME}?chatVotingId=eq.${chatVotingId}`,
         headers: SUPABASE_HEADERS,
       }),
+      // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<ChatVote>(`${CHAT_VOTES_TABLE_NAME}:chatVotingId=eq.${arg}`)
+            .on("*", (payload) => {
+              updateCachedData((draft) => {
+                if (payload.eventType === "INSERT") {
+                  draft.push(payload.new);
+                }
+
+                if (payload.eventType === "UPDATE") {
+                  const index = draft.findIndex(
+                    (chatVote) => chatVote.userId === payload.old.userId
+                  );
+                  draft.splice(index, 1, payload.new);
+                }
+
+                if (payload.eventType === "DELETE") {
+                  const index = draft.findIndex(
+                    (chatVote) => chatVote.userId === payload.old.userId
+                  );
+                  draft.splice(index, 1);
+                }
+              });
+            })
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        supabase.removeSubscription(subscription);
+      },
     }),
   }),
 });
