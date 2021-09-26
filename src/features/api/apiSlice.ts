@@ -41,7 +41,7 @@ const getHeaders = () => {
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery(),
+  baseQuery: fetchBaseQuery({ baseUrl: "" }),
   endpoints: (builder) => ({
     getMe: builder.query<User, void>({
       query: () => ({
@@ -224,7 +224,7 @@ export const api = createApi({
 
         await cacheEntryRemoved;
 
-        supabase.removeSubscription(subscription);
+        if (subscription) supabase.removeSubscription(subscription);
       },
     }),
   }),
