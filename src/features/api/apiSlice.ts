@@ -146,6 +146,33 @@ export const api = createApi({
         headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<ChatVoting>(
+              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`
+            )
+            .on("*", (payload) => {
+              updateCachedData((draft) => {
+                if (payload.eventType === "INSERT") return payload.new;
+                if (payload.eventType === "UPDATE") return payload.new;
+                if (payload.eventType === "DELETE") return null;
+              });
+            })
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createChatVoting: builder.mutation<ChatVoting, AddChatVotingDto>({
       query: (body) => ({
