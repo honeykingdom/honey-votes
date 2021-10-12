@@ -1,4 +1,4 @@
-import { KinopoiskMovie } from "api/kinopoisk";
+import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
 
 export type Movie = {
   id: string;

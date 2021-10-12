@@ -6,8 +6,8 @@ import {
   CircularProgress,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { searchByKeyword } from "api/kinopoisk";
+} from "@mui/material";
+import { searchByKeyword } from "features/kinopoisk-api/kinopoisk";
 import { getMovieDescription } from "./utils/getMovieDescription";
 import { Movie } from "./types";
 import transformKinopoiskMovie from "./utils/transformKinopoiskMovie";

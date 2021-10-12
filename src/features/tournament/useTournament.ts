@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import produce from "immer";
 import getRandomInt from "utils/getRandomInt";
-import { KinopoiskMovie } from "api/kinopoisk";
+import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
 import { Movie, Step, StepAddMovies, StepType } from "./types";
 
 const choiceStepTypes = [

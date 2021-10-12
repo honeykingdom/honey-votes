@@ -1,4 +1,4 @@
-import { KinopoiskMovie } from "api/kinopoisk";
+import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
 import { Movie } from "../types";
 
 const transformKinopoiskMovie = (movie: KinopoiskMovie): Movie => ({

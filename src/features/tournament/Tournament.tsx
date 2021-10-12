@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import useSound from "use-sound";
 import { shuffle } from "d3-array";
-import { Box, Button, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useWindowSize } from "react-use";
 import Confetti from "react-confetti";
 
