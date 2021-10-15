@@ -23,7 +23,7 @@ const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1`;
 const VOTING_TABLE_NAME = "hv_voting";
 const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
 const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
-const CHAT_VOTES_TABLE_NAME = "hv_chat_votes";
+const CHAT_VOTE_TABLE_NAME = "hv_chat_vote";
 
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
 const SUPABASE_HEADERS = {
@@ -42,24 +42,28 @@ const getHeaders = () => {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "" }),
+  tagTypes: ["ChatVoting"],
   endpoints: (builder) => ({
-    getMe: builder.query<User, void>({
+    me: builder.query<User, void>({
       query: () => ({
         url: `${API_BASE}/users/me`,
         headers: getHeaders(),
       }),
     }),
-    getMeRoles: builder.query<UserRoles, string>({
+    meRoles: builder.query<UserRoles, string>({
       query: (channelId) => ({
         url: `${API_BASE}/users/me/${channelId}`,
         headers: getHeaders(),
       }),
     }),
-    getUserByLogin: builder.query<User, string>({
-      query: (channelName) => `${API_BASE}/users?login=${channelName}`,
-    }),
-    getUserById: builder.query<User, string>({
-      query: (channelId) => `${API_BASE}/users?id=${channelId}`,
+    user: builder.query<
+      User,
+      { login: string; id: undefined } | { login: undefined; id: string }
+    >({
+      query: (arg) =>
+        arg.login
+          ? `${API_BASE}/users?login=${arg.login}`
+          : `${API_BASE}/users?id=${arg.id}`,
     }),
 
     getVotingList: builder.query<Voting[], string>({
@@ -68,7 +72,7 @@ export const api = createApi({
         headers: SUPABASE_HEADERS,
       }),
     }),
-    getVoting: builder.query<Voting, number>({
+    voting: builder.query<Voting, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}?id=eq.${votingId}`,
         headers: SUPABASE_HEADERS,
@@ -102,7 +106,7 @@ export const api = createApi({
       }),
     }),
 
-    getVotingOptions: builder.query<VotingOption[], number>({
+    votingOptions: builder.query<VotingOption[], number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}`,
         headers: SUPABASE_HEADERS,
@@ -140,39 +144,15 @@ export const api = createApi({
       }),
     }),
 
-    getChatVoting: builder.query<ChatVoting, string>({
+    chatVoting: builder.query<ChatVoting, string>({
       query: (broadcasterId) => ({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}?broadcasterId=eq.${broadcasterId}`,
         headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
-      onCacheEntryAdded: async (
-        arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
-      ) => {
-        let subscription: RealtimeSubscription | null = null;
-
-        try {
-          await cacheDataLoaded;
-
-          subscription = supabase
-            .from<ChatVoting>(
-              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`
-            )
-            .on("*", (payload) => {
-              updateCachedData((draft) => {
-                if (payload.eventType === "INSERT") return payload.new;
-                if (payload.eventType === "UPDATE") return payload.new;
-                if (payload.eventType === "DELETE") return null;
-              });
-            })
-            .subscribe();
-        } catch {}
-
-        await cacheEntryRemoved;
-
-        if (subscription) supabase.removeSubscription(subscription);
-      },
+      providesTags: (result) => [
+        { type: "ChatVoting", id: result.broadcasterId },
+      ],
     }),
     createChatVoting: builder.mutation<ChatVoting, AddChatVotingDto>({
       query: (body) => ({
@@ -181,6 +161,9 @@ export const api = createApi({
         headers: getHeaders(),
         body,
       }),
+      invalidatesTags: (result) => [
+        { type: "ChatVoting", id: result.broadcasterId },
+      ],
     }),
     updateChatVoting: builder.mutation<
       ChatVoting,
@@ -192,6 +175,9 @@ export const api = createApi({
         headers: getHeaders(),
         body,
       }),
+      invalidatesTags: (result) => [
+        { type: "ChatVoting", id: result.broadcasterId },
+      ],
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
@@ -199,6 +185,9 @@ export const api = createApi({
         method: "DELETE",
         headers: getHeaders(),
       }),
+      invalidatesTags: (result, error, arg) => [
+        { type: "ChatVoting", id: arg },
+      ],
     }),
     clearChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
@@ -210,7 +199,7 @@ export const api = createApi({
 
     getChatVotes: builder.query<ChatVote[], string>({
       query: (chatVotingId) => ({
-        url: `${API_BASE_POSTGREST}/${CHAT_VOTES_TABLE_NAME}?chatVotingId=eq.${chatVotingId}`,
+        url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}?chatVotingId=eq.${chatVotingId}`,
         headers: SUPABASE_HEADERS,
       }),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
@@ -224,7 +213,7 @@ export const api = createApi({
           await cacheDataLoaded;
 
           subscription = supabase
-            .from<ChatVote>(`${CHAT_VOTES_TABLE_NAME}:chatVotingId=eq.${arg}`)
+            .from<ChatVote>(`${CHAT_VOTE_TABLE_NAME}:chatVotingId=eq.${arg}`)
             .on("*", (payload) => {
               updateCachedData((draft) => {
                 if (payload.eventType === "INSERT") {
@@ -258,24 +247,23 @@ export const api = createApi({
 });
 
 export const {
-  useGetMeQuery,
-  useGetMeRolesQuery,
-  useGetUserByLoginQuery,
-  useGetUserByIdQuery,
+  useMeQuery,
+  useMeRolesQuery,
+  useUserQuery,
 
   useGetVotingListQuery,
-  useGetVotingQuery,
+  useVotingQuery,
   useCreateVotingMutation,
   useUpdateVotingMutation,
 
-  useGetVotingOptionsQuery,
+  useVotingOptionsQuery,
   useCreateVotingOptionMutation,
   useDeleteVotingOptionMutation,
 
   useCreateVoteMutation,
   useDeleteVoteMutation,
 
-  useGetChatVotingQuery,
+  useChatVotingQuery,
   useCreateChatVotingMutation,
   useUpdateChatVotingMutation,
   useDeleteChatVotingMutation,
