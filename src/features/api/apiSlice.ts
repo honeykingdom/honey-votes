@@ -58,7 +58,7 @@ export const api = createApi({
     }),
     user: builder.query<
       User,
-      { login: string; id: undefined } | { login: undefined; id: string }
+      { login: string; id?: never } | { login?: never; id: string }
     >({
       query: (arg) =>
         arg.login
