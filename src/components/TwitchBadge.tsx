@@ -7,8 +7,10 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Badge = ({ name, version = "1", children }: Props) => {
+const TwitchBadge = ({ name, version = "1", children }: Props) => {
   const badge = globalBadges.badge_sets[name].versions[version];
+
+  if (!badge) return null;
 
   return (
     <Typography variant="inherit" color="inherit" component="span">
@@ -23,4 +25,4 @@ const Badge = ({ name, version = "1", children }: Props) => {
   );
 };
 
-export default Badge;
+export default TwitchBadge;
