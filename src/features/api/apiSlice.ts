@@ -222,7 +222,7 @@ export const api = createApi({
 
                 if (payload.eventType === "UPDATE") {
                   const index = draft.findIndex(
-                    (chatVote) => chatVote.userId === payload.old.userId
+                    (chatVote) => chatVote.userId === payload.new.userId
                   );
                   draft.splice(index, 1, payload.new);
                 }
