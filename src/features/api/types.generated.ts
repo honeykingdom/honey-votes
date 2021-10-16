@@ -171,9 +171,14 @@ export interface components {
       vip: boolean;
       subMonthsRequired: number;
     };
+    ChatVotingCommands: {
+      vote: string;
+      clearVotes: string;
+    };
     AddChatVotingDto: {
       restrictions?: components["schemas"]["ChatVotingRestrictions"];
       listening?: boolean;
+      commands?: components["schemas"]["ChatVotingCommands"];
       broadcasterId: string;
     };
     ChatVote: {
@@ -189,12 +194,14 @@ export interface components {
       broadcasterId: string;
       restrictions: components["schemas"]["ChatVotingRestrictions"];
       listening: boolean;
+      commands: components["schemas"]["ChatVotingCommands"];
       createdAt: string;
       updatedAt: string;
     };
     UpdateChatVotingDto: {
       restrictions?: components["schemas"]["ChatVotingRestrictions"];
       listening?: boolean;
+      commands?: components["schemas"]["ChatVotingCommands"];
     };
   };
 }
