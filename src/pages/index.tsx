@@ -1,81 +1,22 @@
-import NextLink from "next/link";
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  CardActionArea,
-  CardMedia,
-  useTheme,
-} from "@material-ui/core";
+// import { GetStaticProps } from "next";
+// import fetch from "node-fetch";
+import { Box, Typography, Grid } from "@mui/material";
 import Layout from "components/Layout";
+// import { TwitchUsersResponse } from "features/twitch-api/twitch";
+// import { Streamer } from "features/api/types";
+// import StreamerCard from "components/StreamerCard";
+import SEO from "../../next-seo.config";
 
-const streamers = [
-  {
-    id: "60796327",
-    name: "Lasqa",
-    nickname: "lasqa",
-    image:
-      "https://static-cdn.jtvnw.net/jtv_user_pictures/lasqa-profile_image-49dc25f1e724dbd6-300x300.jpeg",
-  },
-  {
-    id: "43564820",
-    name: "Krabick",
-    nickname: "krabick",
-    image:
-      "https://static-cdn.jtvnw.net/jtv_user_pictures/40c17b98e5d3bac0-profile_image-300x300.png",
-  },
-];
-
-const StreamerCard = ({ nickname, image, name }: typeof streamers[0]) => {
-  const theme = useTheme();
-
-  return (
-    <Card>
-      <NextLink href={`votes/${nickname}`}>
-        <CardActionArea component="a">
-          <CardContent
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <CardMedia
-              image={image}
-              title={name}
-              component="img"
-              style={{
-                width: 120,
-                height: 120,
-                borderRadius: "50%",
-              }}
-            />
-            <div style={{ paddingLeft: theme.spacing(2) }}>
-              <Typography component="h4" variant="h4">
-                {name}
-              </Typography>
-              <Typography
-                component="span"
-                variant="subtitle1"
-                color="textSecondary"
-              >
-                twitch.tv/{nickname}
-              </Typography>
-            </div>
-          </CardContent>
-        </CardActionArea>
-      </NextLink>
-    </Card>
-  );
-};
+// type Props = {
+//   streamers: Streamer[];
+// };
 
 const Home = () => {
   return (
     <Layout>
       <Box my={4} alignContent="center">
         <Typography variant="h1" component="h1" gutterBottom align="center">
-          HoneyVotes
+          {SEO.title}
         </Typography>
         <Typography
           variant="h2"
@@ -85,23 +26,57 @@ const Home = () => {
           color="textSecondary"
           style={{ maxWidth: 820, margin: "0 auto" }}
         >
-          Kappa Keepo 4Head
+          {SEO.description}
         </Typography>
       </Box>
 
-      <Typography variant="h3" component="h3" gutterBottom align="center">
+      {/* <Typography variant="h3" component="h3" gutterBottom align="center">
         Votes
-      </Typography>
+      </Typography> */}
 
-      <Grid container spacing={4}>
+      {/* <Grid container spacing={4}>
         {streamers.slice(0, 12).map((streamer, key) => (
           <Grid item xs={4} key={key}>
             <StreamerCard {...streamer} />
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
     </Layout>
   );
 };
+
+// export const getStaticProps: GetStaticProps<Props> = async () => {
+//   const channels = process.env.NEXT_PUBLIC_CHANNELS.split(";");
+//   const query = channels
+//     .map((channel) => `login=${channel}`)
+//     .reverse()
+//     .join("&");
+
+//   const response = await fetch(`https://api.twitch.tv/helix/users?${query}`, {
+//     headers: {
+//       "Client-ID": process.env.TWITCH_CLIENT_ID,
+//       Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
+//     },
+//   });
+//   const data: TwitchUsersResponse = (await response.json()) as any;
+
+//   return {
+//     props: {
+//       streamers: data.data.map(
+//         ({
+//           id,
+//           login,
+//           display_name: displayName,
+//           profile_image_url: profileImageUrl,
+//         }) => ({
+//           id,
+//           login,
+//           displayName,
+//           profileImageUrl,
+//         })
+//       ),
+//     },
+//   };
+// };
 
 export default Home;
