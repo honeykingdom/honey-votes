@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import Badge from "components/Badge";
+import TwitchBadge from "components/TwitchBadge";
 import { ChatVoting } from "features/api/types";
 import { Box } from "@mui/material";
 
@@ -45,7 +45,7 @@ const RestrictionLabels = ({
     <Box component="span">
       {badges.map(({ title, name }) => (
         <Fragment key={name}>
-          <Badge name={name}>{title}</Badge>{" "}
+          <TwitchBadge name={name}>{title}</TwitchBadge>{" "}
         </Fragment>
       ))}
     </Box>
