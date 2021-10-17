@@ -1,12 +1,13 @@
 import { useMemo } from "react";
-import { useGetMeQuery, useGetMeRolesQuery } from "../apiSlice";
+import { useMeQuery, useMeRolesQuery } from "../apiSlice";
 import { User, UserRoles } from "../types";
 
 type Me = (User & { roles: UserRoles }) | null;
 
+/** @deprecated */
 const useMe = (channelId: string): [me: Me, isLoading: boolean] => {
-  const { data: me, isLoading: isMeLoading } = useGetMeQuery();
-  const { data: meRoles, isLoading: isMeRolesLoading } = useGetMeRolesQuery(
+  const { data: me, isLoading: isMeLoading } = useMeQuery();
+  const { data: meRoles, isLoading: isMeRolesLoading } = useMeRolesQuery(
     channelId,
     { skip: !channelId || !me }
   );
