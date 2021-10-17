@@ -1,4 +1,7 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import {
   AppBar,
   Toolbar,
@@ -8,13 +11,68 @@ import {
   Tooltip,
   IconButton,
   Button,
-} from "@material-ui/core";
-import GitHubIcon from "@material-ui/icons/GitHub";
-import PersonIcon from "@material-ui/icons/Person";
+} from "@mui/material";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import PersonIcon from "@mui/icons-material/Person";
+import TwitchIcon from "icons/twitch.svg";
+import { useMeQuery } from "features/api/apiSlice";
+import {
+  AUTH_URL,
+  COOKIE_ACCESS_TOKEN,
+  COOKIE_REFRESH_TOKEN,
+  LS_REDIRECT_PATH,
+} from "utils/constants";
 
 const Layout = ({ children }: any) => {
+  const me = useMeQuery();
+  const router = useRouter();
+
+  useEffect(() => {
+    const redirectPath = localStorage.getItem(LS_REDIRECT_PATH);
+
+    if (redirectPath) {
+      localStorage.removeItem(LS_REDIRECT_PATH);
+      router.replace(redirectPath);
+    }
+  }, []);
+
+  const handleSignIn = () => {
+    localStorage.setItem(LS_REDIRECT_PATH, window.location.pathname);
+  };
+
+  const handleSignOut = () => {
+    Cookies.remove(COOKIE_ACCESS_TOKEN);
+    Cookies.remove(COOKIE_REFRESH_TOKEN);
+    // TODO: set empty data instead of refetching
+    me.refetch();
+  };
+
+  const signInButton = (
+    <Button
+      variant="contained"
+      href={AUTH_URL}
+      sx={{ backgroundColor: "#6441a5" }}
+      onClick={handleSignIn}
+    >
+      <TwitchIcon style={{ width: 16 }} />
+      &nbsp; Войти
+    </Button>
+  );
+
+  const signOutButton = (
+    <Button
+      variant="contained"
+      sx={{ backgroundColor: "#6441a5" }}
+      onClick={handleSignOut}
+    >
+      Выйти
+    </Button>
+  );
+
+  const hasUser = me.data && !me.isError;
+
   return (
-    <div style={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Link href="/" passHref>
@@ -31,11 +89,16 @@ const Layout = ({ children }: any) => {
             </Typography>
           </Link>
 
-          <Link href="/votes/lasqa" passHref>
-            <Button href="/votes/lasqa" color="inherit">
-              Голосование
-            </Button>
-          </Link>
+          {hasUser && (
+            <>
+              {/* <Link href={`/${me.data.login}/voting/`} passHref>
+                <Button color="inherit">Голосование на сайте</Button>
+              </Link> */}
+              <Link href={`/${me.data.login}/chat-votes`} passHref>
+                <Button color="inherit">Голосование в чате</Button>
+              </Link>
+            </>
+          )}
           <Link href="/tournament" passHref>
             <Button color="inherit">Турнир</Button>
           </Link>
@@ -64,10 +127,31 @@ const Layout = ({ children }: any) => {
               </IconButton>
             </Tooltip>
           </Box>
+
+          {!me.isLoading && (
+            <>
+              {hasUser ? (
+                <>
+                  <Typography
+                    variant="body1"
+                    color="inherit"
+                    sx={{ display: "flex", alignItems: "center", mr: 1, p: 1 }}
+                  >
+                    <TwitchIcon style={{ height: 24, marginRight: 8 }} />
+                    &nbsp;
+                    <strong>{me.data.displayName}</strong>
+                  </Typography>
+                  <Box sx={{ my: 1 }}>{signOutButton}</Box>
+                </>
+              ) : (
+                <Tooltip title="Войти через твич">{signInButton}</Tooltip>
+              )}
+            </>
+          )}
         </Toolbar>
       </AppBar>
-      <Container>{children}</Container>
-    </div>
+      <Container sx={{ pt: 2 }}>{children}</Container>
+    </Box>
   );
 };
 
