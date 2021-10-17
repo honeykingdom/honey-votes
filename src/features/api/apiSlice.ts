@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RealtimeSubscription } from "@supabase/realtime-js";
-import { parseCookies } from "nookies";
+import Cookies from "js-cookie";
 import supabase from "utils/supabase";
 import {
   AddChatVotingDto,
@@ -34,9 +34,7 @@ const SUPABASE_HEADERS = {
 const COOKIE_ACCESS_TOKEN = "accessToken";
 
 const getHeaders = () => {
-  const cookies = parseCookies();
-
-  return { Authorization: `Bearer ${cookies[COOKIE_ACCESS_TOKEN]}` };
+  return { Authorization: `Bearer ${Cookies.get(COOKIE_ACCESS_TOKEN)}` };
 };
 
 export const api = createApi({
@@ -150,9 +148,7 @@ export const api = createApi({
         headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
-      providesTags: (result) => [
-        { type: "ChatVoting", id: result.broadcasterId },
-      ],
+      providesTags: (result, error, arg) => [{ type: "ChatVoting", id: arg }],
     }),
     createChatVoting: builder.mutation<ChatVoting, AddChatVotingDto>({
       query: (body) => ({
