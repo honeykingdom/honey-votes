@@ -12,7 +12,11 @@ const TwitchNickName = ({ userName, tags }: Props) => {
   const nickName = tags.displayName || userName;
   const badges = Object.entries(tags.badges || {}).map(
     ([name, version]: [string, any]) => (
-      <TwitchBadge name={name} version={version === true ? "1" : version} />
+      <TwitchBadge
+        key={name}
+        name={name}
+        version={version === true ? "1" : version}
+      />
     )
   );
 
