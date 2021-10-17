@@ -182,7 +182,7 @@ const ChatVotesPage = () => {
               title: channel.data?.displayName,
               href: `/${channel.data?.login}`,
             },
-            { title: "Голосование чата" },
+            { title: "Голосование в чате" },
           ]}
         />
       </Box>
