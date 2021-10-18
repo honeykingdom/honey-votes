@@ -3,6 +3,9 @@ import { components } from "./types.generated";
 export type User = components["schemas"]["User"];
 export type UserRoles = components["schemas"]["UserRoles"];
 
+export type RefreshTokenResponse =
+  components["schemas"]["RefreshTokenResponse"];
+
 export type Voting = components["schemas"]["Voting"];
 export type AddVotingDto = components["schemas"]["AddVotingDto"];
 export type UpdateVotingDto = components["schemas"]["UpdateVotingDto"];
@@ -47,4 +50,11 @@ export type Streamer = {
   login: string;
   displayName: string;
   profileImageUrl: string;
+};
+
+export type Jwt = {
+  sub: string;
+  login: string;
+  iat: number;
+  exp: number;
 };
