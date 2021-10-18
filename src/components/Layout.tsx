@@ -22,6 +22,7 @@ import {
   COOKIE_REFRESH_TOKEN,
   LS_REDIRECT_PATH,
 } from "utils/constants";
+import PurpleButton from "./PurpleButton";
 
 const Layout = ({ children }: any) => {
   const me = useMeQuery();
@@ -48,25 +49,16 @@ const Layout = ({ children }: any) => {
   };
 
   const signInButton = (
-    <Button
-      variant="contained"
-      href={AUTH_URL}
-      sx={{ backgroundColor: "#6441a5" }}
-      onClick={handleSignIn}
-    >
+    <PurpleButton variant="contained" href={AUTH_URL} onClick={handleSignIn}>
       <TwitchIcon style={{ width: 16 }} />
       &nbsp; Войти
-    </Button>
+    </PurpleButton>
   );
 
   const signOutButton = (
-    <Button
-      variant="contained"
-      sx={{ backgroundColor: "#6441a5" }}
-      onClick={handleSignOut}
-    >
+    <PurpleButton variant="contained" onClick={handleSignOut}>
       Выйти
-    </Button>
+    </PurpleButton>
   );
 
   const hasUser = me.data && !me.isError;
