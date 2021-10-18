@@ -79,7 +79,7 @@ const ChatVotesPage = () => {
   const router = useRouter();
   const [winners, setWinners] = useState<ChatVote[]>([]);
 
-  const channelName = router.query.channelName as string;
+  const channelName = (router.query.channelName as string)?.toLowerCase();
 
   const channel = useUserQuery({ login: channelName }, { skip: !channelName });
   const me = useMeQuery();
