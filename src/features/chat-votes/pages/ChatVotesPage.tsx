@@ -16,6 +16,8 @@ import {
   Box,
   Divider,
   Link,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import LockIcon from "@mui/icons-material/Lock";
@@ -161,23 +163,21 @@ const ChatVotesPage = () => {
   );
 
   const renderSignInMessage = () => (
-    <>
-      <Typography variant="h5" sx={{ mb: 2 }}>
+    <Alert severity="warning">
+      <AlertTitle>
         Голосование для канала <strong>{channelName}</strong> ещё не создано.
-      </Typography>
-      <Typography variant="body1">
-        Если вы владелец канала <strong>twitch.tv/{channelName}</strong>,
-        пожалуйста,{" "}
-        {me.isSuccess ? (
-          "войдите"
-        ) : (
-          <Link href={AUTH_URL} onClick={handleSignIn}>
-            войдите
-          </Link>
-        )}
-        , чтобы создать голосование.
-      </Typography>
-    </>
+      </AlertTitle>
+      Если вы владелец канала <strong>twitch.tv/{channelName}</strong>,
+      пожалуйста,{" "}
+      {me.isSuccess ? (
+        "войдите"
+      ) : (
+        <Link href={AUTH_URL} onClick={handleSignIn}>
+          войдите
+        </Link>
+      )}
+      , чтобы создать голосование.
+    </Alert>
   );
 
   const renderChatVoting = () => (
