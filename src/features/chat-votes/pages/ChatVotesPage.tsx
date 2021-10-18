@@ -15,12 +15,14 @@ import {
   Tooltip,
   Box,
   Divider,
+  Link,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import getRandomInt from "utils/getRandomInt";
+import { AUTH_URL, LS_REDIRECT_PATH } from "utils/constants";
 import {
   useClearChatVotingMutation,
   useCreateChatVotingMutation,
@@ -33,10 +35,10 @@ import {
 } from "features/api/apiSlice";
 import { ChatVote, ChatVoting, TwitchUserType } from "features/api/types";
 import Breadcrumbs from "components/Breadcrumbs";
-import Restrictions from "../components/Restrictions";
-import { OnChatVotingChange } from "../types";
 import TwitchNickName from "components/TwitchNickName";
 import TwitchChatMessage from "components/TwitchChatMessage";
+import Restrictions from "../components/Restrictions";
+import { OnChatVotingChange } from "../types";
 
 const SUB_MONTHS = [
   { value: 0, title: "Subscriber" },
@@ -136,7 +138,10 @@ const ChatVotesPage = () => {
     handleChatVotingChange({ listening: !chatVoting.data?.listening });
   };
 
-  const isLoading = chatVoting.isLoading || chatVotes.isLoading;
+  const handleSignIn = () => {
+    localStorage.setItem(LS_REDIRECT_PATH, window.location.pathname);
+  };
+
   const isEditFormDisabled =
     createChatVotingResult.isLoading ||
     updateChatVotingResult.isLoading ||
@@ -152,43 +157,28 @@ const ChatVotesPage = () => {
     [chatVotes.data]
   );
 
-  if (!channel.data) return null;
-
-  return (
+  const renderSignInMessage = () => (
     <>
-      <Head>
-        <title>{channel.data?.displayName} - HoneyVotes</title>
-      </Head>
-
-      <Typography variant="h4" component="div" sx={{ mb: 2 }}>
-        Голосование в чате
-        <Tooltip
-          title={
-            <>
-              <code>%текст</code> - проголосовать. <br />
-              <code>!clearvotes</code> - очистить все голоса (только владелец
-              канала и редакторы).
-            </>
-          }
-        >
-          <InfoIcon sx={{ ml: 2 }} />
-        </Tooltip>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Голосование для канала <strong>{channelName}</strong> ещё не создано.
       </Typography>
+      <Typography variant="body1">
+        Если вы владелец канала <strong>twitch.tv/{channelName}</strong>,
+        пожалуйста,{" "}
+        {me.isSuccess ? (
+          "войдите"
+        ) : (
+          <Link href={AUTH_URL} onClick={handleSignIn}>
+            войдите
+          </Link>
+        )}
+        , чтобы создать голосование.
+      </Typography>
+    </>
+  );
 
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumbs
-          items={[
-            {
-              title: channel.data?.displayName,
-              href: `/${channel.data?.login}`,
-            },
-            { title: "Голосование в чате" },
-          ]}
-        />
-      </Box>
-
-      <Divider sx={{ mb: 2 }} />
-
+  const renderChatVoting = () => (
+    <>
       <Typography variant="body2" component="div" sx={{ my: 1 }}>
         {canManage && (
           <Button
@@ -370,6 +360,48 @@ const ChatVotesPage = () => {
           </TableBody>
         </Table>
       </TableContainer>
+    </>
+  );
+
+  return (
+    <>
+      <Head>
+        <title>
+          {channel.data?.displayName || channelName} - Голосование в чате
+        </title>
+      </Head>
+
+      <Typography variant="h4" component="div" sx={{ mb: 2 }}>
+        Голосование в чате
+        <Tooltip
+          title={
+            <>
+              <code>%текст</code> - проголосовать. <br />
+              <code>!clearvotes</code> - очистить все голоса (только владелец
+              канала и редакторы).
+            </>
+          }
+        >
+          <InfoIcon sx={{ ml: 2 }} />
+        </Tooltip>
+      </Typography>
+
+      <Box sx={{ mb: 2 }}>
+        <Breadcrumbs
+          items={[
+            {
+              title: channel.data?.displayName || channelName,
+              href: `/${channel.data?.login || channelName}`,
+            },
+            { title: "Голосование в чате" },
+          ]}
+        />
+      </Box>
+
+      <Divider sx={{ mb: 2 }} />
+
+      {chatVoting.isSuccess && renderChatVoting()}
+      {channel.isError && renderSignInMessage()}
     </>
   );
 };
