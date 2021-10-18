@@ -1,7 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { RealtimeSubscription } from "@supabase/realtime-js";
-import Cookies from "js-cookie";
 import supabase from "utils/supabase";
+import apiQuery from "./apiQuery";
+import {
+  API_BASE,
+  API_BASE_POSTGREST,
+  CHAT_VOTE_TABLE_NAME,
+  CHAT_VOTING_TABLE_NAME,
+  USER_TABLE_NAME,
+  VOTING_OPTION_TABLE_NAME,
+  VOTING_TABLE_NAME,
+} from "./constants";
 import {
   AddChatVotingDto,
   AddVoteDto,
@@ -9,6 +18,7 @@ import {
   AddVotingOptionDto,
   ChatVote,
   ChatVoting,
+  RefreshTokenResponse,
   UpdateChatVotingDto,
   UpdateVotingDto,
   User,
@@ -17,45 +27,22 @@ import {
   VotingOption,
 } from "./types";
 
-const API_BASE = `${process.env.NEXT_PUBLIC_API_DOMAIN_URL}/api/honey-votes`;
-const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1`;
-
-const USER_TABLE_NAME = "hv_user";
-const VOTING_TABLE_NAME = "hv_voting";
-const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
-const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
-const CHAT_VOTE_TABLE_NAME = "hv_chat_vote";
-
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
-const SUPABASE_HEADERS = {
-  apikey: SUPABASE_KEY,
-  Authorization: `Bearer ${SUPABASE_KEY}`,
-};
-
-const COOKIE_ACCESS_TOKEN = "accessToken";
-
-const getHeaders = () => {
-  return { Authorization: `Bearer ${Cookies.get(COOKIE_ACCESS_TOKEN)}` };
-};
-
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "" }),
+  baseQuery: apiQuery,
   tagTypes: ["ChatVoting"],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
         url: `${API_BASE}/users/me`,
-        headers: getHeaders(),
       }),
     }),
     meRoles: builder.query<UserRoles, LoginOrId>({
       query: (params) => ({
         url: `${API_BASE}/users/me/roles`,
         params,
-        headers: getHeaders(),
       }),
     }),
     user: builder.query<User, LoginOrId>({
@@ -65,23 +52,28 @@ export const api = createApi({
           login: arg.login ? `eq.${arg.login}` : undefined,
           id: arg.id ? `eq.${arg.id}` : undefined,
         },
-        headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
     }),
 
-    getVotingList: builder.query<Voting[], string>({
+    refreshToken: builder.mutation<RefreshTokenResponse, string>({
+      query: (refreshToken) => ({
+        url: `${API_BASE}/auth/refresh-token`,
+        method: "POST",
+        body: { refreshToken },
+      }),
+    }),
+
+    votingList: builder.query<Voting[], string>({
       query: (channelId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
         params: { broadcasterId: `eq.${channelId}` },
-        headers: SUPABASE_HEADERS,
       }),
     }),
     voting: builder.query<Voting, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
         params: { id: `eq.${votingId}` },
-        headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
     }),
@@ -89,7 +81,6 @@ export const api = createApi({
       query: (body) => ({
         url: `${API_BASE}/voting`,
         method: "POST",
-        headers: getHeaders(),
         body,
       }),
     }),
@@ -100,7 +91,6 @@ export const api = createApi({
       query: ({ votingId, body }) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: "PUT",
-        headers: getHeaders(),
         body,
       }),
     }),
@@ -108,7 +98,6 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: "DELETE",
-        headers: getHeaders(),
       }),
     }),
 
@@ -116,14 +105,12 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}`,
         params: { votingId: `eq.${votingId}` },
-        headers: SUPABASE_HEADERS,
       }),
     }),
     createVotingOption: builder.mutation<VotingOption, AddVotingOptionDto>({
       query: (body) => ({
         url: `${API_BASE}/voting-options`,
         method: "POST",
-        headers: getHeaders(),
         body,
       }),
     }),
@@ -131,7 +118,6 @@ export const api = createApi({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: "DELETE",
-        headers: getHeaders(),
       }),
     }),
 
@@ -139,7 +125,6 @@ export const api = createApi({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
         method: "POST",
-        headers: getHeaders(),
         body: { votingOptionId } as AddVoteDto,
       }),
     }),
@@ -147,7 +132,6 @@ export const api = createApi({
       query: (voteId) => ({
         url: `${API_BASE}/votes/${voteId}`,
         method: "DELETE",
-        headers: getHeaders(),
       }),
     }),
 
@@ -155,7 +139,6 @@ export const api = createApi({
       query: (broadcasterId) => ({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}`,
         params: { broadcasterId: `eq.${broadcasterId}` },
-        headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
       providesTags: (result, error, arg) => [{ type: "ChatVoting", id: arg }],
@@ -164,7 +147,6 @@ export const api = createApi({
       query: (body) => ({
         url: `${API_BASE}/chat-votes`,
         method: "POST",
-        headers: getHeaders(),
         body,
       }),
       invalidatesTags: (result) => [
@@ -178,7 +160,6 @@ export const api = createApi({
       query: ({ chatVotingId, body }) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}`,
         method: "PUT",
-        headers: getHeaders(),
         body,
       }),
       invalidatesTags: (result) => [
@@ -189,7 +170,6 @@ export const api = createApi({
       query: (chatVotingId) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}`,
         method: "DELETE",
-        headers: getHeaders(),
       }),
       invalidatesTags: (result, error, arg) => [
         { type: "ChatVoting", id: arg },
@@ -199,15 +179,13 @@ export const api = createApi({
       query: (chatVotingId) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}/clear`,
         method: "POST",
-        headers: getHeaders(),
       }),
     }),
 
-    getChatVotes: builder.query<ChatVote[], string>({
+    chatVotes: builder.query<ChatVote[], string>({
       query: (chatVotingId) => ({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}`,
         params: { chatVotingId: `eq.${chatVotingId}` },
-        headers: SUPABASE_HEADERS,
       }),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
       onCacheEntryAdded: async (
@@ -258,7 +236,9 @@ export const {
   useMeRolesQuery,
   useUserQuery,
 
-  useGetVotingListQuery,
+  useRefreshTokenMutation,
+
+  useVotingListQuery,
   useVotingQuery,
   useCreateVotingMutation,
   useUpdateVotingMutation,
@@ -276,5 +256,5 @@ export const {
   useDeleteChatVotingMutation,
   useClearChatVotingMutation,
 
-  useGetChatVotesQuery,
+  useChatVotesQuery,
 } = api;
