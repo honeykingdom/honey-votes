@@ -20,6 +20,7 @@ import {
 const API_BASE = `${process.env.NEXT_PUBLIC_API_DOMAIN_URL}/api/honey-votes`;
 const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1`;
 
+const USER_TABLE_NAME = "hv_user";
 const VOTING_TABLE_NAME = "hv_voting";
 const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
 const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
@@ -37,6 +38,8 @@ const getHeaders = () => {
   return { Authorization: `Bearer ${Cookies.get(COOKIE_ACCESS_TOKEN)}` };
 };
 
+type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "" }),
@@ -48,25 +51,29 @@ export const api = createApi({
         headers: getHeaders(),
       }),
     }),
-    meRoles: builder.query<UserRoles, string>({
-      query: (channelId) => ({
-        url: `${API_BASE}/users/me/${channelId}`,
+    meRoles: builder.query<UserRoles, LoginOrId>({
+      query: (params) => ({
+        url: `${API_BASE}/users/me/roles`,
+        params,
         headers: getHeaders(),
       }),
     }),
-    user: builder.query<
-      User,
-      { login: string; id?: never } | { login?: never; id: string }
-    >({
+    user: builder.query<User, LoginOrId>({
       query: (arg) => ({
-        url: `${API_BASE}/users`,
-        params: { login: arg.login, id: arg.id },
+        url: `${API_BASE_POSTGREST}/${USER_TABLE_NAME}`,
+        params: {
+          login: arg.login ? `eq.${arg.login}` : undefined,
+          id: arg.id ? `eq.${arg.id}` : undefined,
+        },
+        headers: SUPABASE_HEADERS,
       }),
+      transformResponse: (response) => response[0],
     }),
 
     getVotingList: builder.query<Voting[], string>({
       query: (channelId) => ({
-        url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}?broadcasterId=eq.${channelId}`,
+        url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
+        params: { broadcasterId: `eq.${channelId}` },
         headers: SUPABASE_HEADERS,
       }),
     }),
@@ -106,7 +113,8 @@ export const api = createApi({
 
     votingOptions: builder.query<VotingOption[], number>({
       query: (votingId) => ({
-        url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}`,
+        url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}`,
+        params: { votingId: `eq.${votingId}` },
         headers: SUPABASE_HEADERS,
       }),
     }),
@@ -144,7 +152,8 @@ export const api = createApi({
 
     chatVoting: builder.query<ChatVoting, string>({
       query: (broadcasterId) => ({
-        url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}?broadcasterId=eq.${broadcasterId}`,
+        url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}`,
+        params: { broadcasterId: `eq.${broadcasterId}` },
         headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
@@ -195,7 +204,8 @@ export const api = createApi({
 
     getChatVotes: builder.query<ChatVote[], string>({
       query: (chatVotingId) => ({
-        url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}?chatVotingId=eq.${chatVotingId}`,
+        url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}`,
+        params: { chatVotingId: `eq.${chatVotingId}` },
         headers: SUPABASE_HEADERS,
       }),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
