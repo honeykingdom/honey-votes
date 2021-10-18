@@ -26,7 +26,7 @@ import { AUTH_URL, LS_REDIRECT_PATH } from "utils/constants";
 import {
   useClearChatVotingMutation,
   useCreateChatVotingMutation,
-  useGetChatVotesQuery,
+  useChatVotesQuery,
   useChatVotingQuery,
   useMeQuery,
   useMeRolesQuery,
@@ -90,7 +90,7 @@ const ChatVotesPage = () => {
   const chatVoting = useChatVotingQuery(channel.data?.id, {
     skip: !channel.data,
   });
-  const chatVotes = useGetChatVotesQuery(channel.data?.id, {
+  const chatVotes = useChatVotesQuery(channel.data?.id, {
     skip: !channel.data,
   });
 
