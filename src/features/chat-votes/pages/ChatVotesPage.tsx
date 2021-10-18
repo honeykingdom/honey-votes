@@ -83,12 +83,15 @@ const ChatVotesPage = () => {
 
   const channel = useUserQuery({ login: channelName }, { skip: !channelName });
   const me = useMeQuery();
-  const meRoles = useMeRolesQuery(channel.data?.id, { skip: !channel.data });
+  const meRoles = useMeRolesQuery(
+    { login: channelName },
+    { skip: !channelName }
+  );
   const chatVoting = useChatVotingQuery(channel.data?.id, {
     skip: !channel.data,
   });
-  const chatVotes = useGetChatVotesQuery(chatVoting.data?.broadcasterId, {
-    skip: !chatVoting.data,
+  const chatVotes = useGetChatVotesQuery(channel.data?.id, {
+    skip: !channel.data,
   });
 
   const [createChatVoting, createChatVotingResult] =
