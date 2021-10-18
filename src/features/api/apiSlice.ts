@@ -79,7 +79,8 @@ export const api = createApi({
     }),
     voting: builder.query<Voting, number>({
       query: (votingId) => ({
-        url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}?id=eq.${votingId}`,
+        url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
+        params: { id: `eq.${votingId}` },
         headers: SUPABASE_HEADERS,
       }),
       transformResponse: (response) => response[0],
