@@ -394,7 +394,7 @@ const ChatVotesPage = () => {
           items={[
             {
               title: channel.data?.displayName || channelName,
-              href: `/${channel.data?.login || channelName}`,
+              // href: `/${channel.data?.login || channelName}`,
             },
             { title: "Голосование в чате" },
           ]}
