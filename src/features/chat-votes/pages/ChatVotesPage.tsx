@@ -404,7 +404,7 @@ const ChatVotesPage = () => {
       <Divider sx={{ mb: 2 }} />
 
       {chatVoting.isSuccess && renderChatVoting()}
-      {channel.isError && renderSignInMessage()}
+      {channel.isSuccess && !channel.data && renderSignInMessage()}
     </>
   );
 };
