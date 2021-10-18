@@ -58,10 +58,10 @@ export const api = createApi({
       User,
       { login: string; id?: never } | { login?: never; id: string }
     >({
-      query: (arg) =>
-        arg.login
-          ? `${API_BASE}/users?login=${arg.login}`
-          : `${API_BASE}/users?id=${arg.id}`,
+      query: (arg) => ({
+        url: `${API_BASE}/users`,
+        params: { login: arg.login, id: arg.id },
+      }),
     }),
 
     getVotingList: builder.query<Voting[], string>({
