@@ -12,7 +12,7 @@ import { COOKIE_ACCESS_TOKEN } from "utils/constants";
 import { API_BASE, API_BASE_POSTGREST } from "./constants";
 import { Jwt, RefreshTokenResponse } from "./types";
 
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY;
 const SUPABASE_HEADERS = {
   apikey: SUPABASE_KEY,
   Authorization: `Bearer ${SUPABASE_KEY}`,
