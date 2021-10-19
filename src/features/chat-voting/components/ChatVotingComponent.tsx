@@ -117,9 +117,14 @@ const ChatVotingComponent = () => {
   };
 
   const createTournament = () => {
+    const voteCommandLength = chatVoting.data?.commands.vote.length || 0;
+    const movies = winners
+      .map((v) => v.content.slice(voteCommandLength))
+      .join(";");
+
     router.push({
       pathname: "/tournament",
-      query: { movies: winners.map(R.prop("content")).join(";") },
+      query: { movies },
     });
   };
 
