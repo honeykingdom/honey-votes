@@ -1,4 +1,4 @@
-export const API_BASE = `${process.env.NEXT_PUBLIC_API_DOMAIN_URL}/api/honey-votes`;
+export const API_BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/honey-votes`;
 export const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_HOST}/rest/v1`;
 
 export const USER_TABLE_NAME = "hv_user";
