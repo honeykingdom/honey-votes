@@ -6,9 +6,9 @@ import {
   FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react";
 import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
-import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
-import { COOKIE_ACCESS_TOKEN } from "utils/constants";
+import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from "utils/constants";
+import storeTokens from "utils/storeTokens";
 import { API_BASE, API_BASE_POSTGREST } from "./constants";
 import { Jwt, RefreshTokenResponse } from "./types";
 
@@ -21,19 +21,14 @@ const SUPABASE_HEADERS = {
 const baseQuery = fetchBaseQuery({ baseUrl: "" });
 
 const getApiHeaders = () => ({
-  Authorization: `Bearer ${Cookies.get(COOKIE_ACCESS_TOKEN)}`,
+  Authorization: `Bearer ${localStorage.getItem(LS_ACCESS_TOKEN)}`,
 });
 
 const getRefreshTokenQuery = () => ({
   url: `${API_BASE}/auth/refresh-token`,
   method: "POST",
-  body: { refreshToken: Cookies.get("refreshToken") },
+  body: { refreshToken: localStorage.getItem(LS_REFRESH_TOKEN) },
 });
-
-const storeTokens = ({ accessToken, refreshToken }) => {
-  Cookies.set("accessToken", accessToken);
-  Cookies.set("refreshToken", refreshToken);
-};
 
 const addHeadersToFetchArgs = (
   args: string | FetchArgs,
@@ -57,7 +52,9 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
         : args.url.startsWith(API_BASE);
 
     if (isApiUrl) {
-      const accessTokenJwt = jwtDecode<Jwt>(Cookies.get("accessToken"));
+      const accessTokenJwt = jwtDecode<Jwt>(
+        localStorage.getItem(LS_ACCESS_TOKEN)
+      );
       const isAccessTokenExpired = accessTokenJwt.exp * 1000 < Date.now();
 
       if (isAccessTokenExpired) {
@@ -67,7 +64,11 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
           extraOptions
         )) as RefreshTokenQueryReturnValue;
 
-        if (refreshTokenResponse.data) storeTokens(refreshTokenResponse.data);
+        if (refreshTokenResponse.data) {
+          const { accessToken, refreshToken } = refreshTokenResponse.data;
+
+          storeTokens(accessToken, refreshToken);
+        }
       }
 
       const newArgs = addHeadersToFetchArgs(args, getApiHeaders());
@@ -81,7 +82,9 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
         )) as RefreshTokenQueryReturnValue;
 
         if (refreshTokenResponse.data) {
-          storeTokens(refreshTokenResponse.data);
+          const { accessToken, refreshToken } = refreshTokenResponse.data;
+
+          storeTokens(accessToken, refreshToken);
 
           const newArgs = addHeadersToFetchArgs(args, getApiHeaders());
 

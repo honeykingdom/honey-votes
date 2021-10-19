@@ -15,6 +15,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import PersonIcon from "@mui/icons-material/Person";
 import { useMeQuery } from "features/api/apiSlice";
 import { LS_REDIRECT_PATH } from "utils/constants";
+import storeTokens from "utils/storeTokens";
 import AccountMenu from "./AccountMenu";
 
 const Layout = ({ children }: any) => {
@@ -23,6 +24,17 @@ const Layout = ({ children }: any) => {
 
   useEffect(() => {
     const redirectPath = localStorage.getItem(LS_REDIRECT_PATH);
+
+    if (window.location.hash.startsWith("#accessToken=")) {
+      const [accessToken, refreshToken] = window.location.hash
+        .slice(1)
+        .split("&")
+        .map((s) => s.split("=")[1]);
+
+      storeTokens(accessToken, refreshToken);
+
+      window.location.hash = "";
+    }
 
     if (redirectPath) {
       localStorage.removeItem(LS_REDIRECT_PATH);

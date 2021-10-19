@@ -1,7 +1,6 @@
 // https://mui.com/components/menus/#account-menu
 import { useState } from "react";
 import Link from "next/link";
-import Cookies from "js-cookie";
 import {
   Avatar,
   Button,
@@ -17,8 +16,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useMeQuery } from "features/api/apiSlice";
 import {
   AUTH_URL,
-  COOKIE_ACCESS_TOKEN,
-  COOKIE_REFRESH_TOKEN,
+  LS_ACCESS_TOKEN,
+  LS_REFRESH_TOKEN,
   LS_REDIRECT_PATH,
 } from "utils/constants";
 import TwitchIcon from "icons/twitch.svg";
@@ -38,8 +37,8 @@ const AccountMenu = () => {
   };
 
   const handleSignOut = () => {
-    Cookies.remove(COOKIE_ACCESS_TOKEN);
-    Cookies.remove(COOKIE_REFRESH_TOKEN);
+    localStorage.removeItem(LS_ACCESS_TOKEN);
+    localStorage.removeItem(LS_REFRESH_TOKEN);
     // TODO: set empty data instead of refetching
     me.refetch();
   };
