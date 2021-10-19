@@ -11,43 +11,18 @@ on:
 
 jobs:
   deploy:
-    name: Publish to Netlify
+    name: Publish to Vercel
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Use Node 14
-        uses: actions/setup-node@v1
+      - name: Publish
+        uses: amondnet/vercel-action@v20
         with:
-          node-version: 14.x
-
-      - name: Install dependencies (with cache)
-        uses: bahmutov/npm-install@v1
-
-      # - name: Test
-      #   run: yarn test --ci --coverage --maxWorkers=2
-
-      - name: Build
-        run: yarn build && yarn export
-        env:
-          TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
-          TWITCH_TOKEN: ${{ secrets.TWITCH_TOKEN }}
-          NEXT_PUBLIC_CHANNELS: ${{ secrets.CHANNELS }}
-          NEXT_PUBLIC_SUPABASE_HOST: ${{ secrets.SUPABASE_HOST }}
-          NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: ${{ secrets.SUPABASE_PUBLIC_ANON_KEY }}
-          NEXT_PUBLIC_TOURNAMENT_WINNER_SOUND_URL: ${{ secrets.TOURNAMENT_WINNER_SOUND_URL }}
-
-      - name: Copy _redirects file
-        run: cp "./_redirects" "./out/_redirects"
-
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v1.1
-        with:
-          publish-dir: './out'
-          production-deploy: true
-          enable-commit-comment: false
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 1
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-args: '--prod'
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-comment: false
