@@ -33,5 +33,15 @@ yarn-error.log*
 # vercel
 .vercel
 
+# netlify
+.netlify
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
 public/sw.js*
 public/workbox-*.js*
