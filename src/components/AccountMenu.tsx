@@ -125,7 +125,7 @@ const AccountMenu = () => {
           </MenuItem>
         </Link> */}
 
-        <Link href={`/${me.data.login}/chat-votes`} passHref>
+        <Link href={`/${me.data.login}/chat-voting`} passHref>
           <MenuItem component="a">
             <ListItemIcon>
               <PollIcon fontSize="small" />

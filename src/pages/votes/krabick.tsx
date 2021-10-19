@@ -5,7 +5,7 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/krabick/chat-votes");
+    router.push("/krabick/chat-voting");
   }, []);
 
   return null;
