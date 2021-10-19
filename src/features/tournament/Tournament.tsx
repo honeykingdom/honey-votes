@@ -17,12 +17,15 @@ import MovieCard from "./MovieCard";
 import useTournament from "./useTournament";
 import { Step, StepType } from "./types";
 
-const beginSfx = "/assets/begin.opus";
-const wheelSfx = "/assets/wheel.opus";
-const noNoNoSfx = "/assets/nonono.opus";
-const ohMySfx = "/assets/oh-my.opus";
-const threeHundredSfx = "/assets/three-hundred.opus";
-const viewersChoiceSfx = "/assets/viewers-choice.opus";
+const TOURNAMENT_ASSETS_URL = process.env.NEXT_PUBLIC_TOURNAMENT_ASSETS_URL;
+
+const beginSfx = `${TOURNAMENT_ASSETS_URL}/begin.opus`;
+const wheelSfx = `${TOURNAMENT_ASSETS_URL}/wheel.opus`;
+const noNoNoSfx = `${TOURNAMENT_ASSETS_URL}/nonono.opus`;
+const ohMySfx = `${TOURNAMENT_ASSETS_URL}/oh-my.opus`;
+const threeHundredSfx = `${TOURNAMENT_ASSETS_URL}/three-hundred.opus`;
+const viewersChoiceSfx = `${TOURNAMENT_ASSETS_URL}/viewers-choice.opus`;
+const winnerSfx = `${TOURNAMENT_ASSETS_URL}/winner.opus`;
 
 type StepText = {
   title: string;
@@ -303,11 +306,7 @@ const Tournament = ({ initialMovies }: Props) => {
       <Typography variant="h3" component="span" textAlign="center">
         {step.movies[0].title}
       </Typography>
-      <audio
-        src={process.env.NEXT_PUBLIC_TOURNAMENT_WINNER_SOUND_URL}
-        autoPlay
-        ref={audioRef}
-      />
+      <audio src={winnerSfx} autoPlay ref={audioRef} />
       <Confetti
         width={windowSize.width}
         height={windowSize.height}
