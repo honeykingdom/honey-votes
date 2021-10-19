@@ -13,7 +13,7 @@ export interface paths {
   "/api/honey-votes/users/me": {
     get: operations["UsersController_me"];
   };
-  "/api/honey-votes/users/me/{channelId}": {
+  "/api/honey-votes/users/me/roles": {
     get: operations["UsersController_getUserRoles"];
   };
   "/api/honey-votes/voting": {
@@ -68,14 +68,14 @@ export interface components {
       updatedAt: string;
     };
     UserRoles: {
-      isEditor: boolean;
-      isMod: boolean;
-      isVip: boolean;
-      isSubTier1: boolean;
-      isSubTier2: boolean;
-      isSubTier3: boolean;
-      isFollower: boolean;
-      minutesFollowed: number;
+      isEditor: boolean | null;
+      isMod: boolean | null;
+      isVip: boolean | null;
+      isSubTier1: boolean | null;
+      isSubTier2: boolean | null;
+      isSubTier3: boolean | null;
+      isFollower: boolean | null;
+      minutesFollowed: number | null;
     };
     UserTypeParams: {
       canVote: boolean;
@@ -261,8 +261,9 @@ export interface operations {
   };
   UsersController_getUserRoles: {
     parameters: {
-      path: {
-        channelId: string;
+      query: {
+        login?: string;
+        id?: string;
       };
     };
     responses: {
@@ -272,6 +273,8 @@ export interface operations {
           "application/json": components["schemas"]["UserRoles"];
         };
       };
+      /** Bad request */
+      400: unknown;
       /** Unauthorized */
       401: unknown;
       /** Not found */
