@@ -3,8 +3,8 @@ import { Typography, Box, Divider } from "@mui/material";
 import Layout from "components/Layout";
 import Breadcrumbs from "components/Breadcrumbs";
 import { useUserQuery } from "features/api/apiSlice";
-import ChatVotingComponent from "features/chat-votes/components/ChatVotingComponent";
-import SignInWarning from "features/chat-votes/components/SignInWarning";
+import ChatVotingComponent from "features/chat-voting/components/ChatVotingComponent";
+import SignInWarning from "features/chat-voting/components/SignInWarning";
 import useChannelLogin from "hooks/useChannelLogin";
 
 const ChatVotesPage = () => {
