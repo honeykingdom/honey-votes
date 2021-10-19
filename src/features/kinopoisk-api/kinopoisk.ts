@@ -1,4 +1,4 @@
-import searchByKeywordResponse from "features/tournament/searchByKeyword.mock.json";
+// import searchByKeywordResponse from "features/tournament/searchByKeyword.mock.json";
 
 const sleep = (duration: number) =>
   new Promise((resolve) => setTimeout(resolve, duration));
