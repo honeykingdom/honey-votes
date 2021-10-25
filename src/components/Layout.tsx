@@ -64,9 +64,9 @@ const Layout = ({ children }: any) => {
 
           {hasUser && (
             <>
-              {/* <Link href={`/${me.data.login}/voting/`} passHref>
+              <Link href={`/${me.data.login}/voting`} passHref>
                 <Button color="inherit">Голосование</Button>
-              </Link> */}
+              </Link>
               <Link href={`/${me.data.login}/chat-voting`} passHref>
                 <Button color="inherit">Голосование в чате</Button>
               </Link>
