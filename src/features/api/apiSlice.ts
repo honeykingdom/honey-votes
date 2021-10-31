@@ -1,3 +1,4 @@
+import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { RealtimeSubscription } from "@supabase/realtime-js";
 import supabase from "utils/supabase";
@@ -18,7 +19,6 @@ import {
   AddVotingOptionDto,
   ChatVote,
   ChatVoting,
-  RefreshTokenResponse,
   UpdateChatVotingDto,
   UpdateVotingDto,
   User,
@@ -28,6 +28,21 @@ import {
 } from "./types";
 
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
+
+// https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#normalizing-data-with-createentityadapter
+const votingOptionsAdapter = createEntityAdapter<VotingOption>({
+  sortComparer: (a, b) => a.fullVotesValue - b.fullVotesValue,
+});
+
+export const votingOptionsSelectors = votingOptionsAdapter.getSelectors();
+
+const chatVotesAdapter = createEntityAdapter<ChatVote>({
+  selectId: (chatVote) => chatVote.userId,
+  sortComparer: (a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+});
+
+export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 
 export const api = createApi({
   reducerPath: "api",
@@ -101,11 +116,54 @@ export const api = createApi({
       }),
     }),
 
-    votingOptions: builder.query<VotingOption[], number>({
+    votingOptions: builder.query<EntityState<VotingOption>, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}`,
         params: { votingId: `eq.${votingId}` },
       }),
+      transformResponse: (response: VotingOption[]) =>
+        votingOptionsAdapter.addMany(
+          votingOptionsAdapter.getInitialState(),
+          response
+        ),
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<VotingOption>(
+              `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`
+            )
+            .on("*", (payload) =>
+              updateCachedData((draft) => {
+                if (payload.eventType === "INSERT") {
+                  votingOptionsAdapter.addOne(draft, payload.new);
+                }
+
+                if (payload.eventType === "UPDATE") {
+                  votingOptionsAdapter.updateOne(draft, {
+                    id: payload.new.id,
+                    changes: payload.new,
+                  });
+                }
+
+                if (payload.eventType === "DELETE") {
+                  votingOptionsAdapter.removeOne(draft, payload.old.id);
+                }
+              })
+            )
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVotingOption: builder.mutation<VotingOption, AddVotingOptionDto>({
       query: (body) => ({
@@ -182,11 +240,13 @@ export const api = createApi({
       }),
     }),
 
-    chatVotes: builder.query<ChatVote[], string>({
+    chatVotes: builder.query<EntityState<ChatVote>, string>({
       query: (chatVotingId) => ({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}`,
         params: { chatVotingId: `eq.${chatVotingId}` },
       }),
+      transformResponse: (response: ChatVote[]) =>
+        chatVotesAdapter.addMany(chatVotesAdapter.getInitialState(), response),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
       onCacheEntryAdded: async (
         arg,
@@ -199,27 +259,24 @@ export const api = createApi({
 
           subscription = supabase
             .from<ChatVote>(`${CHAT_VOTE_TABLE_NAME}:chatVotingId=eq.${arg}`)
-            .on("*", (payload) => {
+            .on("*", (payload) =>
               updateCachedData((draft) => {
                 if (payload.eventType === "INSERT") {
-                  draft.push(payload.new);
+                  chatVotesAdapter.addOne(draft, payload.new);
                 }
 
                 if (payload.eventType === "UPDATE") {
-                  const index = draft.findIndex(
-                    (chatVote) => chatVote.userId === payload.new.userId
-                  );
-                  draft.splice(index, 1, payload.new);
+                  chatVotesAdapter.updateOne(draft, {
+                    id: payload.new.userId,
+                    changes: payload.new,
+                  });
                 }
 
                 if (payload.eventType === "DELETE") {
-                  const index = draft.findIndex(
-                    (chatVote) => chatVote.userId === payload.old.userId
-                  );
-                  draft.splice(index, 1);
+                  chatVotesAdapter.removeOne(draft, payload.old.userId);
                 }
-              });
-            })
+              })
+            )
             .subscribe();
         } catch {}
 
