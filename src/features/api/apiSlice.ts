@@ -71,14 +71,6 @@ export const api = createApi({
       transformResponse: (response) => response[0],
     }),
 
-    refreshToken: builder.mutation<RefreshTokenResponse, string>({
-      query: (refreshToken) => ({
-        url: `${API_BASE}/auth/refresh-token`,
-        method: "POST",
-        body: { refreshToken },
-      }),
-    }),
-
     votingList: builder.query<Voting[], string>({
       query: (channelId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
@@ -304,12 +296,11 @@ export const {
   useMeRolesQuery,
   useUserQuery,
 
-  useRefreshTokenMutation,
-
   useVotingListQuery,
   useVotingQuery,
   useCreateVotingMutation,
   useUpdateVotingMutation,
+  useDeleteVotingMutation,
 
   useVotingOptionsQuery,
   useCreateVotingOptionMutation,
