@@ -29,6 +29,7 @@ import {
   useMeRolesQuery,
   useUpdateChatVotingMutation,
   useUserQuery,
+  chatVotesSelectors,
 } from "features/api/apiSlice";
 import TwitchNickName from "components/TwitchNickName";
 import TwitchChatMessage from "components/TwitchChatMessage";
@@ -94,15 +95,18 @@ const ChatVotingComponent = () => {
     useUpdateChatVotingMutation();
   const [clearChatVoting, clearChatVotingResult] = useClearChatVotingMutation();
 
+  if (chatVoting.isUninitialized || chatVoting.isLoading) return null;
+
   const getWinner = () => {
-    if (winners.length === chatVotes.data.length) return;
+    if (winners.length === chatVotes.data.ids.length) return;
 
     let randomIndex: number;
 
     while (true) {
-      randomIndex = getRandomInt(0, chatVotes.data.length);
+      randomIndex = getRandomInt(0, chatVotes.data.ids.length);
 
-      const userVote = chatVotes.data[randomIndex];
+      const randomId = chatVotes.data.ids[randomIndex];
+      const userVote = chatVotes.data.entities[randomId];
 
       if (!winners.some((w) => w.userName === userVote.userName)) {
         setWinners((prev) => [...prev, { ...userVote }]);
@@ -143,25 +147,17 @@ const ChatVotingComponent = () => {
   const isEditFormDisabled =
     createChatVotingResult.isLoading ||
     updateChatVotingResult.isLoading ||
-    clearChatVotingResult.isLoading;
+    clearChatVotingResult.isLoading ||
+    chatVoting.isFetching;
 
   const canManage =
     !me.isError &&
     !meRoles.isError &&
     (me.data?.id === channel.data?.id || meRoles.data?.isEditor);
 
-  const renderedChatVotes = useMemo(
-    () => R.sort(R.descend(R.prop("updatedAt")), chatVotes.data || []),
-    [chatVotes.data]
-  );
-
-  if (
-    chatVoting.isUninitialized ||
-    chatVoting.isLoading ||
-    (chatVoting.isSuccess && !chatVoting.data)
-  ) {
-    return null;
-  }
+  const renderedChatVotes = chatVotes.data
+    ? chatVotesSelectors.selectAll(chatVotes.data)
+    : [];
 
   return (
     <Box>
@@ -195,10 +191,11 @@ const ChatVotingComponent = () => {
         </Box>
 
         <Typography variant="inherit" color="text.secondary">
-          <code>{chatVoting.data?.commands.vote}текст</code> – проголосовать
+          <code>{chatVoting.data?.commands.vote || "%"}текст</code> –
+          проголосовать
           <br />
-          <code>{chatVoting.data?.commands.clearVotes}</code> – очистить все
-          голоса{" "}
+          <code>{chatVoting.data?.commands.clearVotes || "!clearvotes"}</code> –
+          очистить все голоса{" "}
           <Tooltip title="Только владелец канала и редакторы">
             <InfoIcon sx={{ verticalAlign: "middle", fontSize: "1rem" }} />
           </Tooltip>
@@ -213,7 +210,7 @@ const ChatVotingComponent = () => {
         <Button
           variant="contained"
           sx={{ mr: 2 }}
-          disabled={!chatVotes.data || !chatVotes.data.length}
+          disabled={!chatVotes.data || !chatVotes.data?.ids.length}
           onClick={getWinner}
         >
           Выбрать победителя
@@ -272,7 +269,7 @@ const ChatVotingComponent = () => {
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="inherit" sx={{ mr: 1 }}>
-            Все голоса ({renderedChatVotes.length}){" "}
+            Все голоса ({chatVotes.data?.ids.length || 0}){" "}
           </Typography>
           <Tooltip
             title={
@@ -294,7 +291,7 @@ const ChatVotingComponent = () => {
               variant="text"
               size="small"
               startIcon={<ClearAllIcon />}
-              disabled={isEditFormDisabled || !renderedChatVotes.length}
+              disabled={isEditFormDisabled || !chatVotes.data?.ids.length}
               onClick={() => setIsClearVotesDialogOpen(true)}
             >
               Очистить голоса
