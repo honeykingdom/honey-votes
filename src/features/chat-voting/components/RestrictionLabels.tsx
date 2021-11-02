@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import TwitchBadge from "components/TwitchBadge";
-import { ChatVoting } from "features/api/types";
+import { ChatVoting, SubTier } from "features/api/types";
 import { Box } from "@mui/material";
 
 type Props = {
@@ -8,29 +8,21 @@ type Props = {
 };
 
 const RestrictionLabels = ({
-  restrictions: {
-    mod,
-    vip,
-    subTier1,
-    subTier2,
-    subTier3,
-    viewer,
-    subMonthsRequired,
-  },
+  restrictions: { mod, vip, sub, viewer, subMonthsRequired, subTierRequired },
 }: Props) => {
   const badges: { title: string; name: string }[] = [];
 
   if (mod) badges.push({ title: "Модеры", name: "moderator" });
   if (vip) badges.push({ title: "Випы", name: "vip" });
 
-  if (subTier1 || subTier2 || subTier3) {
+  if (sub) {
     let title: string;
 
-    if (subTier1) {
+    if (subTierRequired === SubTier.Tier1) {
       title = "Сабы";
-    } else if (subTier2) {
+    } else if (subTierRequired === SubTier.Tier2) {
       title = "Сабы (Уровень 2+)";
-    } else if (subTier3) {
+    } else if (subTierRequired === SubTier.Tier3) {
       title = "Сабы (Уровень 3)";
     }
 
@@ -39,7 +31,7 @@ const RestrictionLabels = ({
     badges.push({ title, name: "subscriber" });
   }
 
-  if (viewer) badges.push({ title: "Зрители", name: "glitchcon2020" });
+  if (viewer) badges.push({ title: "Зрители", name: "glhf-pledge" });
 
   return (
     <Box component="span">
