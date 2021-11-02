@@ -74,7 +74,7 @@ export const api = createApi({
     votingList: builder.query<Voting[], string>({
       query: (channelId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
-        params: { broadcasterId: `eq.${channelId}` },
+        params: { broadcasterId: `eq.${channelId}`, order: "createdAt.desc" },
       }),
       providesTags: [{ type: "Voting", id: "LIST" }],
     }),
