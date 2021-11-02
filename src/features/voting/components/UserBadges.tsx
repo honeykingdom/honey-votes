@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import TwitchBadge from "components/TwitchBadge";
 import { SubTier, Voting } from "features/api/types";
+import { FollowedTime } from "../votingConstants";
 
 type Mode = "canVote" | "canAddOptions";
 
@@ -18,13 +19,13 @@ const MINUTES_FOLLOWED: Record<
 };
 
 const FOLLOWED_TIME_VALUES = {
-  [10]: "от 10 минут",
-  [30]: "от 30 минут",
-  [60]: "от 1 часа",
-  [60 * 24]: "от 1 дня",
-  [60 * 24 * 7]: "от 1 недели",
-  [60 * 24 * 30]: "от 1 месяца",
-  [60 * 24 * 30 * 3]: "от 3 месяцев",
+  [FollowedTime.TenMinutes]: "от 10 минут",
+  [FollowedTime.ThirtyMinutes]: "от 30 минут",
+  [FollowedTime.OneHour]: "от 1 часа",
+  [FollowedTime.OneDay]: "от 1 дня",
+  [FollowedTime.OneWeek]: "от 1 недели",
+  [FollowedTime.OneMonth]: "от 1 месяца",
+  [FollowedTime.ThreeMonths]: "от 3 месяцев",
 };
 
 type Props = {
