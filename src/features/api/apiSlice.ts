@@ -11,7 +11,7 @@ import {
   USER_TABLE_NAME,
   VOTING_OPTION_TABLE_NAME,
   VOTING_TABLE_NAME,
-} from "./constants";
+} from "./apiConstants";
 import {
   AddChatVotingDto,
   AddVoteDto,

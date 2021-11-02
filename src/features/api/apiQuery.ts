@@ -9,7 +9,7 @@ import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 import jwtDecode from "jwt-decode";
 import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from "utils/constants";
 import storeTokens from "utils/storeTokens";
-import { API_BASE, API_BASE_POSTGREST } from "./constants";
+import { API_BASE, API_BASE_POSTGREST } from "./apiConstants";
 import { Jwt, RefreshTokenResponse } from "./types";
 
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY;
