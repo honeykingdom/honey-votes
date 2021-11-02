@@ -1,8 +1,7 @@
 import * as R from "ramda";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Button } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, Button } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -10,12 +9,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import {
   useDeleteVotingMutation,
   useUpdateVotingMutation,
-  useVotingQuery,
 } from "features/api/apiSlice";
+import { Voting } from "features/api/types";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingFormModal from "./VotingFormModal/VotingFormModal";
-import { Voting } from "features/api/types";
 
 const getVotingFormValues = R.pick<keyof Voting>([
   "title",
@@ -28,21 +26,20 @@ const getVotingFormValues = R.pick<keyof Voting>([
 ]);
 
 type Props = {
-  votingId: number;
+  voting: Voting;
 };
 
-const VotingActions = ({ votingId }: Props) => {
+const VotingActions = ({ voting }: Props) => {
   const router = useRouter();
   const login = useChannelLogin();
 
-  const voting = useVotingQuery(votingId, { skip: !votingId });
   const [updateVoting, updateVotingResult] = useUpdateVotingMutation();
   const [deleteVoting, deleteVotingResult] = useDeleteVotingMutation();
 
   const [isVotingFormOpened, setIsVotingFormOpened] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const canManageVotes = voting.data?.canManageVotes;
+  const { id: votingId, canManageVotes } = voting;
 
   const handleToggleVoting = () =>
     updateVoting({ votingId, body: { canManageVotes: !canManageVotes } });
@@ -59,11 +56,7 @@ const VotingActions = ({ votingId }: Props) => {
     router.push(`/${login}/voting`);
   };
 
-  const disabled =
-    voting.isLoading ||
-    voting.isFetching ||
-    updateVotingResult.isLoading ||
-    deleteVotingResult.isLoading;
+  const disabled = updateVotingResult.isLoading || deleteVotingResult.isLoading;
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -103,7 +96,7 @@ const VotingActions = ({ votingId }: Props) => {
         title="Редактировать голосование"
         cancelButtonText="Отмена"
         submitButtonText="Сохранить"
-        defaultValues={getVotingFormValues(voting.data)}
+        defaultValues={getVotingFormValues(voting)}
         onClose={() => setIsVotingFormOpened(false)}
         onSubmit={handleEditVoting}
       />
