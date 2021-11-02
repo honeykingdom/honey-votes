@@ -1,5 +1,4 @@
-import * as R from "ramda";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import {
   Typography,
@@ -19,7 +18,12 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import getRandomInt from "utils/getRandomInt";
-import { ChatVote, ChatVoting, TwitchUserType } from "features/api/types";
+import {
+  ChatVote,
+  ChatVoting,
+  SubTier,
+  TwitchUserType,
+} from "features/api/types";
 import {
   useClearChatVotingMutation,
   useCreateChatVotingMutation,
@@ -58,12 +62,11 @@ const SUB_MONTHS = [
 
 const DEFAULT_CHAT_VOTING_RESTRICTIONS: ChatVoting["restrictions"] = {
   [TwitchUserType.Viewer]: false,
-  [TwitchUserType.SubTier1]: true,
-  [TwitchUserType.SubTier2]: true,
-  [TwitchUserType.SubTier3]: true,
+  [TwitchUserType.Sub]: true,
   [TwitchUserType.Mod]: true,
   [TwitchUserType.Vip]: true,
   subMonthsRequired: 0,
+  subTierRequired: SubTier.Tier1,
 };
 
 /** Replaces `voteCommand` at the start of the message with spaces */
