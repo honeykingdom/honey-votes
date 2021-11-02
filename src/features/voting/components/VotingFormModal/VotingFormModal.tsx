@@ -6,17 +6,17 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { UpdateVotingDto, Voting } from "features/api/types";
+import { UpdateVotingDto } from "features/api/types";
 import {
   VOTING_ALLOWED_VOTING_OPTIONS_TYPES_DEFAULT,
   VOTING_CAN_MANAGE_VOTES_DEFAULT,
   VOTING_CAN_MANAGE_VOTING_OPTIONS_DEFAULT,
   VOTING_OPTIONS_LIMIT_DEFAULT,
   VOTING_USER_TYPES_PARAMS_DEFAULT,
-} from "features/api/constants";
+} from "features/api/apiConstants";
 import VotingForm from "./VotingForm";
 
-export const VOTING_DEFAULT: Partial<Voting> = {
+export const VOTING_DEFAULT: UpdateVotingDto = {
   title: "",
   description: "",
   canManageVotes: VOTING_CAN_MANAGE_VOTES_DEFAULT,
@@ -32,7 +32,7 @@ type Props = {
   cancelButtonText: string;
   submitButtonText: string;
   defaultValues?: UpdateVotingDto;
-  onSubmit?: (voting: UpdateVotingDto) => void;
+  onSubmit: (voting: UpdateVotingDto) => void;
   onClose: () => void;
 };
 
@@ -45,15 +45,10 @@ const VotingFormModal = ({
   onSubmit,
   onClose,
 }: Props) => {
-  const { register, control, getValues } = useForm<UpdateVotingDto>({
+  const useFormReturn = useForm<UpdateVotingDto>({
     defaultValues,
   });
-
-  const handleSubmit = () => {
-    const values = getValues();
-
-    onSubmit(values);
-  };
+  const { getValues } = useFormReturn;
 
   return (
     <Dialog
@@ -68,14 +63,13 @@ const VotingFormModal = ({
       <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>
       <DialogContent dividers={true}>
         <VotingForm
-          register={register}
-          control={control as any}
+          useFormReturn={useFormReturn}
           defaultValues={defaultValues}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button variant="contained" onClick={() => onSubmit(getValues())}>
           {submitButtonText}
         </Button>
       </DialogActions>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Control, Controller, UseFormRegister } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import {
   Box,
   Button,
@@ -14,69 +14,26 @@ import {
   Tooltip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  SubTier,
-  TwitchUserType,
-  UpdateVotingDto,
-  VotingOptionType,
-} from "features/api/types";
+import { SubTier, TwitchUserType, UpdateVotingDto } from "features/api/types";
 import {
   VOTING_DESCRIPTION_MAX_LENGTH,
   VOTING_OPTIONS_LIMIT_MAX,
   VOTING_OPTIONS_LIMIT_MIN,
   VOTING_TITLE_MAX_LENGTH,
-} from "features/api/constants";
-import { FollowedTime } from "features/voting/votingConstants";
+} from "features/api/apiConstants";
+import {
+  FOLLOWED_TIME_VALUES,
+  SUB_TIERS,
+  USER_TYPES_ITEMS,
+  VOTING_OPTION_TYPES,
+} from "features/voting/votingConstants";
 import ControlledCheckbox from "./ControlledCheckbox";
 import FormControlSelect from "./FormControlSelect";
-
-const SUB_TIERS = [
-  { value: SubTier.Tier1, label: "Тир 1" },
-  { value: SubTier.Tier2, label: "Тир 2" },
-  { value: SubTier.Tier3, label: "Тир 3" },
-];
-
-const FOLLOWED_TIME_VALUES = [
-  { value: FollowedTime.None, label: "Нет" },
-  { value: FollowedTime.TenMinutes, label: "10 минут" },
-  { value: FollowedTime.ThirtyMinutes, label: "30 минут" },
-  { value: FollowedTime.OneHour, label: "1 час" },
-  { value: FollowedTime.OneDay, label: "1 день" },
-  { value: FollowedTime.OneWeek, label: "1 неделя" },
-  { value: FollowedTime.OneMonth, label: "1 месяц" },
-  { value: FollowedTime.ThreeMonths, label: "3 месяца" },
-];
 
 const VOTING_OPTIONS_LIMIT_MARKS = Array.from({ length: 10 }, (_, i) => ({
   value: (i + 1) * 20,
   label: `${(i + 1) * 20}`,
 }));
-
-const VOTING_OPTION_TYPES = [
-  {
-    label: "Пользовательские варианты",
-    description: "Пользователи могут ввести свой текст",
-    name: VotingOptionType.Custom,
-  },
-  {
-    label: "Фильмы (kinopoisk.ru)",
-    description: "Пользователи могут предложить фильм из сайта kinopoisk.ru",
-    name: VotingOptionType.KinopoiskMovie,
-  },
-  {
-    label: "Игры (IGDB.com)",
-    description: "Пользователи могут предложить игру из базы IGDB.com",
-    name: VotingOptionType.IgdbGame,
-  },
-] as const;
-
-const USER_TYPES_ITEMS = [
-  { label: "Модеры", type: TwitchUserType.Mod },
-  { label: "Випы", type: TwitchUserType.Vip },
-  { label: "Сабы", type: TwitchUserType.Sub },
-  { label: "Фолловеры", type: TwitchUserType.Follower },
-  { label: "Зрители", type: TwitchUserType.Viewer },
-] as const;
 
 const SUB_TIER_MENU_ITEMS = SUB_TIERS.map(({ value, label }) => (
   <MenuItem key={value} value={value}>
@@ -105,14 +62,14 @@ const getInitialIsExtended = (values?: UpdateVotingDto) => {
 
 type Props = {
   defaultValues: UpdateVotingDto;
-  register: UseFormRegister<UpdateVotingDto>;
-  control: Control<UpdateVotingDto>;
+  useFormReturn: UseFormReturn<UpdateVotingDto>;
 };
 
-const VotingForm = ({ defaultValues, register, control }: Props) => {
+const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
   const [isExtended, setIsExtended] = useState(
     getInitialIsExtended(defaultValues)
   );
+  const { control, register } = useFormReturn;
 
   return (
     <>
