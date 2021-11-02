@@ -71,30 +71,33 @@ export interface components {
       isEditor: boolean | null;
       isMod: boolean | null;
       isVip: boolean | null;
-      isSubTier1: boolean | null;
-      isSubTier2: boolean | null;
-      isSubTier3: boolean | null;
+      isSub: boolean | null;
       isFollower: boolean | null;
       minutesFollowed: number | null;
+      subTier: number | null;
     };
-    UserTypeParams: {
+    VotingPermissionsDefault: {
       canVote: boolean;
       canAddOptions: boolean;
     };
-    UserTypeParamsFollower: {
+    VotingPermissionsSubscriber: {
+      canVote: boolean;
+      canAddOptions: boolean;
+      subTierRequiredToVote: number;
+      subTierRequiredToAddOptions: number;
+    };
+    VotingPermissionsFollower: {
       canVote: boolean;
       canAddOptions: boolean;
       minutesToFollowRequiredToVote: number;
       minutesToFollowRequiredToAddOptions: number;
     };
-    UserTypesParams: {
-      mod: components["schemas"]["UserTypeParams"];
-      vip: components["schemas"]["UserTypeParams"];
-      subTier1: components["schemas"]["UserTypeParams"];
-      subTier2: components["schemas"]["UserTypeParams"];
-      subTier3: components["schemas"]["UserTypeParams"];
-      follower: components["schemas"]["UserTypeParamsFollower"];
-      viewer: components["schemas"]["UserTypeParams"];
+    VotingPermissions: {
+      mod: components["schemas"]["VotingPermissionsDefault"];
+      vip: components["schemas"]["VotingPermissionsDefault"];
+      sub: components["schemas"]["VotingPermissionsSubscriber"];
+      follower: components["schemas"]["VotingPermissionsFollower"];
+      viewer: components["schemas"]["VotingPermissionsDefault"];
     };
     Voting: {
       id: number;
@@ -103,7 +106,7 @@ export interface components {
       description?: string;
       canManageVotes: boolean;
       canManageVotingOptions: boolean;
-      userTypesParams: components["schemas"]["UserTypesParams"];
+      permissions: components["schemas"]["VotingPermissions"];
       allowedVotingOptionTypes: ("kinopoiskMovie" | "igdbGame" | "custom")[];
       votingOptionsLimit: number;
       createdAt: string;
@@ -114,7 +117,7 @@ export interface components {
       description?: string;
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
-      userTypesParams?: components["schemas"]["UserTypesParams"];
+      permissions?: components["schemas"]["VotingPermissions"];
       allowedVotingOptionTypes?: ("kinopoiskMovie" | "igdbGame" | "custom")[];
       votingOptionsLimit?: number;
       channelId: string;
@@ -124,7 +127,7 @@ export interface components {
       description?: string;
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
-      userTypesParams?: components["schemas"]["UserTypesParams"];
+      permissions?: components["schemas"]["VotingPermissions"];
       allowedVotingOptionTypes?: ("kinopoiskMovie" | "igdbGame" | "custom")[];
       votingOptionsLimit?: number;
     };
@@ -164,12 +167,11 @@ export interface components {
     };
     ChatVotingRestrictions: {
       viewer: boolean;
-      subTier1: boolean;
-      subTier2: boolean;
-      subTier3: boolean;
+      sub: boolean;
       mod: boolean;
       vip: boolean;
       subMonthsRequired: number;
+      subTierRequired: number;
     };
     ChatVotingCommands: {
       vote: string;
