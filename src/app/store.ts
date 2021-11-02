@@ -1,17 +1,20 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import { api } from "features/api/apiSlice";
+import { kinopoiskApi } from "features/kinopoisk-api/kinopoiskApiSlice";
 // import voting from "features/voting/votingSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [api.reducerPath]: api.reducer,
+      [kinopoiskApi.reducerPath]: kinopoiskApi.reducer,
       // voting,
     },
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware(),
       api.middleware,
+      kinopoiskApi.middleware,
     ],
   });
 };
