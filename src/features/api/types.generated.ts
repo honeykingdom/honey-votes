@@ -33,8 +33,6 @@ export interface paths {
   };
   "/api/honey-votes/votes": {
     post: operations["VotesController_addVote"];
-  };
-  "/api/honey-votes/votes/{voteId}": {
     delete: operations["VotesController_removeVote"];
   };
   "/api/honey-votes/chat-votes": {
@@ -76,6 +74,15 @@ export interface components {
       minutesFollowed: number | null;
       subTier: number | null;
     };
+    Vote: {
+      id: number;
+      authorId: string;
+      votingId: number;
+      votingOptionId: number;
+      value: number;
+      createdAt: string;
+      updatedAt: string;
+    };
     VotingPermissionsDefault: {
       canVote: boolean;
       canAddOptions: boolean;
@@ -112,7 +119,7 @@ export interface components {
       createdAt: string;
       updatedAt: string;
     };
-    AddVotingDto: {
+    CreateVotingDto: {
       title?: string;
       description?: string;
       canManageVotes?: boolean;
@@ -135,13 +142,13 @@ export interface components {
       id: number;
     };
     VotingOptionIgdbGame: {
-      id: number;
+      slug: string;
     };
     VotingOptionCustom: {
       title: string;
       description?: string;
     };
-    AddVotingOptionDto: {
+    CreateVotingOptionDto: {
       votingId: number;
       type: string;
       kinopoiskMovie?: components["schemas"]["VotingOptionKinopoiskMovie"];
@@ -153,7 +160,7 @@ export interface components {
       authorId: string;
       votingId: number;
       fullVotesValue: number;
-      cardId?: number;
+      cardId?: string;
       cardTitle: string;
       cardSubtitle?: string;
       cardDescription?: string;
@@ -162,10 +169,13 @@ export interface components {
       createdAt: string;
       updatedAt: string;
     };
-    AddVoteDto: {
+    CreateVoteDto: {
       votingOptionId: number;
     };
-    ChatVotingRestrictions: {
+    DeleteVoteDto: {
+      votingOptionId: number;
+    };
+    ChatVotingPermissions: {
       viewer: boolean;
       sub: boolean;
       mod: boolean;
@@ -177,8 +187,8 @@ export interface components {
       vote: string;
       clearVotes: string;
     };
-    AddChatVotingDto: {
-      restrictions?: components["schemas"]["ChatVotingRestrictions"];
+    CreateChatVotingDto: {
+      permissions?: components["schemas"]["ChatVotingPermissions"];
       listening?: boolean;
       commands?: components["schemas"]["ChatVotingCommands"];
       broadcasterId: string;
@@ -194,14 +204,14 @@ export interface components {
     };
     ChatVoting: {
       broadcasterId: string;
-      restrictions: components["schemas"]["ChatVotingRestrictions"];
+      permissions: components["schemas"]["ChatVotingPermissions"];
       listening: boolean;
       commands: components["schemas"]["ChatVotingCommands"];
       createdAt: string;
       updatedAt: string;
     };
     UpdateChatVotingDto: {
-      restrictions?: components["schemas"]["ChatVotingRestrictions"];
+      permissions?: components["schemas"]["ChatVotingPermissions"];
       listening?: boolean;
       commands?: components["schemas"]["ChatVotingCommands"];
     };
@@ -315,7 +325,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AddVotingDto"];
+        "application/json": components["schemas"]["CreateVotingDto"];
       };
     };
   };
@@ -395,7 +405,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AddVotingOptionDto"];
+        "application/json": components["schemas"]["CreateVotingOptionDto"];
       };
     };
   };
@@ -428,16 +438,12 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AddVoteDto"];
+        "application/json": components["schemas"]["CreateVoteDto"];
       };
     };
   };
   VotesController_removeVote: {
-    parameters: {
-      path: {
-        voteId: number;
-      };
-    };
+    parameters: {};
     responses: {
       /** OK */
       200: unknown;
@@ -445,6 +451,11 @@ export interface operations {
       401: unknown;
       /** Forbidden */
       403: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DeleteVoteDto"];
+      };
     };
   };
   ChatVotesController_addChatVoting: {
@@ -465,7 +476,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["AddChatVotingDto"];
+        "application/json": components["schemas"]["CreateChatVotingDto"];
       };
     };
   };

@@ -7,17 +7,20 @@ export type RefreshTokenResponse =
   components["schemas"]["RefreshTokenResponse"];
 
 export type Voting = components["schemas"]["Voting"];
-export type AddVotingDto = components["schemas"]["AddVotingDto"];
+export type CreateVotingDto = components["schemas"]["CreateVotingDto"];
 export type UpdateVotingDto = components["schemas"]["UpdateVotingDto"];
 
 export type VotingOption = components["schemas"]["VotingOption"];
-export type AddVotingOptionDto = components["schemas"]["AddVotingOptionDto"];
+export type VotingOptionWithAuthor = VotingOption & { author: User };
+export type CreateVotingOptionDto =
+  components["schemas"]["CreateVotingOptionDto"];
 export type VotingPermissions = components["schemas"]["VotingPermissions"];
 
-export type AddVoteDto = components["schemas"]["AddVoteDto"];
+export type Vote = components["schemas"]["Vote"];
+export type CreateVoteDto = components["schemas"]["CreateVoteDto"];
 
 export type ChatVoting = components["schemas"]["ChatVoting"];
-export type AddChatVotingDto = components["schemas"]["AddChatVotingDto"];
+export type CreateChatVotingDto = components["schemas"]["CreateChatVotingDto"];
 export type UpdateChatVotingDto = components["schemas"]["UpdateChatVotingDto"];
 
 export type ChatVote = components["schemas"]["ChatVote"];
