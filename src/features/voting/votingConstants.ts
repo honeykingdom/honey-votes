@@ -48,7 +48,7 @@ export const VOTING_OPTION_TYPES = [
 
 export const USER_TYPES_ITEMS = [
   { label: "Модеры", type: TwitchUserType.Mod },
-  { label: "Випы", type: TwitchUserType.Vip },
+  // { label: "Випы", type: TwitchUserType.Vip },
   { label: "Сабы", type: TwitchUserType.Sub },
   { label: "Фолловеры", type: TwitchUserType.Follower },
   { label: "Зрители", type: TwitchUserType.Viewer },

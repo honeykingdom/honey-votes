@@ -40,7 +40,7 @@ const UserBadges = ({
   const badges: { title: string; name: string }[] = [];
 
   if (mod[mode]) badges.push({ title: "Модеры", name: "moderator" });
-  if (vip[mode]) badges.push({ title: "Випы", name: "vip" });
+  // if (vip[mode]) badges.push({ title: "Випы", name: "vip" });
 
   if (sub[mode]) {
     const requiredTier = sub[SUB_TIER[mode]];
@@ -67,7 +67,7 @@ const UserBadges = ({
     badges.push({ title, name: "glitchcon2020" });
   }
 
-  if (viewer) badges.push({ title: "Зрители", name: "glhf-pledge" });
+  if (viewer[mode]) badges.push({ title: "Зрители", name: "glhf-pledge" });
 
   return (
     <>
