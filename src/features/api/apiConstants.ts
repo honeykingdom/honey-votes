@@ -8,6 +8,12 @@ import {
 export const API_BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/honey-votes`;
 export const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_HOST}/rest/v1`;
 
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY;
+export const SUPABASE_HEADERS = {
+  apikey: SUPABASE_KEY,
+  Authorization: `Bearer ${SUPABASE_KEY}`,
+};
+
 export const USER_TABLE_NAME = "hv_user";
 
 export const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
