@@ -18,6 +18,7 @@ export type VotingPermissions = components["schemas"]["VotingPermissions"];
 
 export type Vote = components["schemas"]["Vote"];
 export type CreateVoteDto = components["schemas"]["CreateVoteDto"];
+export type DeleteVoteDto = components["schemas"]["DeleteVoteDto"];
 
 export type ChatVoting = components["schemas"]["ChatVoting"];
 export type CreateChatVotingDto = components["schemas"]["CreateChatVotingDto"];
