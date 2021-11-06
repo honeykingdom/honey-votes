@@ -40,8 +40,8 @@ const Home = () => {
       </Box>
 
       <Grid container spacing={2}>
-        {FEATURES.map(({ title, description }) => (
-          <Grid item md={4} sx={{ width: "100%" }}>
+        {FEATURES.map(({ title, description }, i) => (
+          <Grid key={i} item md={4} sx={{ width: "100%" }}>
             <Card>
               <CardContent>
                 <Typography variant="h5" component="div" gutterBottom>
