@@ -1,5 +1,7 @@
+import { useState } from "react";
 import {
   Avatar,
+  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -7,8 +9,6 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
-import { VotingOption } from "features/api/types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import {
@@ -18,9 +18,10 @@ import {
   useMeQuery,
   useMeRolesQuery,
   useUserVotesQuery,
-  useVotingOptionsQuery,
   useVotingQuery,
 } from "features/api/apiSlice";
+import { VotingOption } from "features/api/types";
+import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
 import getCanVote from "../utils/getCanVote";
@@ -46,11 +47,12 @@ const VotingOptionCard = ({ votingOption }: Props) => {
     fullVotesValue,
   } = votingOption;
 
+  const [isDeleteVoteDialogOpen, setIsDeleteVoteDialogOpen] = useState(false);
+
   const login = useChannelLogin();
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
-  const votingOptions = useVotingOptionsQuery(votingId, { skip: !votingId });
   const userVotes = useUserVotesQuery(
     { votingId, authorId: me.data?.id },
     { skip: !me.data }
@@ -152,68 +154,78 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   );
 
   return (
-    <Card
-      sx={{
-        display: "flex",
-        flexGrow: 1,
-        bgcolor: isActive ? "#66bb6a88" : undefined,
-      }}
-      variant="elevation"
-    >
-      {renderCardImage()}
-      {canVote ? (
-        <CardActionArea
-          component="div"
-          sx={{ flexGrow: 1 }}
-          onClick={() => (isActive ? deleteVote(id) : createVote(id))}
-        >
-          {renderCardContent()}
-        </CardActionArea>
-      ) : (
-        <Box sx={{ flexGrow: 1 }}>{renderCardContent()}</Box>
-      )}
-      <Box
+    <>
+      <Card
         sx={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          order: -1,
-          px: 1,
-          width: 64,
+          flexGrow: 1,
+          bgcolor: isActive ? "#66bb6a88" : undefined,
         }}
+        variant="elevation"
       >
-        <Typography
-          component="div"
-          variant="h5"
-          color="text.secondary"
-          align="center"
-        >
-          {fullVotesValue}
-        </Typography>
-      </Box>
-      {canDeleteVotingOption && (
+        {renderCardImage()}
+        {canVote ? (
+          <CardActionArea
+            component="div"
+            sx={{ flexGrow: 1 }}
+            onClick={() => (isActive ? deleteVote(id) : createVote(id))}
+          >
+            {renderCardContent()}
+          </CardActionArea>
+        ) : (
+          <Box sx={{ flexGrow: 1 }}>{renderCardContent()}</Box>
+        )}
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
-            width: 48,
-            ml: "auto",
+            order: -1,
+            px: 1,
+            width: 64,
           }}
         >
-          <IconButton
-            size="small"
-            color="error"
-            onClick={() => deleteVotingOption(id)}
+          <Typography
+            component="div"
+            variant="h5"
+            color="text.secondary"
+            align="center"
           >
-            <DeleteIcon />
-          </IconButton>
+            {fullVotesValue}
+          </Typography>
         </Box>
-      )}
-    </Card>
+        {canDeleteVotingOption && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              width: 48,
+              ml: "auto",
+            }}
+          >
+            <IconButton
+              size="small"
+              color="error"
+              onClick={() => setIsDeleteVoteDialogOpen(true)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        )}
+      </Card>
+
+      <ConfirmationDialog
+        open={isDeleteVoteDialogOpen}
+        title="Удалить вариант для голосования"
+        description="Вы действительно хотите удалить этот вариант для голосования?"
+        handleClose={() => setIsDeleteVoteDialogOpen(false)}
+        handleYes={() => deleteVotingOption(id)}
+      />
+    </>
   );
 };
 
