@@ -3,13 +3,15 @@ import Head from "next/head";
 import { Box } from "@mui/system";
 import { Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import LockIcon from "@mui/icons-material/Lock";
 import Layout from "components/Layout";
 import Breadcrumbs from "components/Breadcrumbs";
 import TwitchBadge from "components/TwitchBadge";
 import VotingOptionCard from "features/voting/components/VotingOptionCard";
+import useChannelLogin from "hooks/useChannelLogin";
 import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
+import type { VotingOptionDefaultValues } from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
 import VotingActions from "features/voting/components/VotingActions";
-import LockIcon from "@mui/icons-material/Lock";
 import {
   useCreateVotingOptionMutation,
   useMeQuery,
@@ -19,11 +21,13 @@ import {
   useVotingQuery,
   votingOptionsSelectors,
 } from "features/api/apiSlice";
-import useChannelLogin from "hooks/useChannelLogin";
 import UserBadges from "features/voting/components/UserBadges";
 import useVotingId from "features/voting/hooks/useVotingId";
 import getCanManageVoting from "features/voting/utils/getCanManageVoting";
 import getCanCreateVotingOptions from "features/voting/utils/getCanCreateVotingOptions";
+import getVotingPermissionsBadges from "features/voting/utils/getVotingPermissionsBadges";
+import getMeBadges from "features/voting/utils/getMeBadges";
+import getCanVote from "features/voting/utils/getCanVote";
 import useSnackbar from "features/snackbar/useSnackbar";
 
 const NO_TITLE = <em style={{ fontWeight: 300 }}>Без названия</em>;
@@ -73,12 +77,15 @@ const VotingPage = () => {
     meRoles.data
   );
 
-  const canManageVotingOptions = getCanCreateVotingOptions(
-    voting.data,
-    renderedVotingOptions,
-    me.data,
-    meRoles.data
-  );
+  const [canCreateVotingOptions, canCreateVotingOptionsReason] =
+    getCanCreateVotingOptions(
+      voting.data,
+      renderedVotingOptions,
+      me.data,
+      meRoles.data
+    );
+
+  const canVote = getCanVote(voting.data, me.data, meRoles.data);
 
   const handleCreateVotingOption = async (body: VotingOptionDefaultValues) => {
     const result = await createVotingOption({ votingId, ...body });
@@ -159,8 +166,10 @@ const VotingPage = () => {
               </Typography>
               <Typography variant="caption">
                 <UserBadges
-                  permissions={voting.data.permissions}
-                  mode="canVote"
+                  badges={getVotingPermissionsBadges(
+                    voting.data.permissions,
+                    "canVote"
+                  )}
                 />
               </Typography>
             </Box>
@@ -176,11 +185,42 @@ const VotingPage = () => {
                 <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
                 <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
                 <UserBadges
-                  permissions={voting.data.permissions}
-                  mode="canAddOptions"
+                  badges={getVotingPermissionsBadges(
+                    voting.data.permissions,
+                    "canAddOptions"
+                  )}
                 />
               </Typography>
             </Box>
+            <Box sx={{ display: "flex" }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mr: 1 }}
+              >
+                Вы:
+              </Typography>
+              <Typography variant="caption">
+                <UserBadges badges={getMeBadges(me.data, meRoles.data)} />
+              </Typography>
+            </Box>
+
+            {voting.data?.canManageVotes &&
+              !canVote &&
+              !meRoles.data?.broadcaster && (
+                <Box mt={1}>
+                  <Typography variant="body2" color="error.light">
+                    Вы не можете голосовать в этом голосовании.
+                  </Typography>
+                </Box>
+              )}
+            {!voting.data?.canManageVotes && (
+              <Box mt={1}>
+                <Typography variant="body2" color="error.light">
+                  [Голосование закрыто]
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           {canManageVoting && (
@@ -191,7 +231,7 @@ const VotingPage = () => {
 
           <Divider sx={{ mb: 2 }} />
 
-          {canManageVotingOptions && (
+          {canCreateVotingOptions && (
             <Box sx={{ mb: 2 }}>
               <Button
                 variant="contained"
@@ -202,10 +242,16 @@ const VotingPage = () => {
               </Button>
             </Box>
           )}
+
+          {!canCreateVotingOptions && canCreateVotingOptionsReason && (
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+              {canCreateVotingOptionsReason}
+            </Typography>
+          )}
         </>
       )}
 
-      {votingOptions.data && (
+      {votingOptions.data && renderedVotingOptions.length > 0 && (
         <Grid container flexDirection="column">
           {renderedVotingOptions.map((votingOption) => (
             <Grid item sx={{ mb: 2 }} key={votingOption.id}>
@@ -218,6 +264,12 @@ const VotingPage = () => {
         </Grid>
       )}
 
+      {votingOptions.data && renderedVotingOptions.length === 0 && (
+        <Typography variant="body1" color="text.secondary">
+          В этом голосовании пока нет ни одного варианта
+        </Typography>
+      )}
+
       <VotingOptionFormModal
         open={isVotingOptionModalOpened}
         title="Создать новый вариант для голосования"
@@ -226,10 +278,7 @@ const VotingPage = () => {
         // @ts-expect-error
         allowedVotingOptionTypes={voting.data?.allowedVotingOptionTypes || []}
         onClose={() => setIsVotingOptionModalOpened(false)}
-        onSubmit={async (body) => {
-          await createVotingOption({ votingId, ...body });
-          setIsVotingOptionModalOpened(false);
-        }}
+        onSubmit={handleCreateVotingOption}
       />
     </Layout>
   );
