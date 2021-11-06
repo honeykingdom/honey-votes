@@ -13,13 +13,15 @@ export const kinopoiskApi = createApi({
   reducerPath: "kinopoiskApi",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL, prepareHeaders }),
   endpoints: (builder) => ({
-    filmsByKeyword: builder.mutation<FilmSearchByFiltersResponse, string>({
+    searchMovies: builder.query<FilmSearchByFiltersResponse["films"], string>({
       query: (keyword) => ({
         url: `v2.1/films/search-by-keyword`,
         params: { keyword },
       }),
+      transformResponse: (response: FilmSearchByFiltersResponse) =>
+        response.films,
     }),
   }),
 });
 
-export const { useFilmsByKeywordMutation } = kinopoiskApi;
+export const { useLazySearchMoviesQuery } = kinopoiskApi;
