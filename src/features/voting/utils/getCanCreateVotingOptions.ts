@@ -6,47 +6,51 @@ const getCanCreateVotingOptions = (
   votingOptions?: VotingOption[],
   me?: User,
   meRoles?: UserRoles
-) => {
-  if (!voting || !me) return false;
+): [boolean] | [boolean, string] => {
+  if (!voting || !me) return [false];
 
-  if (getIsVotingOwner(voting, me)) return true;
+  if (getIsVotingOwner(voting, me)) return [true];
 
-  if (!meRoles) return false;
+  if (!meRoles) return [false];
 
-  if (meRoles.isEditor) return true;
+  if (meRoles.editor) return [true];
 
-  if (!voting.canManageVotingOptions) return false;
+  if (!voting.canManageVotingOptions) return [false];
 
-  if (!votingOptions) return false;
-  if (votingOptions.length >= voting.votingOptionsLimit) return false;
+  if (!votingOptions) return [false];
+  if (votingOptions.length >= voting.votingOptionsLimit) {
+    return [false, "Достигнут лимит вариантов голосования"];
+  }
 
   const votingOptionsByUser = votingOptions.filter(
     (votingOption) => votingOption.authorId === me.id
   );
 
-  if (votingOptionsByUser.length >= 1) return false;
+  if (votingOptionsByUser.length >= 1) {
+    return [false, "Вы уже добавили вариант для голосования"];
+  }
 
-  if (voting.permissions.viewer.canAddOptions) return true;
+  if (voting.permissions.viewer.canAddOptions) return [true];
 
-  if (voting.permissions.mod.canAddOptions && meRoles.isMod) return true;
-  if (voting.permissions.vip.canAddOptions && meRoles.isVip) return true;
+  if (voting.permissions.mod.canAddOptions && meRoles.mod) return [true];
+  if (voting.permissions.vip.canAddOptions && meRoles.vip) return [true];
   if (
     voting.permissions.sub.canAddOptions &&
-    meRoles.isSub &&
+    meRoles.sub &&
     meRoles.subTier >= voting.permissions.sub.subTierRequiredToAddOptions
   ) {
-    return true;
+    return [true];
   }
   if (
     voting.permissions.follower.canAddOptions &&
-    meRoles.isFollower &&
+    meRoles.follower &&
     meRoles.minutesFollowed >=
       voting.permissions.follower.minutesToFollowRequiredToAddOptions
   ) {
-    return true;
+    return [true];
   }
 
-  return false;
+  return [false];
 };
 
 export default getCanCreateVotingOptions;
