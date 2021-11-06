@@ -1,7 +1,7 @@
-import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
+import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
 import { Movie } from "../types";
 
-const transformKinopoiskMovie = (movie: KinopoiskMovie): Movie => ({
+const transformKinopoiskMovie = (movie: Film): Movie => ({
   id: `${movie.filmId}`,
   title: movie.nameRu || movie.nameEn || " ",
   info: movie,

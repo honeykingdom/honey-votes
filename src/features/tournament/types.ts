@@ -1,9 +1,9 @@
-import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
+import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
 
 export type Movie = {
   id: string;
   title: string;
-  info?: KinopoiskMovie;
+  info?: Film;
 };
 
 export enum StepType {

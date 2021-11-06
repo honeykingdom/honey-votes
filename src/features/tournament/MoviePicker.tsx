@@ -7,7 +7,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { searchByKeyword } from "features/kinopoisk-api/kinopoisk";
 import { getMovieDescription } from "./utils/getMovieDescription";
 import { Movie } from "./types";
 import transformKinopoiskMovie from "./utils/transformKinopoiskMovie";
@@ -55,11 +54,11 @@ const MoviePicker = ({
           return;
         }
 
-        const response = await searchByKeyword(inputValue.trim());
+        // const response = await searchByKeyword(inputValue.trim());
 
         if (!active) return;
 
-        setOptions(response?.films.map(transformKinopoiskMovie) || []);
+        // setOptions(response?.films.map(transformKinopoiskMovie) || []);
         // setLoading(false);
       })();
 

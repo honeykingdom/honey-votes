@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import produce from "immer";
 import getRandomInt from "utils/getRandomInt";
-import { KinopoiskMovie } from "features/kinopoisk-api/kinopoisk";
+import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
 import { Movie, Step, StepAddMovies, StepType } from "./types";
 
 const choiceStepTypes = [
@@ -105,11 +105,7 @@ const useTournament = (initialMovies: string[]) => {
   }, []);
 
   const updateInput = useCallback(
-    (
-      index: number,
-      title: string | null = null,
-      info: KinopoiskMovie | null = null
-    ) => {
+    (index: number, title: string | null = null, info: Film | null = null) => {
       setSteps((prev) =>
         produce(prev, (state) => {
           const currentStep = getCurrentStep(state);
