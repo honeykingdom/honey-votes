@@ -9,29 +9,34 @@ import {
   CHAT_VOTE_TABLE_NAME,
   CHAT_VOTING_TABLE_NAME,
   USER_TABLE_NAME,
+  VOTE_TABLE_NAME,
   VOTING_OPTION_TABLE_NAME,
   VOTING_TABLE_NAME,
 } from "./apiConstants";
 import {
-  AddChatVotingDto,
-  AddVoteDto,
-  AddVotingDto,
-  AddVotingOptionDto,
+  CreateChatVotingDto,
+  CreateVoteDto,
+  CreateVotingDto,
+  CreateVotingOptionDto,
   ChatVote,
   ChatVoting,
   UpdateChatVotingDto,
   UpdateVotingDto,
   User,
   UserRoles,
+  Vote,
   Voting,
   VotingOption,
+  VotingOptionWithAuthor,
+  DeleteVoteDto,
 } from "./types";
+import transformVotingOption from "./utils/transformVotingOption";
 
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
 
 // https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#normalizing-data-with-createentityadapter
-const votingOptionsAdapter = createEntityAdapter<VotingOption>({
-  sortComparer: (a, b) => a.fullVotesValue - b.fullVotesValue,
+const votingOptionsAdapter = createEntityAdapter<VotingOptionWithAuthor>({
+  sortComparer: (a, b) => b.fullVotesValue - a.fullVotesValue,
 });
 
 export const votingOptionsSelectors = votingOptionsAdapter.getSelectors();
@@ -47,7 +52,7 @@ export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["Voting", "ChatVoting"],
+  tagTypes: ["Voting", "Vote", "ChatVoting"],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -86,7 +91,7 @@ export const api = createApi({
       transformResponse: (response) => response[0],
       providesTags: (result, error, arg) => [{ type: "Voting", id: arg }],
     }),
-    createVoting: builder.mutation<Voting, AddVotingDto>({
+    createVoting: builder.mutation<Voting, CreateVotingDto>({
       query: (body) => ({
         url: `${API_BASE}/voting`,
         method: "POST",
@@ -119,15 +124,15 @@ export const api = createApi({
       ],
     }),
 
-    votingOptions: builder.query<EntityState<VotingOption>, number>({
+    votingOptions: builder.query<EntityState<VotingOptionWithAuthor>, number>({
       query: (votingId) => ({
-        url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}`,
-        params: { votingId: `eq.${votingId}` },
+        // Can't use params here because URLSearchParams escapes some characters
+        url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
-      transformResponse: (response: VotingOption[]) =>
+      transformResponse: (response: VotingOptionWithAuthor[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
-          response
+          response.map(transformVotingOption)
         ),
       onCacheEntryAdded: async (
         arg,
@@ -145,7 +150,12 @@ export const api = createApi({
             .on("*", (payload) =>
               updateCachedData((draft) => {
                 if (payload.eventType === "INSERT") {
-                  votingOptionsAdapter.addOne(draft, payload.new);
+                  const author = { login: payload.new.authorLogin } as User;
+
+                  votingOptionsAdapter.addOne(draft, {
+                    ...payload.new,
+                    author,
+                  });
                 }
 
                 if (payload.eventType === "UPDATE") {
@@ -168,7 +178,7 @@ export const api = createApi({
         if (subscription) supabase.removeSubscription(subscription);
       },
     }),
-    createVotingOption: builder.mutation<VotingOption, AddVotingOptionDto>({
+    createVotingOption: builder.mutation<VotingOption, CreateVotingOptionDto>({
       query: (body) => ({
         url: `${API_BASE}/voting-options`,
         method: "POST",
@@ -196,14 +206,15 @@ export const api = createApi({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
         method: "POST",
-        body: { votingOptionId } as AddVoteDto,
+        body: { votingOptionId } as CreateVoteDto,
       }),
       invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
     deleteVote: builder.mutation<void, number>({
-      query: (voteId) => ({
-        url: `${API_BASE}/votes/${voteId}`,
+      query: (votingOptionId) => ({
+        url: `${API_BASE}/votes`,
         method: "DELETE",
+        body: { votingOptionId } as DeleteVoteDto,
       }),
       invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
@@ -216,7 +227,7 @@ export const api = createApi({
       transformResponse: (response) => response[0],
       providesTags: (result, error, arg) => [{ type: "ChatVoting", id: arg }],
     }),
-    createChatVoting: builder.mutation<ChatVoting, AddChatVotingDto>({
+    createChatVoting: builder.mutation<ChatVoting, CreateChatVotingDto>({
       query: (body) => ({
         url: `${API_BASE}/chat-votes`,
         method: "POST",
