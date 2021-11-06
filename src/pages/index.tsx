@@ -1,20 +1,29 @@
-// import { GetStaticProps } from "next";
-// import fetch from "node-fetch";
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 import Layout from "components/Layout";
-// import { TwitchUsersResponse } from "features/twitch-api/twitch";
-// import { Streamer } from "features/api/types";
-// import StreamerCard from "components/StreamerCard";
 import SEO from "../../next-seo.config";
 
-// type Props = {
-//   streamers: Streamer[];
-// };
+const FEATURES = [
+  {
+    title: "Голосование в чате",
+    description:
+      "Зрители могут голосовать прямо в чате твича. <br /> Стример может видеть в реальном времени их голоса на сайте и выбрать победителя.",
+  },
+  {
+    title: "Голосование на сайте",
+    description:
+      "Стример может создать голосование для зрителей с ограничением только для сабов/фолловеров. Пользователи смогут добавлять свои варианты и голосовать за них.",
+  },
+  {
+    title: "Фильмы и игры",
+    description:
+      "Пользователи могут добавлять фильмы с сайта kinopoisk.ru или игры с сайта IGDB.com как варианты для голосования, либо ввести свой текст в качестве варианта.",
+  },
+];
 
 const Home = () => {
   return (
     <Layout>
-      <Box my={4} alignContent="center">
+      <Box my={4} mb={8} alignContent="center">
         <Typography variant="h1" component="h1" gutterBottom align="center">
           {SEO.title}
         </Typography>
@@ -30,53 +39,27 @@ const Home = () => {
         </Typography>
       </Box>
 
-      {/* <Typography variant="h3" component="h3" gutterBottom align="center">
-        Votes
-      </Typography> */}
-
-      {/* <Grid container spacing={4}>
-        {streamers.slice(0, 12).map((streamer, key) => (
-          <Grid item xs={4} key={key}>
-            <StreamerCard {...streamer} />
+      <Grid container spacing={2}>
+        {FEATURES.map(({ title, description }) => (
+          <Grid item md={4} sx={{ width: "100%" }}>
+            <Card>
+              <CardContent>
+                <Typography variant="h5" component="div" gutterBottom>
+                  {title}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  component="p"
+                  color="text.secondary"
+                  dangerouslySetInnerHTML={{ __html: description }}
+                />
+              </CardContent>
+            </Card>
           </Grid>
         ))}
-      </Grid> */}
+      </Grid>
     </Layout>
   );
 };
-
-// export const getStaticProps: GetStaticProps<Props> = async () => {
-//   const channels = process.env.NEXT_PUBLIC_CHANNELS.split(";");
-//   const query = channels
-//     .map((channel) => `login=${channel}`)
-//     .reverse()
-//     .join("&");
-
-//   const response = await fetch(`https://api.twitch.tv/helix/users?${query}`, {
-//     headers: {
-//       "Client-ID": process.env.TWITCH_CLIENT_ID,
-//       Authorization: `Bearer ${process.env.TWITCH_TOKEN}`,
-//     },
-//   });
-//   const data: TwitchUsersResponse = (await response.json()) as any;
-
-//   return {
-//     props: {
-//       streamers: data.data.map(
-//         ({
-//           id,
-//           login,
-//           display_name: displayName,
-//           profile_image_url: profileImageUrl,
-//         }) => ({
-//           id,
-//           login,
-//           displayName,
-//           profileImageUrl,
-//         })
-//       ),
-//     },
-//   };
-// };
 
 export default Home;
