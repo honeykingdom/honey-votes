@@ -23,6 +23,7 @@ import {
 import { VotingOption } from "features/api/types";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
+import useSnackbar from "features/snackbar/useSnackbar";
 import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
 import getCanVote from "../utils/getCanVote";
 
@@ -48,6 +49,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   } = votingOption;
 
   const [isDeleteVoteDialogOpen, setIsDeleteVoteDialogOpen] = useState(false);
+  const snackbar = useSnackbar();
 
   const login = useChannelLogin();
   const me = useMeQuery();
@@ -70,6 +72,57 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   );
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
   const isActive = userVotes.data?.some((vote) => vote.votingOptionId === id);
+
+  const handleCardClick = async () => {
+    if (isActive) {
+      const result = await deleteVote(id);
+
+      // @ts-expect-error
+      if (result.error) {
+        snackbar({
+          message: "Не удалось удалить голос",
+          variant: "success",
+        });
+      } else {
+        snackbar({
+          message: "Голос удалён",
+          variant: "success",
+        });
+      }
+    } else {
+      const result = await createVote(id);
+
+      // @ts-expect-error
+      if (result.error) {
+        snackbar({
+          message: "Не удалось проголосовать",
+          variant: "success",
+        });
+      } else {
+        snackbar({
+          message: "Ваш голос защитан",
+          variant: "success",
+        });
+      }
+    }
+  };
+
+  const handleDeleteVotingOption = async () => {
+    const result = await deleteVotingOption(id);
+
+    // @ts-expect-error
+    if (result.error) {
+      snackbar({
+        message: "Не удалось удалить вариант",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Вариант удалён",
+        variant: "success",
+      });
+    }
+  };
 
   const renderCardImage = () =>
     cardImageUrl ? (
@@ -168,7 +221,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
           <CardActionArea
             component="div"
             sx={{ flexGrow: 1 }}
-            onClick={() => (isActive ? deleteVote(id) : createVote(id))}
+            onClick={handleCardClick}
           >
             {renderCardContent()}
           </CardActionArea>
@@ -223,7 +276,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
         title="Удалить вариант для голосования"
         description="Вы действительно хотите удалить этот вариант для голосования?"
         handleClose={() => setIsDeleteVoteDialogOpen(false)}
-        handleYes={() => deleteVotingOption(id)}
+        handleYes={handleDeleteVotingOption}
       />
     </>
   );

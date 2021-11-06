@@ -13,6 +13,7 @@ import {
 import { Voting } from "features/api/types";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
+import useSnackbar from "features/snackbar/useSnackbar";
 import VotingFormModal from "./VotingFormModal/VotingFormModal";
 
 const getVotingFormValues = R.pick<keyof Voting>([
@@ -33,6 +34,8 @@ const VotingActions = ({ voting }: Props) => {
   const router = useRouter();
   const login = useChannelLogin();
 
+  const snackbar = useSnackbar();
+
   const [updateVoting, updateVotingResult] = useUpdateVotingMutation();
   const [deleteVoting, deleteVotingResult] = useDeleteVotingMutation();
 
@@ -41,17 +44,55 @@ const VotingActions = ({ voting }: Props) => {
 
   const { id: votingId, canManageVotes } = voting;
 
-  const handleToggleVoting = () =>
-    updateVoting({ votingId, body: { canManageVotes: !canManageVotes } });
+  const updateVotingAndNotify = async (
+    data: Parameters<typeof updateVoting>[0]
+  ) => {
+    const result = await updateVoting(data);
+
+    // @ts-expect-error
+    if (result.error) {
+      snackbar({
+        message: "Не удалось обновить голосование",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Голосование успешно обновлено",
+        variant: "success",
+      });
+    }
+
+    return result;
+  };
+
+  const handleToggleVoting = async () => {
+    await updateVotingAndNotify({
+      votingId,
+      body: { canManageVotes: !canManageVotes },
+    });
+  };
 
   const handleEditVoting = async (body: Partial<Voting>) => {
-    await updateVoting({ votingId, body });
+    await updateVotingAndNotify({ votingId, body });
 
     setIsVotingFormOpened(false);
   };
 
   const handleDeleteVoting = async () => {
-    await deleteVoting(votingId);
+    const result = await deleteVoting(votingId);
+
+    // @ts-expect-error
+    if (result.error) {
+      snackbar({
+        message: "Не удалось удалить голосование",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Голосование успешно удалено",
+        variant: "success",
+      });
+    }
 
     router.push(`/${login}/voting`);
   };

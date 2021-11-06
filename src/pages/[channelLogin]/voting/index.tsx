@@ -16,10 +16,13 @@ import {
   useVotingListQuery,
 } from "features/api/apiSlice";
 import { UpdateVotingDto } from "features/api/types";
+import useSnackbar from "features/snackbar/useSnackbar";
 
 const VotingListPage = () => {
   const router = useRouter();
   const login = useChannelLogin();
+
+  const snackbar = useSnackbar();
 
   const channel = useUserQuery({ login }, { skip: !login });
   const me = useMeQuery();
@@ -42,6 +45,19 @@ const VotingListPage = () => {
       channelId: channel.data.id,
       ...body,
     });
+
+    // @ts-expect-error
+    if (newVoting.error) {
+      snackbar({
+        message: "Не удалось создать голосование",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Голосование успешно создано",
+        variant: "success",
+      });
+    }
 
     // TODO:
     // @ts-expect-error

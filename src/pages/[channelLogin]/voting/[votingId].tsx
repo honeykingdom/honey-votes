@@ -24,6 +24,7 @@ import UserBadges from "features/voting/components/UserBadges";
 import useVotingId from "features/voting/hooks/useVotingId";
 import getCanManageVoting from "features/voting/utils/getCanManageVoting";
 import getCanCreateVotingOptions from "features/voting/utils/getCanCreateVotingOptions";
+import useSnackbar from "features/snackbar/useSnackbar";
 
 const NO_TITLE = <em style={{ fontWeight: 300 }}>Без названия</em>;
 
@@ -42,6 +43,7 @@ const CLOSED = (
 const VotingPage = () => {
   const login = useChannelLogin();
   const votingId = useVotingId();
+  const snackbar = useSnackbar();
 
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
@@ -77,6 +79,25 @@ const VotingPage = () => {
     me.data,
     meRoles.data
   );
+
+  const handleCreateVotingOption = async (body: VotingOptionDefaultValues) => {
+    const result = await createVotingOption({ votingId, ...body });
+
+    // @ts-expect-error
+    if (result.error) {
+      snackbar({
+        message: "Не удалось добавить вариант",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Вариант добавлен",
+        variant: "success",
+      });
+    }
+
+    setIsVotingOptionModalOpened(false);
+  };
 
   const getTitle = () => {
     if (!voting.data) return "Голосование";
