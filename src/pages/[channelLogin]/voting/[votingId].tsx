@@ -61,6 +61,10 @@ const VotingPage = () => {
     return null;
   }
 
+  const renderedVotingOptions = votingOptions.data
+    ? votingOptionsSelectors.selectAll(votingOptions.data)
+    : [];
+
   const canManageVoting = getCanManageVoting(
     voting.data,
     me.data,
@@ -69,13 +73,10 @@ const VotingPage = () => {
 
   const canManageVotingOptions = getCanCreateVotingOptions(
     voting.data,
+    renderedVotingOptions,
     me.data,
     meRoles.data
   );
-
-  const renderedVotingOptions = votingOptions.data
-    ? votingOptionsSelectors.selectAll(votingOptions.data)
-    : [];
 
   const getTitle = () => {
     if (!voting.data) return "Голосование";

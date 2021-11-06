@@ -1,8 +1,9 @@
-import { User, UserRoles, Voting } from "features/api/types";
+import { User, UserRoles, Voting, VotingOption } from "features/api/types";
 import getIsVotingOwner from "./getIsVotingOwner";
 
 const getCanCreateVotingOptions = (
   voting?: Voting,
+  votingOptions?: VotingOption[],
   me?: User,
   meRoles?: UserRoles
 ) => {
@@ -15,6 +16,15 @@ const getCanCreateVotingOptions = (
   if (meRoles.isEditor) return true;
 
   if (!voting.canManageVotingOptions) return false;
+
+  if (!votingOptions) return false;
+  if (votingOptions.length >= voting.votingOptionsLimit) return false;
+
+  const votingOptionsByUser = votingOptions.filter(
+    (votingOption) => votingOption.authorId === me.id
+  );
+
+  if (votingOptionsByUser.length >= 1) return false;
 
   if (voting.permissions.viewer.canAddOptions) return true;
 
