@@ -192,20 +192,23 @@ const VotingPage = () => {
                 />
               </Typography>
             </Box>
-            <Box sx={{ display: "flex" }}>
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mr: 1 }}
-              >
-                Вы:
-              </Typography>
-              <Typography variant="caption">
-                <UserBadges badges={getMeBadges(me.data, meRoles.data)} />
-              </Typography>
-            </Box>
+            {me.data && (
+              <Box sx={{ display: "flex" }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ mr: 1 }}
+                >
+                  Вы:
+                </Typography>
+                <Typography variant="caption">
+                  <UserBadges badges={getMeBadges(me.data, meRoles.data)} />
+                </Typography>
+              </Box>
+            )}
 
-            {voting.data?.canManageVotes &&
+            {me.data &&
+              voting.data?.canManageVotes &&
               !canVote &&
               !meRoles.data?.broadcaster && (
                 <Box mt={1}>
