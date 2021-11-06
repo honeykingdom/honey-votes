@@ -131,7 +131,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                 key={name}
                 control={
                   <ControlledCheckbox
-                    name="allowedVotingOptionTypes"
+                    name={`allowedVotingOptionTypes.${name}`}
                     register={register}
                     defaultChecked={defaultValues.allowedVotingOptionTypes.includes(
                       name

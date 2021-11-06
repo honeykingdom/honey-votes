@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { UpdateVotingDto } from "features/api/types";
+import { UpdateVotingDto, VotingOptionType } from "features/api/types";
 import {
   VOTING_ALLOWED_VOTING_OPTIONS_TYPES_DEFAULT,
   VOTING_CAN_MANAGE_VOTES_DEFAULT,
@@ -50,6 +50,27 @@ const VotingFormModal = ({
   });
   const { getValues } = useFormReturn;
 
+  const handleSubmit = () => {
+    const values = getValues();
+    const allowedVotingOptionTypes = [];
+
+    if ((values.allowedVotingOptionTypes as any)[VotingOptionType.Custom]) {
+      allowedVotingOptionTypes.push(VotingOptionType.Custom);
+    }
+    if (
+      (values.allowedVotingOptionTypes as any)[VotingOptionType.KinopoiskMovie]
+    ) {
+      allowedVotingOptionTypes.push(VotingOptionType.KinopoiskMovie);
+    }
+    if ((values.allowedVotingOptionTypes as any)[VotingOptionType.IgdbGame]) {
+      allowedVotingOptionTypes.push(VotingOptionType.IgdbGame);
+    }
+
+    values.allowedVotingOptionTypes = allowedVotingOptionTypes;
+
+    onSubmit(values);
+  };
+
   return (
     <Dialog
       open={open}
@@ -69,7 +90,7 @@ const VotingFormModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <Button variant="contained" onClick={() => onSubmit(getValues())}>
+        <Button variant="contained" onClick={handleSubmit}>
           {submitButtonText}
         </Button>
       </DialogActions>
