@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "generate:types": "npx openapi-typescript http://localhost:3000/api-json --output src/types/types.generated.ts"
+    "generate:types": "npx openapi-typescript http://localhost:3000/api-json --output src/features/api/types.generated.ts",
+    "generate:kinopoisk-types": "npx openapi-typescript https://kinopoiskapiunofficial.tech/documentation/api/openapi.json --output src/features/kinopoisk-api/kinopoiskApiTypes.generated.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.5.0",
