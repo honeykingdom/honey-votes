@@ -28,16 +28,19 @@ const FOLLOWED_TIME_VALUES = {
   [FollowedTime.ThreeMonths]: "от 3 месяцев",
 };
 
-type Props = {
-  permissions: Voting["permissions"];
-  mode: Mode;
-};
+type Badge = { title: string; name: string };
 
-const UserBadges = ({
-  permissions: { mod, vip, sub, follower, viewer },
-  mode,
-}: Props) => {
-  const badges: { title: string; name: string }[] = [];
+const getBadges = (
+  { mod, vip, sub, follower, viewer }: Voting["permissions"],
+  mode: Mode
+): Badge[] => {
+  const badges: Badge[] = [];
+
+  if (viewer[mode]) {
+    badges.push({ title: "Все зрители", name: "glhf-pledge" });
+
+    return badges;
+  }
 
   if (mod[mode]) badges.push({ title: "Модеры", name: "moderator" });
   // if (vip[mode]) badges.push({ title: "Випы", name: "vip" });
@@ -67,7 +70,16 @@ const UserBadges = ({
     badges.push({ title, name: "glitchcon2020" });
   }
 
-  if (viewer[mode]) badges.push({ title: "Зрители", name: "glhf-pledge" });
+  return badges;
+};
+
+type Props = {
+  permissions: Voting["permissions"];
+  mode: Mode;
+};
+
+const UserBadges = ({ permissions, mode }: Props) => {
+  const badges = getBadges(permissions, mode);
 
   return (
     <>
