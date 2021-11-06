@@ -5,8 +5,7 @@ const getCanDeleteVotingOption = (
   voting?: Voting,
   votingOption?: VotingOption,
   me?: User,
-  meRoles?: UserRoles,
-  votingOptionsCount?: number
+  meRoles?: UserRoles
 ) => {
   if (!voting || !me) return false;
 
@@ -17,7 +16,7 @@ const getCanDeleteVotingOption = (
   if (!voting.canManageVotingOptions) return false;
   if (!votingOption) return false;
 
-  return me.id === votingOption.authorId && votingOptionsCount === 0;
+  return me.id === votingOption.authorId && votingOption.fullVotesValue === 0;
 };
 
 export default getCanDeleteVotingOption;

@@ -64,8 +64,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
     voting.data,
     votingOption,
     me.data,
-    meRoles.data,
-    votingOptions.data?.ids.length || 0
+    meRoles.data
   );
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
   const isActive = userVotes.data?.some((vote) => vote.votingOptionId === id);
