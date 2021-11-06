@@ -87,9 +87,6 @@ const Layout = ({ children }: any) => {
               </Link>
             </>
           )}
-          <Link href="/tournament" passHref>
-            <Button color="inherit">Турнир</Button>
-          </Link>
 
           <Box sx={{ ml: "auto" }}>
             <Tooltip title="Автор - DmitryScaletta">
