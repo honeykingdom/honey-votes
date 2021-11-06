@@ -8,6 +8,7 @@ type Props = {
   Component?: typeof Checkbox | typeof Switch;
 };
 
+// TODO: check this https://react-hook-form.com/get-started/#IntegratingControlledInputs
 const ControlledCheckbox = ({
   name,
   register,
