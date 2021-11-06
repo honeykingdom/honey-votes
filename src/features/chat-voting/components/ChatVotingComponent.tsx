@@ -37,37 +37,11 @@ import {
 } from "features/api/apiSlice";
 import TwitchNickName from "components/TwitchNickName";
 import TwitchChatMessage from "components/TwitchChatMessage";
-import Restrictions from "./Restrictions";
+import Permissions from "./Permissions";
 import { OnChatVotingChange } from "../types";
 import useChannelLogin from "hooks/useChannelLogin";
 import ConfirmationDialog from "components/ConfirmationDialog";
-
-const SUB_MONTHS = [
-  { value: 0, title: "Subscriber" },
-  { value: 3, title: "3-Month Subscriber" },
-  { value: 6, title: "6-Month Subscriber" },
-  { value: 12, title: "1-Year Subscriber" },
-  { value: 24, title: "2-Year Subscriber" },
-  { value: 36, title: "3-Year Subscriber" },
-  { value: 48, title: "4-Year Subscriber" },
-  { value: 54, title: "4.5-Year Subscriber" },
-  { value: 60, title: "5-Year Subscriber" },
-  { value: 66, title: "5.5-Year Subscriber" },
-  { value: 72, title: "6-Year Subscriber" },
-  { value: 78, title: "6.5-Year Subscriber" },
-  { value: 84, title: "7-Year Subscriber" },
-  { value: 90, title: "7.5-Year Subscriber" },
-  { value: 96, title: "8-Year Subscriber" },
-];
-
-const DEFAULT_CHAT_VOTING_RESTRICTIONS: ChatVoting["restrictions"] = {
-  [TwitchUserType.Viewer]: false,
-  [TwitchUserType.Sub]: true,
-  [TwitchUserType.Mod]: true,
-  [TwitchUserType.Vip]: true,
-  subMonthsRequired: 0,
-  subTierRequired: SubTier.Tier1,
-};
+import { DEFAULT_CHAT_VOTING_PERMISSIONS } from "../chatVotingConstants";
 
 /** Replaces `voteCommand` at the start of the message with spaces */
 const normalizeTwitchChatMessage = (message: string, voteCommand = "") => {
@@ -183,9 +157,9 @@ const ChatVotingComponent = () => {
 
         <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
           <Box sx={{ mr: 1 }}>Голосовать могут:</Box>
-          <Restrictions
-            restrictions={
-              chatVoting.data?.restrictions || DEFAULT_CHAT_VOTING_RESTRICTIONS
+          <Permissions
+            permissions={
+              chatVoting.data?.permissions || DEFAULT_CHAT_VOTING_PERMISSIONS
             }
             canManage={canManage}
             disabled={isEditFormDisabled}
