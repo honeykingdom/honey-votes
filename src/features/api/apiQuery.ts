@@ -46,29 +46,32 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
         : args.url.startsWith(API_BASE);
 
     if (isApiUrl) {
-      const accessTokenJwt = jwtDecode<Jwt>(
-        localStorage.getItem(LS_ACCESS_TOKEN)
-      );
-      const isAccessTokenExpired = accessTokenJwt.exp * 1000 < Date.now();
+      const accessToken = localStorage.getItem(LS_ACCESS_TOKEN);
 
-      if (isAccessTokenExpired) {
-        const refreshTokenResponse = (await baseQuery(
-          getRefreshTokenQuery(),
-          api,
-          extraOptions
-        )) as RefreshTokenQueryReturnValue;
+      if (accessToken) {
+        const accessTokenJwt = jwtDecode<Jwt>(accessToken);
 
-        if (refreshTokenResponse.data) {
-          const { accessToken, refreshToken } = refreshTokenResponse.data;
+        const isAccessTokenExpired = accessTokenJwt.exp * 1000 < Date.now();
 
-          storeTokens(accessToken, refreshToken);
+        if (isAccessTokenExpired) {
+          const refreshTokenResponse = (await baseQuery(
+            getRefreshTokenQuery(),
+            api,
+            extraOptions
+          )) as RefreshTokenQueryReturnValue;
+
+          if (refreshTokenResponse.data) {
+            const { accessToken, refreshToken } = refreshTokenResponse.data;
+
+            storeTokens(accessToken, refreshToken);
+          }
         }
       }
 
       const newArgs = addHeadersToFetchArgs(args, getApiHeaders());
       let result = await baseQuery(newArgs, api, extraOptions);
 
-      if (result.error?.status === 401) {
+      if (accessToken && result.error?.status === 401) {
         const refreshTokenResponse = (await baseQuery(
           getRefreshTokenQuery(),
           api,
