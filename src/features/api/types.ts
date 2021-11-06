@@ -27,7 +27,7 @@ export type UpdateChatVotingDto = components["schemas"]["UpdateChatVotingDto"];
 export type ChatVote = components["schemas"]["ChatVote"];
 
 export enum TwitchUserType {
-  Admin = "admin",
+  Broadcaster = "broadcaster",
   Editor = "editor",
   Mod = "mod",
   Vip = "vip",

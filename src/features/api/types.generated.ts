@@ -66,11 +66,12 @@ export interface components {
       updatedAt: string;
     };
     UserRoles: {
-      isEditor: boolean | null;
-      isMod: boolean | null;
-      isVip: boolean | null;
-      isSub: boolean | null;
-      isFollower: boolean | null;
+      broadcaster: boolean | null;
+      editor: boolean | null;
+      mod: boolean | null;
+      vip: boolean | null;
+      sub: boolean | null;
+      follower: boolean | null;
       minutesFollowed: number | null;
       subTier: number | null;
     };
