@@ -11,11 +11,16 @@ const ChatVotesPage = () => {
   const login = useChannelLogin();
   const channel = useUserQuery({ login }, { skip: !login });
 
+  const username = channel.data?.displayName || login;
+
   return (
     <Layout>
       <Head>
-        {/* TODO: " - Голосование в чате" */}
-        <title>{channel.data?.displayName || login} - Голосование в чате</title>
+        <title>
+          {username
+            ? `${username} - Голосование в чате | HoneyVotes`
+            : "Голосование в чате | HoneyVotes"}
+        </title>
       </Head>
 
       <Typography variant="h4" component="div" sx={{ mb: 2 }}>
@@ -25,10 +30,7 @@ const ChatVotesPage = () => {
       <Box sx={{ mb: 2 }}>
         <Breadcrumbs
           items={[
-            {
-              title: channel.data?.displayName || login,
-              // href: `/${channel.data?.login || login}`,
-            },
+            { title: username, href: `/${login}` },
             { title: "Голосование в чате" },
           ]}
         />
