@@ -158,6 +158,7 @@ export interface components {
     VotingOption: {
       id: number;
       authorId: string;
+      authorLogin: string;
       votingId: number;
       fullVotesValue: number;
       cardId?: string;
