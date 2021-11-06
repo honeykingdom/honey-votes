@@ -81,7 +81,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
       if (result.error) {
         snackbar({
           message: "Не удалось удалить голос",
-          variant: "success",
+          variant: "error",
         });
       } else {
         snackbar({
@@ -96,7 +96,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
       if (result.error) {
         snackbar({
           message: "Не удалось проголосовать",
-          variant: "success",
+          variant: "error",
         });
       } else {
         snackbar({
