@@ -12,7 +12,7 @@ const getCanDeleteVotingOption = (
   if (getIsVotingOwner(voting, me)) return true;
 
   if (!meRoles) return false;
-  if (meRoles.isEditor) return true;
+  if (meRoles.editor) return true;
   if (!voting.canManageVotingOptions) return false;
   if (!votingOption) return false;
 

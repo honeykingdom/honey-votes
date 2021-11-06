@@ -7,18 +7,18 @@ const getCanVote = (voting?: Voting, me?: User, meRoles?: UserRoles) => {
   if (voting.permissions.viewer.canVote) return true;
   if (!meRoles) return false;
 
-  if (voting.permissions.mod.canVote && meRoles.isMod) return true;
-  if (voting.permissions.vip.canVote && meRoles.isVip) return true;
+  if (voting.permissions.mod.canVote && meRoles.mod) return true;
+  if (voting.permissions.vip.canVote && meRoles.vip) return true;
   if (
     voting.permissions.sub.canVote &&
-    meRoles.isSub &&
+    meRoles.sub &&
     meRoles.subTier >= voting.permissions.sub.subTierRequiredToVote
   ) {
     return true;
   }
   if (
     voting.permissions.follower.canVote &&
-    meRoles.isFollower &&
+    meRoles.follower &&
     meRoles.minutesFollowed >=
       voting.permissions.follower.minutesToFollowRequiredToVote
   ) {

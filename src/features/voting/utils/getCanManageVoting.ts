@@ -12,7 +12,7 @@ const getCanManageVoting = (
 
   if (!meRoles) return false;
 
-  if (meRoles.isEditor) return true;
+  if (meRoles.editor) return true;
 
   return false;
 };
