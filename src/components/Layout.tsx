@@ -38,23 +38,27 @@ const Layout = ({ children }: any) => {
   );
 
   useEffect(() => {
+    if (!window.location.hash.startsWith("#accessToken=")) return;
+
+    const [accessToken, refreshToken] = window.location.hash
+      .slice(1)
+      .split("&")
+      .map((s) => s.split("=")[1]);
+
+    storeTokens(accessToken, refreshToken);
+
+    window.location.hash = "";
+
     const redirectPath = localStorage.getItem(LS_REDIRECT_PATH);
-
-    if (window.location.hash.startsWith("#accessToken=")) {
-      const [accessToken, refreshToken] = window.location.hash
-        .slice(1)
-        .split("&")
-        .map((s) => s.split("=")[1]);
-
-      storeTokens(accessToken, refreshToken);
-
-      window.location.hash = "";
-    }
 
     if (redirectPath) {
       localStorage.removeItem(LS_REDIRECT_PATH);
       router.replace(redirectPath);
     }
+
+    setTimeout(() => {
+      me.refetch();
+    }, 500);
   }, []);
 
   const hasUser = me.data && !me.isError;
