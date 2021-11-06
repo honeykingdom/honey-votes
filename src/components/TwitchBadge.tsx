@@ -8,7 +8,7 @@ type Props = {
 };
 
 const TwitchBadge = ({ name, version = "1", children }: Props) => {
-  const badge = globalBadges.badge_sets[name].versions[version];
+  const badge = globalBadges.badge_sets[name]?.versions[version];
 
   if (!badge) return null;
 
