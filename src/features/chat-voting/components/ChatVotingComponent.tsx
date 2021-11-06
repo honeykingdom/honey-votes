@@ -130,7 +130,7 @@ const ChatVotingComponent = () => {
   const canManage =
     !me.isError &&
     !meRoles.isError &&
-    (me.data?.id === channel.data?.id || meRoles.data?.isEditor);
+    (me.data?.id === channel.data?.id || meRoles.data?.editor);
 
   const renderedChatVotes = chatVotes.data
     ? chatVotesSelectors.selectAll(chatVotes.data)
