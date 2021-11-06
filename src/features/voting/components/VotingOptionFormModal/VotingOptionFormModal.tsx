@@ -10,7 +10,7 @@ import { CreateVotingOptionDto, VotingOptionType } from "features/api/types";
 import VotingOptionForm from "./VotingOptionForm";
 import { useEffect } from "react";
 
-type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, "votingId">;
+export type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, "votingId">;
 
 type Props = {
   open: boolean;
