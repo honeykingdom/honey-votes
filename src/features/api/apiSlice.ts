@@ -182,18 +182,30 @@ export const api = createApi({
       }),
     }),
 
+    userVotes: builder.query<Vote[], { votingId: number; authorId: string }>({
+      query: ({ authorId, votingId }) => ({
+        url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}`,
+        params: {
+          authorId: `eq.${authorId}`,
+          votingId: `eq.${votingId}`,
+        },
+      }),
+      providesTags: [{ type: "Vote", id: "LIST" }],
+    }),
     createVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
         method: "POST",
         body: { votingOptionId } as AddVoteDto,
       }),
+      invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (voteId) => ({
         url: `${API_BASE}/votes/${voteId}`,
         method: "DELETE",
       }),
+      invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
@@ -306,6 +318,7 @@ export const {
   useCreateVotingOptionMutation,
   useDeleteVotingOptionMutation,
 
+  useUserVotesQuery,
   useCreateVoteMutation,
   useDeleteVoteMutation,
 
