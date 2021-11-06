@@ -4,20 +4,18 @@ import { SyntheticEvent } from "react";
 import { OnChatVotingChange } from "../types";
 
 type Props = {
-  restrictions: ChatVoting["restrictions"];
+  permissions: ChatVoting["permissions"];
   disabled?: boolean;
   onChange: OnChatVotingChange;
 };
 
-const RestrictionsForm = ({
-  restrictions,
+const PermissionsForm = ({
+  permissions,
   disabled = false,
   onChange = () => {},
 }: Props) => {
-  const { mod, vip, subTier1, subTier2, subTier3, viewer, subMonthsRequired } =
-    restrictions;
-  const sub = subTier1 || subTier2 || subTier3;
-
+  const { mod, vip, sub, viewer, subMonthsRequired, subTierRequired } =
+    permissions;
   const checkboxes = [
     { name: "mod", label: "Модеры", value: mod },
     { name: "vip", label: "Випы", value: vip },
@@ -29,18 +27,7 @@ const RestrictionsForm = ({
     (name: string) => (e: SyntheticEvent<HTMLInputElement, Event>) => {
       const value = e.currentTarget.checked;
 
-      if (name === "sub") {
-        onChange({
-          restrictions: {
-            ...restrictions,
-            subTier1: value,
-            subTier2: value,
-            subTier3: value,
-          },
-        });
-      } else {
-        onChange({ restrictions: { ...restrictions, [name]: value } });
-      }
+      onChange({ permissions: { ...permissions, [name]: value } });
     };
 
   return (
@@ -101,4 +88,4 @@ const RestrictionsForm = ({
   );
 };
 
-export default RestrictionsForm;
+export default PermissionsForm;

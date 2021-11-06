@@ -1,30 +1,30 @@
 import { ChatVoting } from "features/api/types";
 import { OnChatVotingChange } from "../types";
-import RestrictionLabels from "./RestrictionLabels";
-import RestrictionsForm from "./RestrictionsForm";
+import PermissionsLabels from "./PermissionsLabels";
+import PermissionsForm from "./PermissionsForm";
 
 type Props = {
-  restrictions: ChatVoting["restrictions"];
+  permissions: ChatVoting["permissions"];
   canManage: boolean;
   disabled?: boolean;
   onChange: OnChatVotingChange;
 };
 
-const Restrictions = ({
-  restrictions,
+const Permissions = ({
+  permissions,
   canManage,
   disabled = false,
   onChange,
 }: Props) => {
   return canManage ? (
-    <RestrictionsForm
-      restrictions={restrictions}
+    <PermissionsForm
+      permissions={permissions}
       disabled={disabled}
       onChange={onChange}
     />
   ) : (
-    <RestrictionLabels restrictions={restrictions} />
+    <PermissionsLabels permissions={permissions} />
   );
 };
 
-export default Restrictions;
+export default Permissions;

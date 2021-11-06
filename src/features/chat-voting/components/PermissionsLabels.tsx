@@ -4,11 +4,11 @@ import { ChatVoting, SubTier } from "features/api/types";
 import { Box } from "@mui/material";
 
 type Props = {
-  restrictions: ChatVoting["restrictions"];
+  permissions: ChatVoting["permissions"];
 };
 
-const RestrictionLabels = ({
-  restrictions: { mod, vip, sub, viewer, subMonthsRequired, subTierRequired },
+const PermissionsLabels = ({
+  permissions: { mod, vip, sub, viewer, subMonthsRequired, subTierRequired },
 }: Props) => {
   const badges: { title: string; name: string }[] = [];
 
@@ -44,4 +44,4 @@ const RestrictionLabels = ({
   );
 };
 
-export default RestrictionLabels;
+export default PermissionsLabels;
