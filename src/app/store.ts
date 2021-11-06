@@ -2,12 +2,14 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import { api } from "features/api/apiSlice";
 import { kinopoiskApi } from "features/kinopoisk-api/kinopoiskApiSlice";
+import snackbar from "features/snackbar/snackbarSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [api.reducerPath]: api.reducer,
       [kinopoiskApi.reducerPath]: kinopoiskApi.reducer,
+      snackbar,
     },
     middleware: (getDefaultMiddleware) => [
       ...getDefaultMiddleware(),
