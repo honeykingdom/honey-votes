@@ -29,15 +29,19 @@ const ChannelPage = () => {
 
       <Divider sx={{ mb: 2 }} />
 
-      <NextLink href={`/${me.data.login}/voting`} passHref>
-        <Link>Голосование</Link>
-      </NextLink>
+      {me.data && (
+        <>
+          <NextLink href={`/${me.data?.login}/voting`} passHref>
+            <Link>Голосование</Link>
+          </NextLink>
 
-      <br />
+          <br />
 
-      <NextLink href={`/${me.data.login}/chat-voting`} passHref>
-        <Link>Голосование в чате</Link>
-      </NextLink>
+          <NextLink href={`/${me.data?.login}/chat-voting`} passHref>
+            <Link>Голосование в чате</Link>
+          </NextLink>
+        </>
+      )}
     </Layout>
   );
 };
