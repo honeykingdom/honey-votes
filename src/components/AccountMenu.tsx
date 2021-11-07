@@ -13,17 +13,20 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import PollIcon from "@mui/icons-material/Poll";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useAppDispatch } from "app/hooks";
+import TwitchIcon from "icons/twitch.svg";
 import { useMeQuery } from "features/api/apiSlice";
 import {
   AUTH_URL,
   LS_ACCESS_TOKEN,
   LS_REFRESH_TOKEN,
   LS_REDIRECT_PATH,
-} from "utils/constants";
-import TwitchIcon from "icons/twitch.svg";
+} from "features/auth/authConstants";
+import { clearTokens } from "features/auth/authSlice";
 import PurpleButton from "./PurpleButton";
 
 const AccountMenu = () => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = !!anchorEl;
 
@@ -37,10 +40,11 @@ const AccountMenu = () => {
   };
 
   const handleSignOut = () => {
+    dispatch(clearTokens());
+    me.refetch();
+
     localStorage.removeItem(LS_ACCESS_TOKEN);
     localStorage.removeItem(LS_REFRESH_TOKEN);
-    // TODO: set empty data instead of refetching
-    me.refetch();
   };
 
   if (me.isLoading || me.isUninitialized) return null;

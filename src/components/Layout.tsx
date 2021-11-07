@@ -17,13 +17,15 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { useMeQuery } from "features/api/apiSlice";
-import { LS_REDIRECT_PATH } from "utils/constants";
-import storeTokens from "utils/storeTokens";
+import { LS_REDIRECT_PATH } from "features/auth/authConstants";
+import storeTokens from "features/auth/storeTokens";
 import { hideSnackbar } from "features/snackbar/snackbarSlice";
+import { updateTokens } from "features/auth/authSlice";
 import AccountMenu from "./AccountMenu";
 
 const Layout = ({ children }: any) => {
   const dispatch = useAppDispatch();
+
   const me = useMeQuery();
   const router = useRouter();
   const snackbarState = useAppSelector((state) => state.snackbar);
@@ -45,6 +47,7 @@ const Layout = ({ children }: any) => {
       .split("&")
       .map((s) => s.split("=")[1]);
 
+    dispatch(updateTokens({ accessToken, refreshToken }));
     storeTokens(accessToken, refreshToken);
 
     window.location.hash = "";

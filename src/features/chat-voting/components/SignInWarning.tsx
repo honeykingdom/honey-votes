@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Link } from "@mui/material";
 import { useMeQuery } from "features/api/apiSlice";
 import useChannelLogin from "hooks/useChannelLogin";
-import { AUTH_URL, LS_REDIRECT_PATH } from "utils/constants";
+import { AUTH_URL, LS_REDIRECT_PATH } from "features/auth/authConstants";
 
 const SignInWarning = () => {
   const login = useChannelLogin();
