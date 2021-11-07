@@ -181,7 +181,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             <FormControlSelect
               id="minutesToFollowRequiredToVote"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToVote`}
-              label="Минимальный уровень подписки"
+              label="Минимальное время фоллова"
               control={control}
             >
               {FOLLOWED_TIME_MENU_ITEMS}
@@ -234,7 +234,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             <FormControlSelect
               id="minutesToFollowRequiredToAddOptions"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToAddOptions`}
-              label="Минимальный уровень подписки"
+              label="Минимальное время фоллова"
               control={control}
             >
               {FOLLOWED_TIME_MENU_ITEMS}
