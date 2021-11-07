@@ -7,21 +7,22 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 import jwtDecode from "jwt-decode";
-import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from "utils/constants";
-import storeTokens from "utils/storeTokens";
+import { AppState } from "app/store";
+import storeTokens from "features/auth/storeTokens";
 import { API_BASE, API_BASE_POSTGREST, SUPABASE_HEADERS } from "./apiConstants";
 import { Jwt, RefreshTokenResponse } from "./types";
+import { updateTokens } from "features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({ baseUrl: "" });
 
-const getApiHeaders = () => ({
-  Authorization: `Bearer ${localStorage.getItem(LS_ACCESS_TOKEN)}`,
+const getApiHeaders = (accessToken: string) => ({
+  Authorization: `Bearer ${accessToken}`,
 });
 
-const getRefreshTokenQuery = () => ({
+const getRefreshTokenQuery = (refreshToken: string) => ({
   url: `${API_BASE}/auth/refresh-token`,
   method: "POST",
-  body: { refreshToken: localStorage.getItem(LS_REFRESH_TOKEN) },
+  body: { refreshToken },
 });
 
 const addHeadersToFetchArgs = (
@@ -46,7 +47,10 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
         : args.url.startsWith(API_BASE);
 
     if (isApiUrl) {
-      const accessToken = localStorage.getItem(LS_ACCESS_TOKEN);
+      const state = api.getState() as AppState;
+
+      let accessToken = state.auth.accessToken;
+      let refreshToken = state.auth.refreshToken;
 
       if (accessToken) {
         const accessTokenJwt = jwtDecode<Jwt>(accessToken);
@@ -55,35 +59,42 @@ const apiQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> =
 
         if (isAccessTokenExpired) {
           const refreshTokenResponse = (await baseQuery(
-            getRefreshTokenQuery(),
+            getRefreshTokenQuery(refreshToken),
             api,
             extraOptions
           )) as RefreshTokenQueryReturnValue;
 
           if (refreshTokenResponse.data) {
-            const { accessToken, refreshToken } = refreshTokenResponse.data;
+            accessToken = refreshTokenResponse.data.accessToken;
+            refreshToken = refreshTokenResponse.data.refreshToken;
 
+            api.dispatch(updateTokens({ accessToken, refreshToken }));
             storeTokens(accessToken, refreshToken);
           }
         }
       }
 
-      const newArgs = addHeadersToFetchArgs(args, getApiHeaders());
+      const newArgs = addHeadersToFetchArgs(args, getApiHeaders(accessToken));
       let result = await baseQuery(newArgs, api, extraOptions);
 
       if (accessToken && result.error?.status === 401) {
         const refreshTokenResponse = (await baseQuery(
-          getRefreshTokenQuery(),
+          getRefreshTokenQuery(refreshToken),
           api,
           extraOptions
         )) as RefreshTokenQueryReturnValue;
 
         if (refreshTokenResponse.data) {
-          const { accessToken, refreshToken } = refreshTokenResponse.data;
+          accessToken = refreshTokenResponse.data.accessToken;
+          refreshToken = refreshTokenResponse.data.refreshToken;
 
+          api.dispatch(updateTokens({ accessToken, refreshToken }));
           storeTokens(accessToken, refreshToken);
 
-          const newArgs = addHeadersToFetchArgs(args, getApiHeaders());
+          const newArgs = addHeadersToFetchArgs(
+            args,
+            getApiHeaders(accessToken)
+          );
 
           result = await baseQuery(newArgs, api, extraOptions);
         }
