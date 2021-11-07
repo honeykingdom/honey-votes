@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from "react";
-import { useRouter } from "next/router";
+import { useMemo } from "react";
 import Link from "next/link";
 import {
   AppBar,
@@ -17,18 +16,17 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAppDispatch, useAppSelector } from "app/hooks";
 import { useMeQuery } from "features/api/apiSlice";
-import { LS_REDIRECT_PATH } from "features/auth/authConstants";
-import storeTokens from "features/auth/storeTokens";
 import { hideSnackbar } from "features/snackbar/snackbarSlice";
-import { updateTokens } from "features/auth/authSlice";
+import { useAuthRedirect } from "features/auth/useAuthRedirect";
 import AccountMenu from "./AccountMenu";
 
 const Layout = ({ children }: any) => {
   const dispatch = useAppDispatch();
 
   const me = useMeQuery();
-  const router = useRouter();
   const snackbarState = useAppSelector((state) => state.snackbar);
+
+  useAuthRedirect();
 
   const handleSnackbarClose = useMemo(
     () => (event?: React.SyntheticEvent, reason?: string) => {
@@ -38,31 +36,6 @@ const Layout = ({ children }: any) => {
     },
     []
   );
-
-  useEffect(() => {
-    if (!window.location.hash.startsWith("#accessToken=")) return;
-
-    const [accessToken, refreshToken] = window.location.hash
-      .slice(1)
-      .split("&")
-      .map((s) => s.split("=")[1]);
-
-    dispatch(updateTokens({ accessToken, refreshToken }));
-    storeTokens(accessToken, refreshToken);
-
-    window.location.hash = "";
-
-    const redirectPath = localStorage.getItem(LS_REDIRECT_PATH);
-
-    if (redirectPath) {
-      localStorage.removeItem(LS_REDIRECT_PATH);
-      router.replace(redirectPath);
-    }
-
-    setTimeout(() => {
-      me.refetch();
-    }, 500);
-  }, []);
 
   const hasUser = me.data && !me.isError;
 
