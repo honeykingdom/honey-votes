@@ -34,7 +34,7 @@ const VotingListPage = () => {
   const username = channel.data?.displayName || login;
 
   const canManage =
-    channel.isSuccess && me.isSuccess && channel.data.id === me.data.id;
+    channel.isSuccess && me.isSuccess && channel.data?.id === me.data?.id;
 
   const [isVotingFormOpened, setIsVotingFormOpened] = useState(false);
 
