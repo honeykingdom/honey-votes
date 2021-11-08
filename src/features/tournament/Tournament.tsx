@@ -4,17 +4,19 @@ import { shuffle } from "d3-array";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useWindowSize } from "react-use";
 import Confetti from "react-confetti";
-
-import SpinningWheel, {
+import SpinningWheel from "react-spinning-canvas-wheel";
+import type {
   SpinningWheelRef,
   WheelSegment,
-} from "../../../react-spinning-wheel-canvas/src";
+} from "react-spinning-canvas-wheel";
+
 import VolumeControl from "components/VolumeControl";
 import ArrowRightIcon from "icons/arrow-right.svg";
 import getRandomInt from "utils/getRandomInt";
 import MovieCard from "./MovieCard";
 // import MoviePicker from "./MoviePicker";
 import useTournament from "./useTournament";
+import timingFunction from "./utils/timingFunction";
 import { Step, StepType } from "./types";
 
 const TOURNAMENT_ASSETS_URL = process.env.NEXT_PUBLIC_TOURNAMENT_ASSETS_URL;
@@ -278,6 +280,7 @@ const Tournament = ({ initialMovies }: Props) => {
             setSelectedMovieId(wheelSegments[index].id);
             playNoNoNo();
           }}
+          timingFunction={timingFunction}
         />
         <ArrowRightIcon
           style={{
