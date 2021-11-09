@@ -44,7 +44,7 @@ export const votingOptionsSelectors = votingOptionsAdapter.getSelectors();
 const chatVotesAdapter = createEntityAdapter<ChatVote>({
   selectId: (chatVote) => chatVote.userId,
   sortComparer: (a, b) =>
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
 });
 
 export const chatVotesSelectors = chatVotesAdapter.getSelectors();
