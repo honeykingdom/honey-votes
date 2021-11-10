@@ -5,7 +5,7 @@ import {
 } from "features/twitch-api/twitchApiSlice";
 
 type Props = {
-  channelId: string;
+  channelId?: string;
   name: string;
   version?: string;
   children?: React.ReactNode;
