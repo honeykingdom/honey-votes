@@ -2,18 +2,20 @@ import { Box } from "@mui/material";
 import TwitchBadge from "./TwitchBadge";
 
 type Props = {
+  channelId: string;
   userName: string;
   // TODO: add types
   tags: any;
 };
 
-const TwitchNickName = ({ userName, tags }: Props) => {
+const TwitchNickName = ({ channelId, userName, tags }: Props) => {
   // TODO: don't display chinese nicknames
   const nickName = tags.displayName || userName;
   const badges = Object.entries(tags.badges || {}).map(
     ([name, version]: [string, any]) => (
       <TwitchBadge
         key={name}
+        channelId={channelId}
         name={name}
         version={version === true ? "1" : version}
       />

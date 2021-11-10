@@ -1,14 +1,23 @@
 import { Typography } from "@mui/material";
-import globalBadges from "features/twitch-api/globalBadges.mock.json";
+import {
+  useChannelBadgesQuery,
+  useGlobalBadgesQuery,
+} from "features/twitch-api/twitchApiSlice";
 
 type Props = {
+  channelId: string;
   name: string;
   version?: string;
   children?: React.ReactNode;
 };
 
-const TwitchBadge = ({ name, version = "1", children }: Props) => {
-  const badge = globalBadges.badge_sets[name]?.versions[version];
+const TwitchBadge = ({ channelId, name, version = "1", children }: Props) => {
+  const globalBadges = useGlobalBadgesQuery();
+  const channelBadges = useChannelBadgesQuery(channelId, { skip: !channelId });
+
+  const badge =
+    globalBadges.data?.[name]?.versions?.[version] ||
+    channelBadges.data?.[name]?.versions?.[version];
 
   if (!badge) return null;
 

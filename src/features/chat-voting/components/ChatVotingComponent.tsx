@@ -222,7 +222,11 @@ const ChatVotingComponent = () => {
                   />
                 </TableCell>
                 <TableCell title={userName}>
-                  <TwitchNickName userName={userName} tags={tags} />
+                  <TwitchNickName
+                    channelId={channel.data?.id}
+                    userName={userName}
+                    tags={tags}
+                  />
                 </TableCell>
                 <TableCell align="right" sx={{ py: 1 }}>
                   <Button
@@ -299,7 +303,11 @@ const ChatVotingComponent = () => {
                   />
                 </TableCell>
                 <TableCell title={userName}>
-                  <TwitchNickName userName={userName} tags={tags} />
+                  <TwitchNickName
+                    channelId={channel.data?.id}
+                    userName={userName}
+                    tags={tags}
+                  />
                 </TableCell>
                 <TableCell>{new Date(updatedAt).toLocaleString()}</TableCell>
               </TableRow>
