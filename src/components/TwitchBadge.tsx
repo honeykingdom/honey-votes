@@ -16,8 +16,8 @@ const TwitchBadge = ({ channelId, name, version = "1", children }: Props) => {
   const channelBadges = useChannelBadgesQuery(channelId, { skip: !channelId });
 
   const badge =
-    globalBadges.data?.[name]?.versions?.[version] ||
-    channelBadges.data?.[name]?.versions?.[version];
+    channelBadges.data?.[name]?.versions?.[version] ||
+    globalBadges.data?.[name]?.versions?.[version];
 
   if (!badge) return null;
 
