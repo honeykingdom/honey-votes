@@ -45,6 +45,25 @@ export interface paths {
   "/api/honey-votes/chat-votes/{chatVotingId}/clear": {
     post: operations["ChatVotesController_clearChatVotes"];
   };
+  "/api/honey-votes/chat-goal": {
+    post: operations["ChatGoalController_createGoal"];
+  };
+  "/api/honey-votes/chat-goal/{goalId}": {
+    put: operations["ChatGoalController_updateGoal"];
+    delete: operations["ChatGoalController_deleteGoal"];
+  };
+  "/api/honey-votes/chat-goal/{goalId}/start": {
+    post: operations["ChatGoalController_startGoal"];
+  };
+  "/api/honey-votes/chat-goal/{goalId}/pause": {
+    post: operations["ChatGoalController_pauseGoal"];
+  };
+  "/api/honey-votes/chat-goal/{goalId}/reset": {
+    post: operations["ChatGoalController_resetGoal"];
+  };
+  "/api/honey-votes/chat-goal/{goalId}/reset-votes": {
+    post: operations["ChatGoalController_resetVotes"];
+  };
 }
 
 export interface components {
@@ -216,6 +235,72 @@ export interface components {
       permissions?: components["schemas"]["ChatVotingPermissions"];
       listening?: boolean;
       commands?: components["schemas"]["ChatVotingCommands"];
+    };
+    ChatGoalPermissionsDefault: {
+      canVote: boolean;
+      votesAmount: number;
+    };
+    ChatGoalPermissions: {
+      mod: components["schemas"]["ChatGoalPermissionsDefault"];
+      vip: components["schemas"]["ChatGoalPermissionsDefault"];
+      subTier1: components["schemas"]["ChatGoalPermissionsDefault"];
+      subTier2: components["schemas"]["ChatGoalPermissionsDefault"];
+      subTier3: components["schemas"]["ChatGoalPermissionsDefault"];
+      viewer: components["schemas"]["ChatGoalPermissionsDefault"];
+    };
+    CreateChatGoalDto: {
+      permissions?: components["schemas"]["ChatGoalPermissions"];
+      listening?: boolean;
+      title?: string;
+      upvoteCommand?: string;
+      downvoteCommand?: string;
+      timerDuration?: number;
+      maxVotesValue?: number;
+      broadcasterId: string;
+    };
+    ChatVoteEventPayload: {
+      userId: string;
+      userLogin: string;
+      userDisplayName: string;
+    };
+    ChatVoteEvent: {
+      type: string;
+      payload: components["schemas"]["ChatVoteEventPayload"];
+    };
+    ChatGoalEvent: {
+      chatGoalId: string;
+      seed: number;
+      action: components["schemas"]["ChatVoteEvent"];
+    };
+    ChatGoal: {
+      broadcasterId: string;
+      permissions: components["schemas"]["ChatGoalPermissions"];
+      listening: boolean;
+      title: string;
+      upvoteCommand: string;
+      downvoteCommand: string;
+      /** Original timer duration */
+      timerDuration: number;
+      /** How many votes needs to complete the goal */
+      maxVotesValue: number;
+      status: number;
+      /** Timestamp when timer should finish */
+      endTimerTimestamp: number;
+      /** Remaining timer duration after pause */
+      remainingTimerDuration: number;
+      /** Current full votes value */
+      votesValue: number;
+      createdAt: string;
+      updatedAt: string;
+    };
+    UpdateChatGoalDto: {
+      permissions?: components["schemas"]["ChatGoalPermissions"];
+      listening?: boolean;
+      title?: string;
+      upvoteCommand?: string;
+      downvoteCommand?: string;
+      timerDuration?: number;
+      maxVotesValue?: number;
     };
   };
 }
@@ -532,6 +617,133 @@ export interface operations {
     responses: {
       /** OK */
       200: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+  };
+  ChatGoalController_createGoal: {
+    parameters: {};
+    responses: {
+      /** Created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["ChatGoal"];
+        };
+      };
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateChatGoalDto"];
+      };
+    };
+  };
+  ChatGoalController_updateGoal: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** Created */
+      201: unknown;
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateChatGoalDto"];
+      };
+    };
+  };
+  ChatGoalController_deleteGoal: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+  };
+  ChatGoalController_startGoal: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: unknown;
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+  };
+  ChatGoalController_pauseGoal: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: unknown;
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+  };
+  ChatGoalController_resetGoal: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: unknown;
+      /** Bad request */
+      400: unknown;
+      /** Unauthorized */
+      401: unknown;
+      /** Forbidden */
+      403: unknown;
+    };
+  };
+  ChatGoalController_resetVotes: {
+    parameters: {
+      path: {
+        goalId: string;
+      };
+    };
+    responses: {
+      /** OK */
+      200: unknown;
+      /** Bad request */
+      400: unknown;
       /** Unauthorized */
       401: unknown;
       /** Forbidden */

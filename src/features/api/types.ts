@@ -26,12 +26,20 @@ export type UpdateChatVotingDto = components["schemas"]["UpdateChatVotingDto"];
 
 export type ChatVote = components["schemas"]["ChatVote"];
 
+export type ChatGoal = components["schemas"]["ChatGoal"];
+export type ChatGoalEvent = components["schemas"]["ChatGoalEvent"];
+export type CreateChatGoalDto = components["schemas"]["CreateChatGoalDto"];
+export type UpdateChatGoalDto = components["schemas"]["UpdateChatGoalDto"];
+
 export enum TwitchUserType {
   Broadcaster = "broadcaster",
   Editor = "editor",
   Mod = "mod",
   Vip = "vip",
   Sub = "sub",
+  SubTier1 = "subTier1",
+  SubTier2 = "subTier2",
+  SubTier3 = "subTier3",
   Follower = "follower",
   Viewer = "viewer",
 }
@@ -48,6 +56,20 @@ export enum VotingOptionType {
   Custom = "custom",
 }
 
+export enum GoalStatus {
+  Uninitialized,
+
+  TimerIdle,
+  TimerRunning,
+  TimerPaused,
+
+  VotingIdle,
+  VotingRunning,
+  VotingPaused,
+  VotingFinished,
+}
+
+/** @deprecated */
 export type Streamer = {
   id: string;
   login: string;
