@@ -15,6 +15,7 @@ import {
 import GitHubIcon from "@mui/icons-material/GitHub";
 import PersonIcon from "@mui/icons-material/Person";
 import { useAppDispatch, useAppSelector } from "app/hooks";
+import getMainMenuLinks from "utils/getMainMenuLinks";
 import { useMeQuery } from "features/api/apiSlice";
 import { hideSnackbar } from "features/snackbar/snackbarSlice";
 import { useAuthRedirect } from "features/auth/useAuthRedirect";
@@ -59,12 +60,11 @@ const Layout = ({ children }: any) => {
 
           {hasUser && (
             <>
-              <Link href={`/${me.data.login}/voting`} passHref>
-                <Button color="inherit">Голосование</Button>
-              </Link>
-              <Link href={`/${me.data.login}/chat-voting`} passHref>
-                <Button color="inherit">Голосование в чате</Button>
-              </Link>
+              {getMainMenuLinks(me.data.login).map(({ label, href }) => (
+                <Link key={href} href={href} passHref>
+                  <Button color="inherit">{label}</Button>
+                </Link>
+              ))}
             </>
           )}
 

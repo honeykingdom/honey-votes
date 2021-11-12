@@ -11,9 +11,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import PollIcon from "@mui/icons-material/Poll";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAppDispatch } from "app/hooks";
+import getMainMenuLinks from "utils/getMainMenuLinks";
 import TwitchIcon from "icons/twitch.svg";
 import { useMeQuery } from "features/api/apiSlice";
 import {
@@ -119,23 +119,18 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <Link href={`/${me.data.login}/voting`} passHref>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <PollIcon fontSize="small" />
-            </ListItemIcon>
-            Голосование
-          </MenuItem>
-        </Link>
-
-        <Link href={`/${me.data.login}/chat-voting`} passHref>
-          <MenuItem component="a">
-            <ListItemIcon>
-              <PollIcon fontSize="small" />
-            </ListItemIcon>
-            Голосование в чате
-          </MenuItem>
-        </Link>
+        {getMainMenuLinks(me.data.login).map(
+          ({ label, href, IconComponent }) => (
+            <Link key={href} href={href} passHref>
+              <MenuItem component="a">
+                <ListItemIcon>
+                  <IconComponent fontSize="small" />
+                </ListItemIcon>
+                {label}
+              </MenuItem>
+            </Link>
+          )
+        )}
 
         <Divider />
 
