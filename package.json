@@ -2,8 +2,12 @@
   "name": "honey-votes",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "chat-goal-widget"
+  ],
   "scripts": {
     "dev": "next dev -p 3001",
+    "prebuild": "rm -rf ./public/chat-goal-widget && cd ./chat-goal-widget && yarn build && yarn export -o ../public/chat-goal-widget",
     "build": "next build",
     "start": "next start",
     "export": "next export",
