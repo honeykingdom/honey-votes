@@ -12,7 +12,8 @@
     "start": "next start",
     "export": "next export",
     "generate:types": "npx openapi-typescript http://localhost:3000/api-json --output src/features/api/types.generated.ts",
-    "generate:kinopoisk-types": "npx openapi-typescript https://kinopoiskapiunofficial.tech/documentation/api/openapi.json --output src/features/kinopoisk-api/kinopoiskApiTypes.generated.ts"
+    "generate:kinopoisk-types": "npx openapi-typescript https://kinopoiskapiunofficial.tech/documentation/api/openapi.json --output src/features/kinopoisk-api/kinopoiskApiTypes.generated.ts",
+    "generate:schema": "node ./scripts/generateApiSchema.js http://localhost:3000/api-json src/features/api/api-schemas.json"
   },
   "dependencies": {
     "@emotion/react": "^11.5.0",
