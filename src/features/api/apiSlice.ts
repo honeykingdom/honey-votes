@@ -6,6 +6,7 @@ import apiQuery from "./apiQuery";
 import {
   API_BASE,
   API_BASE_POSTGREST,
+  CHAT_GOAL_TABLE_NAME,
   CHAT_VOTE_TABLE_NAME,
   CHAT_VOTING_TABLE_NAME,
   USER_TABLE_NAME,
@@ -29,6 +30,9 @@ import {
   VotingOption,
   VotingOptionWithAuthor,
   DeleteVoteDto,
+  ChatGoal,
+  CreateChatGoalDto,
+  UpdateChatGoalDto,
 } from "./types";
 import transformVotingOption from "./utils/transformVotingOption";
 
@@ -311,6 +315,87 @@ export const api = createApi({
         if (subscription) supabase.removeSubscription(subscription);
       },
     }),
+
+    chatGoal: builder.query<ChatGoal, string>({
+      query: (broadcasterId) => ({
+        url: `${API_BASE_POSTGREST}/${CHAT_GOAL_TABLE_NAME}`,
+        params: { broadcasterId: `eq.${broadcasterId}` },
+      }),
+      transformResponse: (response) => response[0],
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<ChatGoal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${arg}`)
+            .on("*", (payload) =>
+              updateCachedData((draft) => {
+                if (payload.eventType === "INSERT") return payload.new;
+                if (payload.eventType === "UPDATE") return payload.new;
+                if (payload.eventType === "DELETE") return null;
+              })
+            )
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
+    }),
+    createChatGoal: builder.mutation<ChatGoal, CreateChatGoalDto>({
+      query: (body) => ({
+        url: `${API_BASE}/chat-goal`,
+        method: "POST",
+        body,
+      }),
+    }),
+    updateChatGoal: builder.mutation<
+      ChatGoal,
+      { chatGoalId: string; body: UpdateChatGoalDto }
+    >({
+      query: ({ chatGoalId, body }) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}`,
+        method: "PUT",
+        body,
+      }),
+    }),
+    deleteChatGoal: builder.mutation<void, string>({
+      query: (chatGoalId) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}`,
+        method: "DELETE",
+      }),
+    }),
+
+    startChatGoal: builder.mutation<void, string>({
+      query: (chatGoalId) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}/start`,
+        method: "POST",
+      }),
+    }),
+    pauseChatGoal: builder.mutation<void, string>({
+      query: (chatGoalId) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}/pause`,
+        method: "POST",
+      }),
+    }),
+    resetChatGoal: builder.mutation<void, string>({
+      query: (chatGoalId) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}/reset`,
+        method: "POST",
+      }),
+    }),
+    resetChatGoalVotes: builder.mutation<void, string>({
+      query: (chatGoalId) => ({
+        url: `${API_BASE}/chat-goal/${chatGoalId}/reset-votes`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
@@ -340,4 +425,14 @@ export const {
   useClearChatVotingMutation,
 
   useChatVotesQuery,
+
+  useChatGoalQuery,
+  useCreateChatGoalMutation,
+  useUpdateChatGoalMutation,
+  useDeleteChatGoalMutation,
+
+  useStartChatGoalMutation,
+  usePauseChatGoalMutation,
+  useResetChatGoalMutation,
+  useResetChatGoalVotesMutation,
 } = api;
