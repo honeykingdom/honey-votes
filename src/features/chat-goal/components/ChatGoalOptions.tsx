@@ -152,7 +152,7 @@ const ChatGoalOptions = () => {
 
         <Grid container spacing={2}>
           <Grid item md={6}>
-            <Tooltip title="Необходимое количество голосов, чтобы завершить чатгол">
+            <Tooltip title="Количество голосов, необходимое для завершения чатгола">
               <TextField
                 label="Количество голосов"
                 type="number"
