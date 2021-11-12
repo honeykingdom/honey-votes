@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
-  assetPrefix: process.env.NODE_ENV === "development" ? undefined : ".",
+  assetPrefix:
+    process.env.NODE_ENV === "development" ? undefined : "/chat-goal-widget",
 };
