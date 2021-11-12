@@ -262,6 +262,7 @@ export interface components {
       userId: string;
       userLogin: string;
       userDisplayName: string;
+      votesCount: number;
     };
     ChatVoteEvent: {
       type: string;
@@ -284,9 +285,9 @@ export interface components {
       /** How many votes needs to complete the goal */
       maxVotesValue: number;
       status: number;
-      /** Timestamp when timer should finish */
+      /** Timestamp when timer should finish (ms) */
       endTimerTimestamp: number;
-      /** Remaining timer duration after pause */
+      /** Remaining timer duration after pause (ms) */
       remainingTimerDuration: number;
       /** Current full votes value */
       votesValue: number;

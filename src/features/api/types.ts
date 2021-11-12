@@ -56,7 +56,7 @@ export enum VotingOptionType {
   Custom = "custom",
 }
 
-export enum GoalStatus {
+export enum ChatGoalStatus {
   Uninitialized,
 
   TimerIdle,
@@ -68,6 +68,27 @@ export enum GoalStatus {
   VotingPaused,
   VotingFinished,
 }
+
+export enum ChatEventType {
+  Upvote = "upvote",
+  Downvote = "downvote",
+}
+
+export type ChatGoalOptions = Pick<
+  ChatGoal,
+  | "permissions"
+  | "listening"
+  | "title"
+  | "upvoteCommand"
+  | "downvoteCommand"
+  | "timerDuration"
+  | "maxVotesValue"
+>;
+
+export type ChatGoalState = Pick<
+  ChatGoal,
+  "status" | "endTimerTimestamp" | "remainingTimerDuration" | "votesValue"
+>;
 
 /** @deprecated */
 export type Streamer = {
