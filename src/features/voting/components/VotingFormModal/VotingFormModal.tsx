@@ -12,7 +12,7 @@ import {
   VOTING_CAN_MANAGE_VOTES_DEFAULT,
   VOTING_CAN_MANAGE_VOTING_OPTIONS_DEFAULT,
   VOTING_OPTIONS_LIMIT_DEFAULT,
-  VOTING_USER_TYPES_PARAMS_DEFAULT,
+  VOTING_PERMISSIONS_DEFAULT,
 } from "features/api/apiConstants";
 import VotingForm from "./VotingForm";
 
@@ -21,7 +21,7 @@ export const VOTING_DEFAULT: UpdateVotingDto = {
   description: "",
   canManageVotes: VOTING_CAN_MANAGE_VOTES_DEFAULT,
   canManageVotingOptions: VOTING_CAN_MANAGE_VOTING_OPTIONS_DEFAULT,
-  permissions: VOTING_USER_TYPES_PARAMS_DEFAULT,
+  permissions: VOTING_PERMISSIONS_DEFAULT,
   allowedVotingOptionTypes: VOTING_ALLOWED_VOTING_OPTIONS_TYPES_DEFAULT,
   votingOptionsLimit: VOTING_OPTIONS_LIMIT_DEFAULT,
 };
