@@ -79,19 +79,24 @@ const ChatGoalComponent = () => {
     if (!goal.isSuccess) return;
 
     let error = false;
+    let listening = false;
 
     if (goal.data) {
+      listening = !goal.data?.listening;
+
       const result = await updateChatGoal({
         chatGoalId: goal.data.broadcasterId,
-        body: { listening: !goal.data?.listening },
+        body: { listening },
       });
 
       // @ts-expect-error
       error = !!result.error;
     } else {
+      listening = true;
+
       const result = await createChatGoal({
         broadcasterId: channel.data.id,
-        listening: true,
+        listening,
       });
 
       // @ts-expect-error
@@ -101,7 +106,10 @@ const ChatGoalComponent = () => {
     if (error) {
       snackbar({ message: "Не удалось включить чатгол", variant: "error" });
     } else {
-      snackbar({ message: "Чатгол включен", variant: "success" });
+      snackbar({
+        message: listening ? "Чатгол включен" : "Чатгол выключен",
+        variant: "success",
+      });
     }
   };
 
