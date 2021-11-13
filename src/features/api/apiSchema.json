@@ -61,7 +61,9 @@
       ]
     },
     "votingOptionsLimit": {
-      "default": 100
+      "default": 100,
+      "minimum": 2,
+      "maximum": 200
     }
   },
   "VotingOption": {
