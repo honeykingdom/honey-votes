@@ -7,7 +7,7 @@ import {
 type Props = {
   channelId?: string;
   name: string;
-  version?: string;
+  version?: string | number;
   children?: React.ReactNode;
 };
 
