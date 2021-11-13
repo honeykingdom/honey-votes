@@ -9,12 +9,11 @@ import {
   Tooltip,
   Divider,
   FormLabel,
-  FormGroup,
-  FormControlLabel,
   Checkbox,
   Button,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
+import TwitchBadge from "components/TwitchBadge";
 import useChannelLogin from "hooks/useChannelLogin";
 import { UpdateChatGoalDto } from "features/api/apiTypes";
 import { TwitchUserType } from "features/api/apiConstants";
@@ -26,13 +25,25 @@ import {
 } from "features/api/apiSlice";
 
 const USER_TYPES_ITEMS = [
-  { label: "Модеры", type: TwitchUserType.Mod },
-  { label: "Випы", type: TwitchUserType.Vip },
-  { label: "Сабы (Tier 1)", type: TwitchUserType.SubTier1 },
-  { label: "Сабы (Tier 2)", type: TwitchUserType.SubTier2 },
-  { label: "Сабы (Tier 3)", type: TwitchUserType.SubTier3 },
-  { label: "Зрители", type: TwitchUserType.Viewer },
-];
+  { label: "Модеры", type: TwitchUserType.Mod, badge: ["moderator"] },
+  { label: "Випы", type: TwitchUserType.Vip, badge: ["vip"] },
+  {
+    label: "Сабы (Tier 1)",
+    type: TwitchUserType.SubTier1,
+    badge: ["subscriber", 0],
+  },
+  {
+    label: "Сабы (Tier 2)",
+    type: TwitchUserType.SubTier2,
+    badge: ["subscriber", 2000],
+  },
+  {
+    label: "Сабы (Tier 3)",
+    type: TwitchUserType.SubTier3,
+    badge: ["subscriber", 3000],
+  },
+  { label: "Зрители", type: TwitchUserType.Viewer, badge: ["glhf-pledge"] },
+] as const;
 
 const pickOptions = R.pick<keyof UpdateChatGoalDto>([
   "permissions",
@@ -188,47 +199,77 @@ const ChatGoalOptions = () => {
       <Box sx={{ mb: 2 }}>
         <Grid container sx={{ mb: 1 }}>
           <Grid item sm={6}>
-            <FormLabel>Кто может голосовать</FormLabel>
+            <FormLabel>Могут голосовать:</FormLabel>
           </Grid>
-          <Grid item sm={6}>
-            <FormLabel>Количество голосов</FormLabel>
+          <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <FormLabel>За</FormLabel>
+          </Grid>
+          <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <FormLabel>Против</FormLabel>
+          </Grid>
+          <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <FormLabel>Голоса</FormLabel>
           </Grid>
         </Grid>
-        {USER_TYPES_ITEMS.map(({ label, type }) => (
-          <Grid container key={type}>
+        {USER_TYPES_ITEMS.map(({ label, type, badge: [name, version] }) => (
+          <Grid
+            container
+            key={type}
+            sx={{ display: "flex", alignItems: "center" }}
+          >
             <Grid item sm={6}>
-              <FormGroup>
-                <FormControlLabel
-                  disabled={isDisabled}
-                  control={
-                    <Controller
-                      // @ts-expect-error
-                      name={`permissions.${type}.canVote`}
-                      control={control}
-                      render={({ field: { ref, ...rest } }) => (
-                        <Checkbox
-                          inputRef={ref}
-                          checked={!!rest.value}
-                          {...rest}
-                        />
-                      )}
-                    />
-                  }
-                  label={label}
-                />
-              </FormGroup>
+              <TwitchBadge
+                name={name}
+                version={version}
+                channelId={goal.data?.broadcasterId}
+              />{" "}
+              {label}
             </Grid>
-            <Grid item sm={6}>
+
+            <Grid item sm={2} sx={{ textAlign: "center" }}>
+              <Controller
+                name={`permissions.${type}.canUpvote`}
+                control={control}
+                render={({ field: { ref, ...rest } }) => (
+                  <Checkbox
+                    inputRef={ref}
+                    checked={!!rest.value}
+                    disabled={isDisabled}
+                    {...rest}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item sm={2} sx={{ textAlign: "center" }}>
+              <Controller
+                name={`permissions.${type}.canDownvote`}
+                control={control}
+                render={({ field: { ref, ...rest } }) => (
+                  <Checkbox
+                    inputRef={ref}
+                    checked={!!rest.value}
+                    disabled={isDisabled}
+                    {...rest}
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item sm={2} sx={{ textAlign: "center" }}>
               <TextField
                 id="title"
                 size="small"
                 type="number"
                 variant="standard"
                 fullWidth
-                disabled={isDisabled || !values.permissions?.[type].canVote}
+                disabled={
+                  isDisabled ||
+                  (!values.permissions?.[type].canUpvote &&
+                    !values.permissions?.[type].canDownvote)
+                }
                 sx={{ maxWidth: 64 }}
                 {...withMui(
-                  // @ts-expect-error
                   register(`permissions.${type}.votesAmount`, {
                     valueAsNumber: true,
                     min: 0,
