@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Dialog,
@@ -6,9 +7,9 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import { CreateVotingOptionDto, VotingOptionType } from "features/api/types";
+import { CreateVotingOptionDto } from "features/api/apiTypes";
+import { VotingOptionType } from "features/api/apiConstants";
 import VotingOptionForm from "./VotingOptionForm";
-import { useEffect } from "react";
 
 export type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, "votingId">;
 

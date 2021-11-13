@@ -1,4 +1,4 @@
-import { ChatVoting } from "features/api/types";
+import { ChatVoting } from "features/api/apiTypes";
 import { OnChatVotingChange } from "../types";
 import PermissionsLabels from "./PermissionsLabels";
 import PermissionsForm from "./PermissionsForm";

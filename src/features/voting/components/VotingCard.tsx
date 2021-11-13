@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import { format } from "date-fns";
-import { Voting } from "features/api/types";
+import { Voting } from "features/api/apiTypes";
 import VotingActions from "./VotingActions";
 
 const NO_TITLE = (

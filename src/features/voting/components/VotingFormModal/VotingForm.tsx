@@ -14,13 +14,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import { SubTier, TwitchUserType, UpdateVotingDto } from "features/api/types";
-import {
-  VOTING_DESCRIPTION_MAX_LENGTH,
-  VOTING_OPTIONS_LIMIT_MAX,
-  VOTING_OPTIONS_LIMIT_MIN,
-  VOTING_TITLE_MAX_LENGTH,
-} from "features/api/apiConstants";
+import { UpdateVotingDto } from "features/api/apiTypes";
+import { SubTier, TwitchUserType } from "features/api/apiConstants";
+import apiSchema from "features/api/apiSchema.json";
 import {
   FOLLOWED_TIME_VALUES,
   SUB_TIERS,
@@ -78,7 +74,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           id="title"
           label="Заголовок"
           variant="outlined"
-          inputProps={{ maxLength: VOTING_TITLE_MAX_LENGTH }}
+          inputProps={{ maxLength: apiSchema.Voting.title.maxLength }}
           {...register("title")}
         />
       </FormGroup>
@@ -90,7 +86,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           multiline
           rows={2}
           variant="outlined"
-          inputProps={{ maxLength: VOTING_DESCRIPTION_MAX_LENGTH }}
+          inputProps={{ maxLength: apiSchema.Voting.description.maxLength }}
           {...register("description")}
         />
       </FormGroup>
@@ -257,8 +253,8 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                 name=""
                 valueLabelDisplay="auto"
                 step={2}
-                min={VOTING_OPTIONS_LIMIT_MIN}
-                max={VOTING_OPTIONS_LIMIT_MAX}
+                min={apiSchema.Voting.votingOptionsLimit.minimum}
+                max={apiSchema.Voting.votingOptionsLimit.maximum}
                 marks={VOTING_OPTIONS_LIMIT_MARKS}
                 size="small"
                 defaultValue={defaultValues.votingOptionsLimit}

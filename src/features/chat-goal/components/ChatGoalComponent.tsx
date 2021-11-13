@@ -17,7 +17,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useChannelLogin from "hooks/useChannelLogin";
 import ConfirmationDialog from "components/ConfirmationDialog";
-import { ChatGoalStatus } from "features/api/types";
+import { ChatGoalStatus } from "features/api/apiConstants";
 import {
   useMeQuery,
   useMeRolesQuery,

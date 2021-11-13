@@ -1,4 +1,4 @@
-import { User, VotingOption, VotingOptionWithAuthor } from "../types";
+import { User, VotingOption, VotingOptionWithAuthor } from "../apiTypes";
 
 type VotingOptionResponse = Omit<VotingOption, "authorId"> & {
   authorId: User;

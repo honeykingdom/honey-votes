@@ -18,12 +18,12 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ClearAllIcon from "@mui/icons-material/ClearAll";
 import getRandomInt from "utils/getRandomInt";
-import {
-  ChatVote,
-  ChatVoting,
-  SubTier,
-  TwitchUserType,
-} from "features/api/types";
+import useChannelLogin from "hooks/useChannelLogin";
+import TwitchNickName from "components/TwitchNickName";
+import TwitchChatMessage from "components/TwitchChatMessage";
+import ConfirmationDialog from "components/ConfirmationDialog";
+import { ChatVote } from "features/api/apiTypes";
+import apiSchema from "features/api/apiSchema.json";
 import {
   useClearChatVotingMutation,
   useCreateChatVotingMutation,
@@ -35,13 +35,8 @@ import {
   useUserQuery,
   chatVotesSelectors,
 } from "features/api/apiSlice";
-import TwitchNickName from "components/TwitchNickName";
-import TwitchChatMessage from "components/TwitchChatMessage";
 import Permissions from "./Permissions";
 import { OnChatVotingChange } from "../types";
-import useChannelLogin from "hooks/useChannelLogin";
-import ConfirmationDialog from "components/ConfirmationDialog";
-import { DEFAULT_CHAT_VOTING_PERMISSIONS } from "../chatVotingConstants";
 
 /** Replaces `voteCommand` at the start of the message with spaces */
 const normalizeTwitchChatMessage = (message: string, voteCommand = "") => {
@@ -159,7 +154,8 @@ const ChatVotingComponent = () => {
           <Box sx={{ mr: 1 }}>Голосовать могут:</Box>
           <Permissions
             permissions={
-              chatVoting.data?.permissions || DEFAULT_CHAT_VOTING_PERMISSIONS
+              chatVoting.data?.permissions ||
+              apiSchema.ChatVoting.permissions.default
             }
             canManage={canManage}
             disabled={isEditFormDisabled}

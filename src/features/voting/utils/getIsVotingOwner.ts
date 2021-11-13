@@ -1,4 +1,4 @@
-import { User, Voting } from "features/api/types";
+import { User, Voting } from "features/api/apiTypes";
 
 const getIsVotingOwner = (voting?: Voting, me?: User) => {
   if (!voting || !me) return false;

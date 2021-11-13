@@ -10,7 +10,7 @@ import {
   useDeleteVotingMutation,
   useUpdateVotingMutation,
 } from "features/api/apiSlice";
-import { Voting } from "features/api/types";
+import { Voting } from "features/api/apiTypes";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import useSnackbar from "features/snackbar/useSnackbar";

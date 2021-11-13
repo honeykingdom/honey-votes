@@ -33,7 +33,7 @@ import {
   ChatGoal,
   CreateChatGoalDto,
   UpdateChatGoalDto,
-} from "./types";
+} from "./apiTypes";
 import transformVotingOption from "./utils/transformVotingOption";
 
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };

@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { Voting } from "features/api/types";
+import { Voting } from "features/api/apiTypes";
 import VotingCard from "./VotingCard";
 
 type Props = {

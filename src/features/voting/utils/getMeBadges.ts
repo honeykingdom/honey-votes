@@ -1,4 +1,5 @@
-import { SubTier, User, UserRoles, Voting } from "features/api/types";
+import { SubTier } from "features/api/apiConstants";
+import { User, UserRoles, Voting } from "features/api/apiTypes";
 import type { Badge } from "../components/UserBadges";
 
 const getMeBadges = (me: User, meRoles: UserRoles): Badge[] => {

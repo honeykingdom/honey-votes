@@ -1,4 +1,8 @@
-import { SubTier, TwitchUserType, VotingOptionType } from "features/api/types";
+import {
+  SubTier,
+  TwitchUserType,
+  VotingOptionType,
+} from "features/api/apiConstants";
 
 export enum FollowedTime {
   None = 0,

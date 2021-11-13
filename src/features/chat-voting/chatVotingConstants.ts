@@ -1,5 +1,3 @@
-import { ChatVoting, SubTier, TwitchUserType } from "features/api/types";
-
 export const SUB_MONTHS = [
   { value: 0, title: "Subscriber" },
   { value: 3, title: "3-Month Subscriber" },
@@ -17,12 +15,3 @@ export const SUB_MONTHS = [
   { value: 90, title: "7.5-Year Subscriber" },
   { value: 96, title: "8-Year Subscriber" },
 ];
-
-export const DEFAULT_CHAT_VOTING_PERMISSIONS: ChatVoting["permissions"] = {
-  [TwitchUserType.Viewer]: false,
-  [TwitchUserType.Sub]: true,
-  [TwitchUserType.Mod]: true,
-  [TwitchUserType.Vip]: true,
-  subMonthsRequired: 0,
-  subTierRequired: SubTier.Tier1,
-};

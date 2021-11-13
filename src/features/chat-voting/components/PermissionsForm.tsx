@@ -1,5 +1,5 @@
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { ChatVoting } from "features/api/types";
+import { ChatVoting } from "features/api/apiTypes";
 import { SyntheticEvent } from "react";
 import { OnChatVotingChange } from "../types";
 

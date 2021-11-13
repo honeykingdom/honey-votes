@@ -10,7 +10,7 @@ import jwtDecode from "jwt-decode";
 import { AppState } from "app/store";
 import storeTokens from "features/auth/storeTokens";
 import { API_BASE, API_BASE_POSTGREST, SUPABASE_HEADERS } from "./apiConstants";
-import { Jwt, RefreshTokenResponse } from "./types";
+import { Jwt, RefreshTokenResponse } from "./apiTypes";
 import { updateTokens } from "features/auth/authSlice";
 
 const baseQuery = fetchBaseQuery({ baseUrl: "" });

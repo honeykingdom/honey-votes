@@ -8,11 +8,9 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { CreateVotingOptionDto, VotingOptionType } from "features/api/types";
-import {
-  VOTING_OPTION_CARD_DESCRIPTION_MAX_LENGTH,
-  VOTING_OPTION_CARD_TITLE_MAX_LENGTH,
-} from "features/api/apiConstants";
+import { CreateVotingOptionDto } from "features/api/apiTypes";
+import { VotingOptionType } from "features/api/apiConstants";
+import apiSchema from "features/api/apiSchema.json";
 import VotingOptionAutocomplete from "./VotingOptionAutocomplete";
 
 const VOTING_OPTION_TYPES = [
@@ -75,7 +73,9 @@ const VotingOptionForm = ({
               id="title"
               label="Заголовок"
               variant="outlined"
-              inputProps={{ maxLength: VOTING_OPTION_CARD_TITLE_MAX_LENGTH }}
+              inputProps={{
+                maxLength: apiSchema.VotingOption.cardTitle.maxLength,
+              }}
               {...register(`${VotingOptionType.Custom}.title`)}
             />
           </FormGroup>
@@ -88,7 +88,7 @@ const VotingOptionForm = ({
               rows={2}
               variant="outlined"
               inputProps={{
-                maxLength: VOTING_OPTION_CARD_DESCRIPTION_MAX_LENGTH,
+                maxLength: apiSchema.VotingOption.cardDescription.maxLength,
               }}
               {...register(`${VotingOptionType.Custom}.description`)}
             />

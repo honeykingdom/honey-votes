@@ -15,7 +15,7 @@ import {
   useUserQuery,
   useVotingListQuery,
 } from "features/api/apiSlice";
-import { UpdateVotingDto } from "features/api/types";
+import { UpdateVotingDto } from "features/api/apiTypes";
 import useSnackbar from "features/snackbar/useSnackbar";
 
 const VotingListPage = () => {

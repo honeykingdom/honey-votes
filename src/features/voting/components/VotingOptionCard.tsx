@@ -20,7 +20,7 @@ import {
   useUserVotesQuery,
   useVotingQuery,
 } from "features/api/apiSlice";
-import { VotingOption } from "features/api/types";
+import { VotingOption } from "features/api/apiTypes";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import useSnackbar from "features/snackbar/useSnackbar";

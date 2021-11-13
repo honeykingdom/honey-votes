@@ -1,4 +1,4 @@
-import { User, UserRoles, Voting } from "features/api/types";
+import { User, UserRoles, Voting } from "features/api/apiTypes";
 import getIsVotingOwner from "./getIsVotingOwner";
 
 const getCanManageVoting = (

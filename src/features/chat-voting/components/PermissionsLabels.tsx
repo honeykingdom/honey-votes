@@ -1,7 +1,8 @@
 import { Fragment } from "react";
-import TwitchBadge from "components/TwitchBadge";
-import { ChatVoting, SubTier } from "features/api/types";
 import { Box } from "@mui/material";
+import TwitchBadge from "components/TwitchBadge";
+import { ChatVoting } from "features/api/apiTypes";
+import { SubTier } from "features/api/apiConstants";
 
 type Props = {
   permissions: ChatVoting["permissions"];

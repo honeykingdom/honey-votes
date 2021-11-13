@@ -6,24 +6,20 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { UpdateVotingDto, VotingOptionType } from "features/api/types";
-import {
-  VOTING_ALLOWED_VOTING_OPTIONS_TYPES_DEFAULT,
-  VOTING_CAN_MANAGE_VOTES_DEFAULT,
-  VOTING_CAN_MANAGE_VOTING_OPTIONS_DEFAULT,
-  VOTING_OPTIONS_LIMIT_DEFAULT,
-  VOTING_PERMISSIONS_DEFAULT,
-} from "features/api/apiConstants";
+import { UpdateVotingDto } from "features/api/apiTypes";
+import { VotingOptionType } from "features/api/apiConstants";
+import apiSchema from "features/api/apiSchema.json";
 import VotingForm from "./VotingForm";
 
 export const VOTING_DEFAULT: UpdateVotingDto = {
   title: "",
   description: "",
-  canManageVotes: VOTING_CAN_MANAGE_VOTES_DEFAULT,
-  canManageVotingOptions: VOTING_CAN_MANAGE_VOTING_OPTIONS_DEFAULT,
-  permissions: VOTING_PERMISSIONS_DEFAULT,
-  allowedVotingOptionTypes: VOTING_ALLOWED_VOTING_OPTIONS_TYPES_DEFAULT,
-  votingOptionsLimit: VOTING_OPTIONS_LIMIT_DEFAULT,
+  canManageVotes: apiSchema.Voting.canManageVotes.default,
+  canManageVotingOptions: apiSchema.Voting.canManageVotingOptions.default,
+  permissions: apiSchema.Voting.permissions.default,
+  allowedVotingOptionTypes: apiSchema.Voting.allowedVotingOptionTypes
+    .default as VotingOptionType[],
+  votingOptionsLimit: apiSchema.Voting.votingOptionsLimit.default,
 };
 
 type Props = {

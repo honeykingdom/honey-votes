@@ -1,4 +1,5 @@
-import { SubTier, Voting } from "features/api/types";
+import { SubTier } from "features/api/apiConstants";
+import { Voting } from "features/api/apiTypes";
 import type { Badge } from "../components/UserBadges";
 import { FollowedTime } from "../votingConstants";
 

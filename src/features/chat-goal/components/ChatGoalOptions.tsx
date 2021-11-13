@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import useChannelLogin from "hooks/useChannelLogin";
-import { TwitchUserType, UpdateChatGoalDto } from "features/api/types";
+import { UpdateChatGoalDto } from "features/api/apiTypes";
+import { TwitchUserType } from "features/api/apiConstants";
 import useSnackbar from "features/snackbar/useSnackbar";
 import {
   useChatGoalQuery,
