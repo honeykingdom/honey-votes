@@ -1,15 +1,16 @@
-import useChannelLogin from "hooks/useChannelLogin";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
-import { useUserQuery } from "features/api/apiSlice";
+import useUsername from "hooks/useUsername";
+import useChannelLogin from "hooks/useChannelLogin";
 import ChatVotingComponent from "features/chat-voting/components/ChatVotingComponent";
 import SignInWarning from "features/chat-voting/components/SignInWarning";
+import { useUserQuery } from "features/api/apiSlice";
 
 const ChatVotesPage = () => {
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
+  const username = useUsername();
 
-  const username = channel.data?.displayName || login;
+  const channel = useUserQuery({ login }, { skip: !login });
 
   return (
     <Layout>

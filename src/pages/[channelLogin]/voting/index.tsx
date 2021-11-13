@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
+import useUsername from "hooks/useUsername";
 import VotingList from "features/voting/components/VotingList";
 import VotingFormModal from "features/voting/components/VotingFormModal/VotingFormModal";
 import {
@@ -19,6 +20,7 @@ import useSnackbar from "features/snackbar/useSnackbar";
 const VotingListPage = () => {
   const router = useRouter();
   const login = useChannelLogin();
+  const username = useUsername();
 
   const snackbar = useSnackbar();
 
@@ -28,8 +30,6 @@ const VotingListPage = () => {
     skip: !channel.data,
   });
   const [createVoting] = useCreateVotingMutation();
-
-  const username = channel.data?.displayName || login;
 
   const canManage =
     channel.isSuccess && me.isSuccess && channel.data?.id === me.data?.id;

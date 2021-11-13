@@ -1,14 +1,12 @@
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
-import { useUserQuery } from "features/api/apiSlice";
+import useUsername from "hooks/useUsername";
 import ChatGoalComponent from "features/chat-goal/components/ChatGoalComponent";
 
 const ChatGoalPage = () => {
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
-
-  const username = channel.data?.displayName || login;
+  const username = useUsername();
 
   return (
     <Layout>

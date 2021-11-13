@@ -5,8 +5,9 @@ import LockIcon from "@mui/icons-material/Lock";
 import Layout from "components/Layout";
 import TwitchBadge from "components/TwitchBadge";
 import PageHeader from "components/PageHeader";
-import VotingOptionCard from "features/voting/components/VotingOptionCard";
+import useUsername from "hooks/useUsername";
 import useChannelLogin from "hooks/useChannelLogin";
+import VotingOptionCard from "features/voting/components/VotingOptionCard";
 import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
 import type { VotingOptionDefaultValues } from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
 import VotingActions from "features/voting/components/VotingActions";
@@ -44,6 +45,7 @@ const CLOSED = (
 
 const VotingPage = () => {
   const login = useChannelLogin();
+  const username = useUsername();
   const votingId = useVotingId();
   const snackbar = useSnackbar();
 
@@ -57,8 +59,6 @@ const VotingPage = () => {
 
   const [isVotingOptionModalOpened, setIsVotingOptionModalOpened] =
     useState(false);
-
-  const username = channel.data?.displayName || login;
 
   // TODO: handle not existing voting
   if (voting.isSuccess && !voting.data) {
