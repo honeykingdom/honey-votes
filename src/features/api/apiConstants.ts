@@ -57,7 +57,7 @@ export enum ChatGoalStatus {
   VotingFinished,
 }
 
-export enum ChatEventType {
+export enum ChatGoalEventType {
   Upvote = "upvote",
   Downvote = "downvote",
 }
