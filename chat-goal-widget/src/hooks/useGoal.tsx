@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import supabase from "../utils/supabase";
 import parseSearchParams from "../utils/parseSearchParams";
-import { Goal, GoalEvent, GoalEventType, GoalVote } from "../utils/types";
+import { Goal, GoalEvent, GoalVote } from "../utils/types";
+import { GoalEventType } from "../utils/constants";
 
 const MAX_VOTES_COUNT = 6;
 

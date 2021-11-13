@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import useGoal from "../hooks/useGoal";
-import { Goal, GoalStatus } from "../utils/types";
+import { Goal } from "../utils/types";
+import { GoalStatus } from "../utils/constants";
 
 const ChatGoalWidgetIndex = styled.div`
   padding: 16px;
