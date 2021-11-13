@@ -1,4 +1,4 @@
-import { components } from "./types.generated";
+import { components } from "./apiTypes.generated";
 
 export type User = components["schemas"]["User"];
 export type UserRoles = components["schemas"]["UserRoles"];
@@ -30,73 +30,6 @@ export type ChatGoal = components["schemas"]["ChatGoal"];
 export type ChatGoalEvent = components["schemas"]["ChatGoalEvent"];
 export type CreateChatGoalDto = components["schemas"]["CreateChatGoalDto"];
 export type UpdateChatGoalDto = components["schemas"]["UpdateChatGoalDto"];
-
-export enum TwitchUserType {
-  Broadcaster = "broadcaster",
-  Editor = "editor",
-  Mod = "mod",
-  Vip = "vip",
-  Sub = "sub",
-  SubTier1 = "subTier1",
-  SubTier2 = "subTier2",
-  SubTier3 = "subTier3",
-  Follower = "follower",
-  Viewer = "viewer",
-}
-
-export enum SubTier {
-  Tier1 = 1,
-  Tier2 = 2,
-  Tier3 = 3,
-}
-
-export enum VotingOptionType {
-  KinopoiskMovie = "kinopoiskMovie",
-  IgdbGame = "igdbGame",
-  Custom = "custom",
-}
-
-export enum ChatGoalStatus {
-  Uninitialized,
-
-  TimerIdle,
-  TimerRunning,
-  TimerPaused,
-
-  VotingIdle,
-  VotingRunning,
-  VotingPaused,
-  VotingFinished,
-}
-
-export enum ChatEventType {
-  Upvote = "upvote",
-  Downvote = "downvote",
-}
-
-export type ChatGoalOptions = Pick<
-  ChatGoal,
-  | "permissions"
-  | "listening"
-  | "title"
-  | "upvoteCommand"
-  | "downvoteCommand"
-  | "timerDuration"
-  | "maxVotesValue"
->;
-
-export type ChatGoalState = Pick<
-  ChatGoal,
-  "status" | "endTimerTimestamp" | "remainingTimerDuration" | "votesValue"
->;
-
-/** @deprecated */
-export type Streamer = {
-  id: string;
-  login: string;
-  displayName: string;
-  profileImageUrl: string;
-};
 
 export type Jwt = {
   sub: string;

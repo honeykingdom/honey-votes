@@ -126,6 +126,7 @@ export interface components {
       follower: components["schemas"]["VotingPermissionsFollower"];
       viewer: components["schemas"]["VotingPermissionsDefault"];
     };
+    VotingOptionType: "kinopoiskMovie" | "igdbGame" | "custom";
     Voting: {
       id: number;
       broadcasterId: string;
@@ -134,7 +135,7 @@ export interface components {
       canManageVotes: boolean;
       canManageVotingOptions: boolean;
       permissions: components["schemas"]["VotingPermissions"];
-      allowedVotingOptionTypes: ("kinopoiskMovie" | "igdbGame" | "custom")[];
+      allowedVotingOptionTypes: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit: number;
       createdAt: string;
       updatedAt: string;
@@ -145,7 +146,7 @@ export interface components {
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
       permissions?: components["schemas"]["VotingPermissions"];
-      allowedVotingOptionTypes?: ("kinopoiskMovie" | "igdbGame" | "custom")[];
+      allowedVotingOptionTypes?: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit?: number;
       channelId: string;
     };
@@ -155,7 +156,7 @@ export interface components {
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
       permissions?: components["schemas"]["VotingPermissions"];
-      allowedVotingOptionTypes?: ("kinopoiskMovie" | "igdbGame" | "custom")[];
+      allowedVotingOptionTypes?: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit?: number;
     };
     VotingOptionKinopoiskMovie: {
@@ -181,6 +182,7 @@ export interface components {
       authorLogin: string;
       votingId: number;
       fullVotesValue: number;
+      type: components["schemas"]["VotingOptionType"];
       cardId?: string;
       cardTitle: string;
       cardSubtitle?: string;
@@ -259,6 +261,7 @@ export interface components {
       maxVotesValue?: number;
       broadcasterId: string;
     };
+    ChatEventType: "upvote" | "downvote";
     ChatVoteEventPayload: {
       userId: string;
       userLogin: string;
@@ -266,7 +269,7 @@ export interface components {
       votesCount: number;
     };
     ChatVoteEvent: {
-      type: string;
+      type: components["schemas"]["ChatEventType"];
       payload: components["schemas"]["ChatVoteEventPayload"];
     };
     ChatGoalEvent: {
