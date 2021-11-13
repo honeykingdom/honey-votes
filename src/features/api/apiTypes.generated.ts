@@ -261,7 +261,7 @@ export interface components {
       maxVotesValue?: number;
       broadcasterId: string;
     };
-    ChatEventType: "upvote" | "downvote";
+    ChatGoalEventType: "upvote" | "downvote";
     ChatVoteEventPayload: {
       userId: string;
       userLogin: string;
@@ -269,7 +269,7 @@ export interface components {
       votesCount: number;
     };
     ChatVoteEvent: {
-      type: components["schemas"]["ChatEventType"];
+      type: components["schemas"]["ChatGoalEventType"];
       payload: components["schemas"]["ChatVoteEventPayload"];
     };
     ChatGoalEvent: {
