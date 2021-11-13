@@ -1,22 +1,27 @@
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
+import PollIcon from "@mui/icons-material/Poll";
+import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
 import Layout from "components/Layout";
 import SEO from "../../next-seo.config";
 
 const FEATURES = [
   {
-    title: "Голосование в чате",
-    description:
-      "Зрители могут голосовать прямо в чате твича. <br /> Стример может видеть в реальном времени их голоса на сайте и выбрать победителя.",
-  },
-  {
     title: "Голосование на сайте",
     description:
-      "Стример может создать голосование для зрителей с ограничением только для сабов/фолловеров. Пользователи смогут добавлять свои варианты и голосовать за них.",
+      "Зрители добавляют фильмы, игры или свой текст в качестве вариантов. Можно ограничить только для сабов/фолловеров.",
+    IconComponent: PollIcon,
   },
   {
-    title: "Фильмы и игры",
+    title: "Голосование в чате",
     description:
-      "Пользователи могут добавлять фильмы с сайта kinopoisk.ru или игры с сайта IGDB.com как варианты для голосования, либо ввести свой текст в качестве варианта.",
+      "Зрители вводят свои варианты прямо в чате твича. Стример видит их на сайте и может выбрать победителя.",
+    IconComponent: PollIcon,
+  },
+  {
+    title: "Чатгол",
+    description:
+      "Голосование за или против пока не наберётся нужное количество голосов. <br /> Есть виджет для OBS.",
+    IconComponent: ThumbsUpDownIcon,
   },
 ];
 
@@ -24,7 +29,13 @@ const Home = () => {
   return (
     <Layout>
       <Box my={4} mb={8} alignContent="center">
-        <Typography variant="h1" component="h1" gutterBottom align="center">
+        <Typography
+          variant="h1"
+          component="h1"
+          gutterBottom
+          align="center"
+          sx={{ fontSize: { xs: "3rem", sm: "6rem" } }}
+        >
           {SEO.title}
         </Typography>
         <Typography
@@ -33,19 +44,28 @@ const Home = () => {
           gutterBottom
           align="center"
           color="textSecondary"
-          style={{ maxWidth: 820, margin: "0 auto" }}
+          sx={{
+            maxWidth: 820,
+            margin: "0 auto",
+            fontSize: { xs: "2rem", sm: "3.75rem" },
+          }}
         >
           {SEO.description}
         </Typography>
       </Box>
 
       <Grid container spacing={2}>
-        {FEATURES.map(({ title, description }, i) => (
-          <Grid key={i} item md={4} sx={{ width: "100%" }}>
+        {FEATURES.map(({ title, description, IconComponent }, i) => (
+          <Grid key={i} item lg={4} sx={{ width: "100%" }}>
             <Card>
               <CardContent>
-                <Typography variant="h5" component="div" gutterBottom>
-                  {title}
+                <Typography
+                  variant="h5"
+                  component="div"
+                  gutterBottom
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <IconComponent sx={{ mr: 2, fontSize: 40 }} /> {title}
                 </Typography>
                 <Typography
                   variant="body1"
