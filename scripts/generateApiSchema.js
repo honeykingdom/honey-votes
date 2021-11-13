@@ -13,6 +13,8 @@ const main = async () => {
 
   const schema = Object.entries(rawSchema).reduce(
     (acc, [key, { properties: rawProperties }]) => {
+      if (!rawProperties) return acc;
+
       const properties = Object.entries(rawProperties).reduce((acc, [k, v]) => {
         const property = R.omit(
           [
@@ -34,7 +36,7 @@ const main = async () => {
 
       if (Object.keys(properties).length === 0) return acc;
 
-      return { ...acc, [key]: { properties } };
+      return { ...acc, [key]: properties };
     },
     {}
   );
