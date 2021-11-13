@@ -156,7 +156,13 @@ const VotingPage = () => {
           )}
 
           <Box sx={{ mb: 2 }}>
-            <Box sx={{ display: "flex" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                mb: { xs: 1, sm: 0 },
+              }}
+            >
               <Typography
                 variant="caption"
                 color="text.secondary"
@@ -173,7 +179,13 @@ const VotingPage = () => {
                 />
               </Typography>
             </Box>
-            <Box sx={{ display: "flex" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                mb: { xs: 1, sm: 0 },
+              }}
+            >
               <Typography
                 variant="caption"
                 color="text.secondary"
@@ -193,7 +205,13 @@ const VotingPage = () => {
               </Typography>
             </Box>
             {me.data && (
-              <Box sx={{ display: "flex" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  mb: { xs: 1, sm: 0 },
+                }}
+              >
                 <Typography
                   variant="caption"
                   color="text.secondary"

@@ -59,20 +59,20 @@ const Layout = ({ children }: any) => {
           </Link>
 
           {hasUser && (
-            <>
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
               {getMainMenuLinks(me.data.login).map(({ label, href }) => (
                 <Link key={href} href={href} passHref>
                   <Button color="inherit">{label}</Button>
                 </Link>
               ))}
-            </>
+            </Box>
           )}
 
           <Box sx={{ ml: "auto" }}>
             <Tooltip title="Автор - DmitryScaletta">
               <IconButton
                 color="inherit"
-                sx={{ mr: 1 }}
+                sx={{ display: { xs: "none", sm: "inline-flex" }, mr: 1 }}
                 href="//github.com/DmitryScaletta"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -83,7 +83,7 @@ const Layout = ({ children }: any) => {
             <Tooltip title="Репозиторий на GitHub">
               <IconButton
                 color="inherit"
-                sx={{ mr: 1 }}
+                sx={{ display: { xs: "none", sm: "inline-flex" }, mr: 1 }}
                 href="//github.com/honeykingdom/honey-votes"
                 target="_blank"
                 rel="noreferrer noopener"

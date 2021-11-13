@@ -162,14 +162,21 @@ const VotingOptionCard = ({ votingOption }: Props) => {
     );
 
   const renderCardContent = () => (
-    <CardContent sx={{ display: "flex", py: 1, height: "100%" }}>
+    <CardContent
+      sx={{
+        display: "flex",
+        px: { xs: 1, sm: 2 },
+        py: { xs: 0.5, sm: 1 },
+        height: "100%",
+      }}
+    >
       <Box sx={{ flexGrow: 1 }}>
         <Typography
           variant="h5"
           component="h2"
           display="flex"
           alignItems="center"
-          sx={{ flexGrow: 1 }}
+          sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.5rem" } }}
         >
           {cardTitle}
         </Typography>
@@ -187,7 +194,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
         component="div"
         color="text.secondary"
         sx={{
-          display: "inline-flex",
+          display: { xs: "none", md: "inline-flex" },
           alignItems: "center",
           mt: "auto",
         }}
@@ -237,7 +244,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
             flexShrink: 0,
             order: -1,
             px: 1,
-            width: 64,
+            width: { xs: 40, sm: 64 },
           }}
         >
           <Typography
@@ -256,7 +263,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
               alignItems: "center",
               justifyContent: "center",
               flexShrink: 0,
-              width: 48,
+              width: { xs: 32, sm: 48 },
               ml: "auto",
             }}
           >

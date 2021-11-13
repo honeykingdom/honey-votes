@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Avatar,
+  Box,
   Button,
   Divider,
   ListItemIcon,
@@ -82,7 +83,9 @@ const AccountMenu = () => {
         }}
         onClick={handleClick}
       >
-        {me.data.displayName}
+        <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          {me.data.displayName}
+        </Box>
       </Button>
 
       <Menu

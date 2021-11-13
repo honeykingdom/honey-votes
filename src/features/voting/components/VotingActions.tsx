@@ -100,7 +100,13 @@ const VotingActions = ({ voting }: Props) => {
   const disabled = updateVotingResult.isLoading || deleteVotingResult.isLoading;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        alignItems: "flex-start",
+      }}
+    >
       <Button
         color="primary"
         startIcon={canManageVotes ? <LockIcon /> : <LockOpenIcon />}
