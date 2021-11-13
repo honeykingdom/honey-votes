@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
-import { Typography, Button, Tooltip, Box, Divider } from "@mui/material";
+import { Button, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import InfoIcon from "@mui/icons-material/Info";
 import Layout from "components/Layout";
-import Breadcrumbs from "components/Breadcrumbs";
+import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingList from "features/voting/components/VotingList";
 import VotingFormModal from "features/voting/components/VotingFormModal/VotingFormModal";
@@ -69,43 +67,14 @@ const VotingListPage = () => {
 
   return (
     <Layout>
-      <Head>
-        <title>
-          {username
-            ? `${username} - Голосование | HoneyVotes`
-            : "Голосование | HoneyVotes"}
-        </title>
-      </Head>
-
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-        <Typography component="div" variant="h4">
-          Голосование
-        </Typography>
-        <Tooltip
-          title={
-            <>
-              Зрители могут предлагать свои варианты для голосования. <br />
-              Стример может разрешить голосование только подписчикам или
-              пользователям, которые зафоловлены на канал.
-            </>
-          }
-        >
-          <InfoIcon sx={{ ml: 2 }} />
-        </Tooltip>
-      </Box>
-
-      {channel && (
-        <Box sx={{ mb: 2 }}>
-          <Breadcrumbs
-            items={[
-              { title: username, href: `/${login}` },
-              { title: "Голосование" },
-            ]}
-          />
-        </Box>
-      )}
-
-      <Divider sx={{ mb: 2 }} />
+      <PageHeader
+        title={username ? `${username} - Голосование` : "Голосование"}
+        pageTitle="Голосование"
+        breadcrumbs={[
+          { title: username, href: `/${login}` },
+          { title: "Голосование" },
+        ]}
+      />
 
       {canManage && (
         <Box sx={{ my: 2 }}>

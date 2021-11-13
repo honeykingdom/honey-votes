@@ -1,11 +1,9 @@
-import Head from "next/head";
-import { Typography, Box, Divider } from "@mui/material";
+import useChannelLogin from "hooks/useChannelLogin";
 import Layout from "components/Layout";
-import Breadcrumbs from "components/Breadcrumbs";
+import PageHeader from "components/PageHeader";
 import { useUserQuery } from "features/api/apiSlice";
 import ChatVotingComponent from "features/chat-voting/components/ChatVotingComponent";
 import SignInWarning from "features/chat-voting/components/SignInWarning";
-import useChannelLogin from "hooks/useChannelLogin";
 
 const ChatVotesPage = () => {
   const login = useChannelLogin();
@@ -15,28 +13,16 @@ const ChatVotesPage = () => {
 
   return (
     <Layout>
-      <Head>
-        <title>
-          {username
-            ? `${username} - Голосование в чате | HoneyVotes`
-            : "Голосование в чате | HoneyVotes"}
-        </title>
-      </Head>
-
-      <Typography variant="h4" component="div" sx={{ mb: 2 }}>
-        Голосование в чате
-      </Typography>
-
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumbs
-          items={[
-            { title: username, href: `/${login}` },
-            { title: "Голосование в чате" },
-          ]}
-        />
-      </Box>
-
-      <Divider sx={{ mb: 2 }} />
+      <PageHeader
+        title={
+          username ? `${username} - Голосование в чате` : "Голосование в чате"
+        }
+        pageTitle="Голосование в чате"
+        breadcrumbs={[
+          { title: username, href: `/${login}` },
+          { title: "Голосование в чате" },
+        ]}
+      />
 
       <ChatVotingComponent />
       {channel.isSuccess && !channel.data && <SignInWarning />}

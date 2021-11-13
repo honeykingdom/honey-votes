@@ -1,9 +1,7 @@
-import Head from "next/head";
-import { Typography, Box, Divider } from "@mui/material";
 import Layout from "components/Layout";
-import Breadcrumbs from "components/Breadcrumbs";
-import { useUserQuery } from "features/api/apiSlice";
+import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
+import { useUserQuery } from "features/api/apiSlice";
 import ChatGoalComponent from "features/chat-goal/components/ChatGoalComponent";
 
 const ChatGoalPage = () => {
@@ -14,25 +12,14 @@ const ChatGoalPage = () => {
 
   return (
     <Layout>
-      <Head>
-        <title>
-          {username
-            ? `${username} - Чатгол | HoneyVotes`
-            : "Чатгол | HoneyVotes"}
-        </title>
-      </Head>
-
-      <Typography variant="h4" component="div" sx={{ mb: 2 }}>
-        Чатгол
-      </Typography>
-
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumbs
-          items={[{ title: username, href: `/${login}` }, { title: "Чатгол" }]}
-        />
-      </Box>
-
-      <Divider sx={{ mb: 2 }} />
+      <PageHeader
+        title={username ? `${username} - Чатгол` : "Чатгол"}
+        pageTitle="Чатгол"
+        breadcrumbs={[
+          { title: username, href: `/${login}` },
+          { title: "Чатгол" },
+        ]}
+      />
 
       <ChatGoalComponent />
     </Layout>

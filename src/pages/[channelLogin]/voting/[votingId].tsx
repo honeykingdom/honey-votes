@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import Head from "next/head";
-import { Box } from "@mui/system";
-import { Button, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import LockIcon from "@mui/icons-material/Lock";
 import Layout from "components/Layout";
-import Breadcrumbs from "components/Breadcrumbs";
 import TwitchBadge from "components/TwitchBadge";
+import PageHeader from "components/PageHeader";
 import VotingOptionCard from "features/voting/components/VotingOptionCard";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
@@ -114,38 +112,25 @@ const VotingPage = () => {
 
   return (
     <Layout>
-      <Head>
-        <title>
-          {username
-            ? `${username} - ${
-                voting.data?.title || "Без названия"
-              } | HoneyVotes`
-            : "Голосование | HoneyVotes"}
-        </title>
-      </Head>
-
-      <Typography variant="h4" component="div" sx={{ display: "flex", mb: 2 }}>
-        {!voting.data?.canManageVotes && CLOSED}
-        {getTitle()}
-      </Typography>
-
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumbs
-          items={[
-            {
-              title: channel.data?.displayName || login,
-              href: `/${login}`,
-            },
-            {
-              title: "Голосование",
-              href: `/${login}/voting`,
-            },
-            { title: voting.data?.title || NO_TITLE },
-          ]}
-        />
-      </Box>
-
-      <Divider sx={{ mb: 2 }} />
+      <PageHeader
+        title={
+          username
+            ? `${username} - ${voting.data?.title || "Без названия"}`
+            : "Голосование"
+        }
+        pageTitle={getTitle()}
+        breadcrumbs={[
+          {
+            title: channel.data?.displayName || login,
+            href: `/${login}`,
+          },
+          {
+            title: "Голосование",
+            href: `/${login}/voting`,
+          },
+          { title: voting.data?.title || NO_TITLE },
+        ]}
+      />
 
       {channel.data && voting.data && (
         <>
