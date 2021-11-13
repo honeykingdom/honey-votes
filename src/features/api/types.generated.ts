@@ -237,7 +237,8 @@ export interface components {
       commands?: components["schemas"]["ChatVotingCommands"];
     };
     ChatGoalPermissionsDefault: {
-      canVote: boolean;
+      canUpvote: boolean;
+      canDownvote: boolean;
       votesAmount: number;
     };
     ChatGoalPermissions: {
