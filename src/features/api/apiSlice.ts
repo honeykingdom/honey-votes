@@ -97,7 +97,38 @@ export const api = createApi({
         params: { id: `eq.${votingId}` },
       }),
       transformResponse: (response) => response[0],
-      providesTags: (result, error, arg) => [{ type: "Voting", id: arg }],
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<Voting>(`${VOTING_TABLE_NAME}:id=eq.${arg}`)
+            .on("*", (payload) =>
+              updateCachedData(() => {
+                if (
+                  payload.eventType === "INSERT" ||
+                  payload.eventType === "UPDATE"
+                ) {
+                  return payload.new;
+                }
+
+                if (payload.eventType === "DELETE") {
+                  return null;
+                }
+              })
+            )
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVoting: builder.mutation<Voting, CreateVotingDto>({
       query: (body) => ({
@@ -116,25 +147,18 @@ export const api = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "Voting", id: "LIST" },
-        { type: "Voting", id: arg.votingId },
-      ],
+      invalidatesTags: [{ type: "Voting", id: "LIST" }],
     }),
     deleteVoting: builder.mutation<void, number>({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "Voting", id: "LIST" },
-        { type: "Voting", id: arg },
-      ],
+      invalidatesTags: [{ type: "Voting", id: "LIST" }],
     }),
 
     votingOptions: builder.query<EntityState<VotingOptionWithAuthor>, number>({
       query: (votingId) => ({
-        // Can't use params here because URLSearchParams escapes some characters
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
       transformResponse: (response: VotingOptionWithAuthor[]) =>
@@ -202,9 +226,8 @@ export const api = createApi({
 
     votes: builder.query<EntityState<Vote>, number>({
       query: (votingId) => ({
-        url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?select=authorId,votingId,votingOptionId,value&votingId=eq.${votingId}`,
+        url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?votingId=eq.${votingId}&select=authorId,votingId,votingOptionId,value`,
       }),
-      providesTags: [{ type: "Vote", id: "LIST" }],
       transformResponse: (response: Vote[]) =>
         votesAdapter.addMany(votesAdapter.getInitialState(), response),
       onCacheEntryAdded: async (
@@ -246,7 +269,6 @@ export const api = createApi({
         method: "POST",
         body: { votingOptionId } as CreateVoteDto,
       }),
-      invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -254,7 +276,6 @@ export const api = createApi({
         method: "DELETE",
         body: { votingOptionId } as DeleteVoteDto,
       }),
-      invalidatesTags: [{ type: "Vote", id: "LIST" }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
