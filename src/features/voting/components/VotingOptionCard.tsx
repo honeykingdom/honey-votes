@@ -17,7 +17,7 @@ import {
   useDeleteVotingOptionMutation,
   useMeQuery,
   useMeRolesQuery,
-  useUserVotesQuery,
+  useVotesQuery,
   useVotingQuery,
 } from "features/api/apiSlice";
 import { VotingOption } from "features/api/apiTypes";
@@ -45,7 +45,6 @@ const VotingOptionCard = ({ votingOption }: Props) => {
     cardDescription,
     cardImageUrl,
     cardUrl,
-    fullVotesValue,
   } = votingOption;
 
   const [isDeleteVoteDialogOpen, setIsDeleteVoteDialogOpen] = useState(false);
@@ -55,10 +54,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
-  const userVotes = useUserVotesQuery(
-    { votingId, authorId: me.data?.id },
-    { skip: !me.data }
-  );
+  const votes = useVotesQuery(votingId, { skip: !votingId });
   const [createVote] = useCreateVoteMutation();
   const [deleteVote] = useDeleteVoteMutation();
   const [deleteVotingOption] = useDeleteVotingOptionMutation();
@@ -71,7 +67,15 @@ const VotingOptionCard = ({ votingOption }: Props) => {
     meRoles.data
   );
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
-  const isActive = userVotes.data?.some((vote) => vote.votingOptionId === id);
+  const isActive = votes.data?.entities[me.data?.id]?.votingOptionId === id;
+
+  let fullVotesValue: string | number = "-";
+
+  if (votes.isSuccess) {
+    fullVotesValue = Object.values(votes.data.entities).filter(
+      (vote) => vote.votingOptionId === id
+    ).length;
+  }
 
   const handleCardClick = async () => {
     if (isActive) {
