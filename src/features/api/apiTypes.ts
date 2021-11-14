@@ -16,7 +16,10 @@ export type CreateVotingOptionDto =
   components["schemas"]["CreateVotingOptionDto"];
 export type VotingPermissions = components["schemas"]["VotingPermissions"];
 
-export type Vote = components["schemas"]["Vote"];
+export type Vote = Omit<
+  components["schemas"]["Vote"],
+  "createdAt" | "updatedAt"
+>;
 export type CreateVoteDto = components["schemas"]["CreateVoteDto"];
 export type DeleteVoteDto = components["schemas"]["DeleteVoteDto"];
 

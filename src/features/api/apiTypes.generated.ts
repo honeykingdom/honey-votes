@@ -95,7 +95,6 @@ export interface components {
       subTier: number | null;
     };
     Vote: {
-      id: number;
       authorId: string;
       votingId: number;
       votingOptionId: number;
@@ -135,6 +134,7 @@ export interface components {
       canManageVotes: boolean;
       canManageVotingOptions: boolean;
       permissions: components["schemas"]["VotingPermissions"];
+      showValues: boolean;
       allowedVotingOptionTypes: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit: number;
       createdAt: string;
@@ -146,6 +146,7 @@ export interface components {
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
       permissions?: components["schemas"]["VotingPermissions"];
+      showValues?: boolean;
       allowedVotingOptionTypes?: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit?: number;
       channelId: string;
@@ -156,6 +157,7 @@ export interface components {
       canManageVotes?: boolean;
       canManageVotingOptions?: boolean;
       permissions?: components["schemas"]["VotingPermissions"];
+      showValues?: boolean;
       allowedVotingOptionTypes?: components["schemas"]["VotingOptionType"][];
       votingOptionsLimit?: number;
     };
@@ -181,7 +183,6 @@ export interface components {
       authorId: string;
       authorLogin: string;
       votingId: number;
-      fullVotesValue: number;
       type: components["schemas"]["VotingOptionType"];
       cardId?: string;
       cardTitle: string;

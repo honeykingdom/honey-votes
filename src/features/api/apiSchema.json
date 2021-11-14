@@ -53,6 +53,9 @@
         }
       }
     },
+    "showValues": {
+      "default": true
+    },
     "allowedVotingOptionTypes": {
       "default": [
         "kinopoiskMovie",
