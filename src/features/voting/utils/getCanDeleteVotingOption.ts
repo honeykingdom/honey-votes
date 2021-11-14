@@ -4,6 +4,7 @@ import getIsVotingOwner from "./getIsVotingOwner";
 const getCanDeleteVotingOption = (
   voting?: Voting,
   votingOption?: VotingOption,
+  fullVotesValue?: number | string,
   me?: User,
   meRoles?: UserRoles
 ) => {
@@ -16,7 +17,7 @@ const getCanDeleteVotingOption = (
   if (!voting.canManageVotingOptions) return false;
   if (!votingOption) return false;
 
-  return me.id === votingOption.authorId && votingOption.fullVotesValue === 0;
+  return me.id === votingOption.authorId && fullVotesValue === 0;
 };
 
 export default getCanDeleteVotingOption;

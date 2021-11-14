@@ -60,12 +60,7 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   const [deleteVotingOption] = useDeleteVotingOptionMutation();
 
   const authorName = getAuthorName(votingOption);
-  const canDeleteVotingOption = getCanDeleteVotingOption(
-    voting.data,
-    votingOption,
-    me.data,
-    meRoles.data
-  );
+
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
   const isActive = votes.data?.entities[me.data?.id]?.votingOptionId === id;
 
@@ -76,6 +71,14 @@ const VotingOptionCard = ({ votingOption }: Props) => {
       (vote) => vote.votingOptionId === id
     ).length;
   }
+
+  const canDeleteVotingOption = getCanDeleteVotingOption(
+    voting.data,
+    votingOption,
+    fullVotesValue,
+    me.data,
+    meRoles.data
+  );
 
   const handleCardClick = async () => {
     if (isActive) {
