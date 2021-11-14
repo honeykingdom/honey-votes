@@ -60,7 +60,7 @@ export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["Voting", "Vote", "ChatVoting"],
+  tagTypes: ["Voting"],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -284,7 +284,40 @@ export const api = createApi({
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
       transformResponse: (response) => response[0],
-      providesTags: (result, error, arg) => [{ type: "ChatVoting", id: arg }],
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<ChatVoting>(
+              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`
+            )
+            .on("*", (payload) =>
+              updateCachedData(() => {
+                if (
+                  payload.eventType === "INSERT" ||
+                  payload.eventType === "UPDATE"
+                ) {
+                  return payload.new;
+                }
+
+                if (payload.eventType === "DELETE") {
+                  return null;
+                }
+              })
+            )
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createChatVoting: builder.mutation<ChatVoting, CreateChatVotingDto>({
       query: (body) => ({
@@ -292,9 +325,6 @@ export const api = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "ChatVoting", id: arg.broadcasterId },
-      ],
     }),
     updateChatVoting: builder.mutation<
       ChatVoting,
@@ -305,18 +335,12 @@ export const api = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "ChatVoting", id: arg.chatVotingId },
-      ],
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: "ChatVoting", id: arg },
-      ],
     }),
     clearChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
