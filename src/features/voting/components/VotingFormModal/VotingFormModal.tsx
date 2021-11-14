@@ -17,6 +17,7 @@ export const VOTING_DEFAULT: UpdateVotingDto = {
   canManageVotes: apiSchema.Voting.canManageVotes.default,
   canManageVotingOptions: apiSchema.Voting.canManageVotingOptions.default,
   permissions: apiSchema.Voting.permissions.default,
+  showValues: apiSchema.Voting.showValues.default,
   allowedVotingOptionTypes: apiSchema.Voting.allowedVotingOptionTypes
     .default as VotingOptionType[],
   votingOptionsLimit: apiSchema.Voting.votingOptionsLimit.default,

@@ -45,6 +45,15 @@ const FOLLOWED_TIME_MENU_ITEMS = FOLLOWED_TIME_VALUES.map(
   )
 );
 
+const SWITCHES: { label: string; name: keyof UpdateVotingDto }[] = [
+  { label: "Открыть голосование", name: "canManageVotes" },
+  {
+    label: "Открыть добавление вариантов для голосования",
+    name: "canManageVotingOptions",
+  },
+  { label: "Показывать голоса", name: "showValues" },
+];
+
 const getInitialIsExtended = (values?: UpdateVotingDto) => {
   if (!values) return false;
 
@@ -93,28 +102,21 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Box mb={2}>
         <FormGroup>
-          <FormControlLabel
-            control={
-              <ControlledCheckbox
-                name="canManageVotes"
-                register={register}
-                defaultChecked={defaultValues.canManageVotes}
-                Component={Switch}
-              />
-            }
-            label="Открыть голосование"
-          />
-          <FormControlLabel
-            control={
-              <ControlledCheckbox
-                name="canManageVotingOptions"
-                register={register}
-                defaultChecked={defaultValues.canManageVotingOptions}
-                Component={Switch}
-              />
-            }
-            label="Открыть добавление вариантов для голосования"
-          />
+          {SWITCHES.map(({ label, name }) => (
+            <FormControlLabel
+              key={name}
+              control={
+                <Controller
+                  name={name}
+                  control={control}
+                  render={({ field: { ref, ...rest } }) => (
+                    <Switch inputRef={ref} checked={!!rest.value} {...rest} />
+                  )}
+                />
+              }
+              label={label}
+            />
+          ))}
         </FormGroup>
       </Box>
 

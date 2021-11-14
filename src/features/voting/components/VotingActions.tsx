@@ -22,6 +22,7 @@ const getVotingFormValues = R.pick<keyof Voting>([
   "canManageVotes",
   "canManageVotingOptions",
   "permissions",
+  "showValues",
   "allowedVotingOptionTypes",
   "votingOptionsLimit",
 ]);
