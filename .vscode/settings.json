@@ -4,6 +4,7 @@
         "kinopoisk",
         "postgrest",
         "supabase",
+        "upsert",
         "твич"
     ],
     "cSpell.language": "en,ru,ru-RU,en-US,en-GB"
