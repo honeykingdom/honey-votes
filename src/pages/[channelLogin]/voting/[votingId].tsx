@@ -16,6 +16,7 @@ import {
   useMeQuery,
   useMeRolesQuery,
   useUserQuery,
+  useVotesQuery,
   useVotingOptionsQuery,
   useVotingQuery,
   votingOptionsSelectors,
@@ -28,6 +29,7 @@ import getVotingPermissionsBadges from "features/voting/utils/getVotingPermissio
 import getMeBadges from "features/voting/utils/getMeBadges";
 import getCanVote from "features/voting/utils/getCanVote";
 import useSnackbar from "features/snackbar/useSnackbar";
+import { VotingOptionWithAuthor } from "features/api/apiTypes";
 
 const NO_TITLE = <em style={{ fontWeight: 300 }}>Без названия</em>;
 
@@ -52,6 +54,7 @@ const VotingPage = () => {
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
   const votingOptions = useVotingOptionsQuery(votingId, { skip: !votingId });
+  const votes = useVotesQuery(votingId, { skip: !votingId });
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
 
@@ -65,9 +68,29 @@ const VotingPage = () => {
     return null;
   }
 
-  const renderedVotingOptions = votingOptions.data
-    ? votingOptionsSelectors.selectAll(votingOptions.data)
-    : [];
+  const fullVoteValues: Record<number, number> = Object.values(
+    votes.data?.entities || []
+  ).reduce(
+    (acc, vote) => ({
+      ...acc,
+      [vote.votingOptionId]: (acc[vote.votingOptionId] || 0) + 1,
+    }),
+    {}
+  );
+
+  let renderedVotingOptions: VotingOptionWithAuthor[] = [];
+
+  if (votingOptions.data) {
+    renderedVotingOptions = votingOptionsSelectors.selectAll(
+      votingOptions.data
+    );
+
+    if (voting.data?.showValues) {
+      renderedVotingOptions = [...renderedVotingOptions].sort(
+        (a, b) => (fullVoteValues[b.id] || 0) - (fullVoteValues[a.id] || 0)
+      );
+    }
+  }
 
   const canManageVoting = getCanManageVoting(
     voting.data,
@@ -264,6 +287,15 @@ const VotingPage = () => {
               <VotingOptionCard
                 key={votingOption.id}
                 votingOption={votingOption}
+                isActive={
+                  votes.data?.entities[me.data?.id]?.votingOptionId ===
+                  votingOption.id
+                }
+                fullVotesValue={
+                  voting.data?.showValues
+                    ? fullVoteValues[votingOption.id]
+                    : "-"
+                }
               />
             </Grid>
           ))}

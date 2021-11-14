@@ -34,9 +34,15 @@ const getAuthorName = (votingOption?: VotingOption): string =>
 
 type Props = {
   votingOption: VotingOption;
+  isActive: boolean;
+  fullVotesValue: number | string;
 };
 
-const VotingOptionCard = ({ votingOption }: Props) => {
+const VotingOptionCard = ({
+  votingOption,
+  isActive,
+  fullVotesValue = 0,
+}: Props) => {
   const {
     id,
     votingId,
@@ -54,7 +60,6 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
-  const votes = useVotesQuery(votingId, { skip: !votingId });
   const [createVote] = useCreateVoteMutation();
   const [deleteVote] = useDeleteVoteMutation();
   const [deleteVotingOption] = useDeleteVotingOptionMutation();
@@ -62,15 +67,6 @@ const VotingOptionCard = ({ votingOption }: Props) => {
   const authorName = getAuthorName(votingOption);
 
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
-  const isActive = votes.data?.entities[me.data?.id]?.votingOptionId === id;
-
-  let fullVotesValue: string | number = "-";
-
-  if (votes.isSuccess) {
-    fullVotesValue = Object.values(votes.data.entities).filter(
-      (vote) => vote.votingOptionId === id
-    ).length;
-  }
 
   const canDeleteVotingOption = getCanDeleteVotingOption(
     voting.data,
