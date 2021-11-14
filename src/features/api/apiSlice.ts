@@ -39,11 +39,15 @@ import transformVotingOption from "./utils/transformVotingOption";
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
 
 // https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#normalizing-data-with-createentityadapter
-const votingOptionsAdapter = createEntityAdapter<VotingOptionWithAuthor>({
-  sortComparer: (a, b) => b.fullVotesValue - a.fullVotesValue,
-});
+const votingOptionsAdapter = createEntityAdapter<VotingOptionWithAuthor>();
 
 export const votingOptionsSelectors = votingOptionsAdapter.getSelectors();
+
+const votesAdapter = createEntityAdapter<Vote>({
+  selectId: (vote) => vote.authorId,
+});
+
+export const votesSelectors = votesAdapter.getSelectors();
 
 const chatVotesAdapter = createEntityAdapter<ChatVote>({
   selectId: (chatVote) => chatVote.userId,
@@ -196,15 +200,45 @@ export const api = createApi({
       }),
     }),
 
-    userVotes: builder.query<Vote[], { votingId: number; authorId: string }>({
-      query: ({ authorId, votingId }) => ({
-        url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}`,
-        params: {
-          authorId: `eq.${authorId}`,
-          votingId: `eq.${votingId}`,
-        },
+    votes: builder.query<EntityState<Vote>, number>({
+      query: (votingId) => ({
+        url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?select=authorId,votingId,votingOptionId,value&votingId=eq.${votingId}`,
       }),
       providesTags: [{ type: "Vote", id: "LIST" }],
+      transformResponse: (response: Vote[]) =>
+        votesAdapter.addMany(votesAdapter.getInitialState(), response),
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
+
+        try {
+          await cacheDataLoaded;
+
+          subscription = supabase
+            .from<Vote>(`${VOTE_TABLE_NAME}:votingId=eq.${arg}`)
+            .on("*", (payload) =>
+              updateCachedData((draft) => {
+                if (
+                  payload.eventType === "INSERT" ||
+                  payload.eventType === "UPDATE"
+                ) {
+                  votesAdapter.upsertOne(draft, payload.new);
+                }
+
+                if (payload.eventType === "DELETE") {
+                  votesAdapter.removeOne(draft, payload.old.authorId);
+                }
+              })
+            )
+            .subscribe();
+        } catch {}
+
+        await cacheEntryRemoved;
+
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -414,7 +448,7 @@ export const {
   useCreateVotingOptionMutation,
   useDeleteVotingOptionMutation,
 
-  useUserVotesQuery,
+  useVotesQuery,
   useCreateVoteMutation,
   useDeleteVoteMutation,
 
