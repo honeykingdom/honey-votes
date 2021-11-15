@@ -46,7 +46,6 @@ const VotingOptionForm = ({
         <Controller
           control={control}
           defaultValue={VotingOptionType.KinopoiskMovie}
-          // @ts-expect-error
           name="type"
           render={({ field }) => (
             <ToggleButtonGroup
