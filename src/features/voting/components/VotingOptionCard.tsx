@@ -17,7 +17,6 @@ import {
   useDeleteVotingOptionMutation,
   useMeQuery,
   useMeRolesQuery,
-  useVotesQuery,
   useVotingQuery,
 } from "features/api/apiSlice";
 import { VotingOption } from "features/api/apiTypes";
@@ -32,16 +31,21 @@ const getAuthorName = (votingOption?: VotingOption): string =>
   (votingOption as any).author?.login ||
   "";
 
+// 1 min
+const VOTE_INTERVAL = 60 * 1000;
+
 type Props = {
   votingOption: VotingOption;
   isActive: boolean;
   fullVotesValue: number | string;
+  lastVoteTimestampRef: React.MutableRefObject<number>;
 };
 
 const VotingOptionCard = ({
   votingOption,
   isActive,
   fullVotesValue = 0,
+  lastVoteTimestampRef,
 }: Props) => {
   const {
     id,
@@ -60,8 +64,8 @@ const VotingOptionCard = ({
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
-  const [createVote] = useCreateVoteMutation();
-  const [deleteVote] = useDeleteVoteMutation();
+  const [createVote, createVoteResult] = useCreateVoteMutation();
+  const [deleteVote, deleteVoteResult] = useDeleteVoteMutation();
   const [deleteVotingOption] = useDeleteVotingOptionMutation();
 
   const authorName = getAuthorName(votingOption);
@@ -77,6 +81,18 @@ const VotingOptionCard = ({
   );
 
   const handleCardClick = async () => {
+    if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
+      snackbar({
+        message:
+          "Вы уже проголосовали. Менять голос можно будет только спустя 1 минуту.",
+        variant: "error",
+      });
+
+      return;
+    }
+
+    if (createVoteResult.isLoading || deleteVoteResult.isLoading) return;
+
     if (isActive) {
       const result = await deleteVote(id);
 
@@ -94,6 +110,8 @@ const VotingOptionCard = ({
       }
     } else {
       const result = await createVote(id);
+
+      lastVoteTimestampRef.current = Date.now();
 
       // @ts-expect-error
       if (result.error) {

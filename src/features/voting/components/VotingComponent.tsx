@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import LockIcon from "@mui/icons-material/Lock";
@@ -54,6 +54,7 @@ const VotingComponent = () => {
 
   const [createVotingOption] = useCreateVotingOptionMutation();
 
+  const lastVoteTimestampRef = useRef(0);
   const [isVotingOptionModalOpened, setIsVotingOptionModalOpened] =
     useState(false);
 
@@ -103,7 +104,6 @@ const VotingComponent = () => {
 
   return (
     <>
-      {" "}
       {channel.data && voting.data && (
         <>
           {voting.data.description && (
@@ -238,6 +238,7 @@ const VotingComponent = () => {
                   votingOption={votingOption}
                   isActive={isActive}
                   fullVotesValue={fullVotesValue}
+                  lastVoteTimestampRef={lastVoteTimestampRef}
                 />
               </Grid>
             )
