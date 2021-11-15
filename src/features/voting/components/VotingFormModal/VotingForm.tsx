@@ -3,6 +3,7 @@ import { Controller, UseFormReturn } from "react-hook-form";
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -23,8 +24,8 @@ import {
   USER_TYPES_ITEMS,
   VOTING_OPTION_TYPES,
 } from "features/voting/votingConstants";
-import ControlledCheckbox from "./ControlledCheckbox";
 import FormControlSelect from "./FormControlSelect";
+import type { VotingFormParams } from "./VotingFormModal";
 
 const VOTING_OPTIONS_LIMIT_MARKS = Array.from({ length: 10 }, (_, i) => ({
   value: (i + 1) * 20,
@@ -67,7 +68,7 @@ const getInitialIsExtended = (values?: UpdateVotingDto) => {
 
 type Props = {
   defaultValues: UpdateVotingDto;
-  useFormReturn: UseFormReturn<UpdateVotingDto>;
+  useFormReturn: UseFormReturn<VotingFormParams>;
 };
 
 const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
@@ -128,11 +129,15 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               <FormControlLabel
                 key={name}
                 control={
-                  <ControlledCheckbox
+                  <Controller
                     name={`allowedVotingOptionTypes.${name}`}
-                    register={register}
-                    defaultChecked={defaultValues.allowedVotingOptionTypes.includes(
-                      name
+                    control={control}
+                    render={({ field: { ref, ...rest } }) => (
+                      <Checkbox
+                        inputRef={ref}
+                        checked={!!rest.value}
+                        {...rest}
+                      />
                     )}
                   />
                 }
@@ -152,10 +157,16 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               <FormControlLabel
                 key={type}
                 control={
-                  <ControlledCheckbox
+                  <Controller
                     name={`permissions.${type}.canVote`}
-                    register={register}
-                    defaultChecked={defaultValues.permissions[type].canVote}
+                    control={control}
+                    render={({ field: { ref, ...rest } }) => (
+                      <Checkbox
+                        inputRef={ref}
+                        checked={!!rest.value}
+                        {...rest}
+                      />
+                    )}
                   />
                 }
                 label={label}
@@ -203,12 +214,16 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               <FormControlLabel
                 key={type}
                 control={
-                  <ControlledCheckbox
+                  <Controller
                     name={`permissions.${type}.canAddOptions`}
-                    register={register}
-                    defaultChecked={
-                      defaultValues.permissions[type].canAddOptions
-                    }
+                    control={control}
+                    render={({ field: { ref, ...rest } }) => (
+                      <Checkbox
+                        inputRef={ref}
+                        checked={!!rest.value}
+                        {...rest}
+                      />
+                    )}
                   />
                 }
                 label={label}

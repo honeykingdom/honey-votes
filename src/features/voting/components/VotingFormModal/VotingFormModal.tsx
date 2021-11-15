@@ -23,6 +23,47 @@ export const VOTING_DEFAULT: UpdateVotingDto = {
   votingOptionsLimit: apiSchema.Voting.votingOptionsLimit.default,
 };
 
+export type VotingFormParams = Omit<
+  UpdateVotingDto,
+  "allowedVotingOptionTypes"
+> & {
+  allowedVotingOptionTypes: { [key in VotingOptionType]: boolean };
+};
+
+const transformToFormValues = (values: UpdateVotingDto): VotingFormParams => ({
+  ...values,
+  allowedVotingOptionTypes: {
+    [VotingOptionType.Custom]: values.allowedVotingOptionTypes.includes(
+      VotingOptionType.Custom
+    ),
+    [VotingOptionType.KinopoiskMovie]: values.allowedVotingOptionTypes.includes(
+      VotingOptionType.KinopoiskMovie
+    ),
+    [VotingOptionType.IgdbGame]: values.allowedVotingOptionTypes.includes(
+      VotingOptionType.IgdbGame
+    ),
+  },
+});
+
+const transformToValues = (values: VotingFormParams): UpdateVotingDto => {
+  const allowedVotingOptionTypes = [];
+
+  if (values.allowedVotingOptionTypes[VotingOptionType.Custom]) {
+    allowedVotingOptionTypes.push(VotingOptionType.Custom);
+  }
+  if (values.allowedVotingOptionTypes[VotingOptionType.KinopoiskMovie]) {
+    allowedVotingOptionTypes.push(VotingOptionType.KinopoiskMovie);
+  }
+  if (values.allowedVotingOptionTypes[VotingOptionType.IgdbGame]) {
+    allowedVotingOptionTypes.push(VotingOptionType.IgdbGame);
+  }
+
+  return {
+    ...values,
+    allowedVotingOptionTypes,
+  };
+};
+
 type Props = {
   open: boolean;
   title: string;
@@ -42,30 +83,15 @@ const VotingFormModal = ({
   onSubmit,
   onClose,
 }: Props) => {
-  const useFormReturn = useForm<UpdateVotingDto>({
-    defaultValues,
+  const useFormReturn = useForm<VotingFormParams>({
+    defaultValues: transformToFormValues(defaultValues),
   });
   const { getValues } = useFormReturn;
 
   const handleSubmit = () => {
     const values = getValues();
-    const allowedVotingOptionTypes = [];
 
-    if ((values.allowedVotingOptionTypes as any)[VotingOptionType.Custom]) {
-      allowedVotingOptionTypes.push(VotingOptionType.Custom);
-    }
-    if (
-      (values.allowedVotingOptionTypes as any)[VotingOptionType.KinopoiskMovie]
-    ) {
-      allowedVotingOptionTypes.push(VotingOptionType.KinopoiskMovie);
-    }
-    if ((values.allowedVotingOptionTypes as any)[VotingOptionType.IgdbGame]) {
-      allowedVotingOptionTypes.push(VotingOptionType.IgdbGame);
-    }
-
-    values.allowedVotingOptionTypes = allowedVotingOptionTypes;
-
-    onSubmit(values);
+    onSubmit(transformToValues(values));
   };
 
   return (
