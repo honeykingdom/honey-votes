@@ -38,8 +38,6 @@ const useGoal = () => {
       .on("*", (payload) => {
         if (payload.eventType === "DELETE") return;
 
-        console.log(payload);
-
         setVotes((prev) => {
           let value: GoalVote["value"] = 1;
 

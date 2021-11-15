@@ -6,13 +6,6 @@ import { User } from "features/api/apiTypes";
 const ADMINS = process.env.NEXT_PUBLIC_ADMINS.split(";");
 
 const getMainMenuLinks = (me: User) => {
-  console.log({
-    x1: !me,
-    x2: me.broadcasterType === BroadcasterType.None,
-    x3: !ADMINS.includes(me.login),
-    ADMINS,
-  });
-
   if (!me) return [];
 
   const isPartner = me.broadcasterType !== BroadcasterType.None;
