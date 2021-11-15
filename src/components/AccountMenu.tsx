@@ -122,18 +122,16 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {getMainMenuLinks(me.data.login).map(
-          ({ label, href, IconComponent }) => (
-            <Link key={href} href={href} passHref>
-              <MenuItem component="a">
-                <ListItemIcon>
-                  <IconComponent fontSize="small" />
-                </ListItemIcon>
-                {label}
-              </MenuItem>
-            </Link>
-          )
-        )}
+        {getMainMenuLinks(me.data).map(({ label, href, IconComponent }) => (
+          <Link key={href} href={href} passHref>
+            <MenuItem component="a">
+              <ListItemIcon>
+                <IconComponent fontSize="small" />
+              </ListItemIcon>
+              {label}
+            </MenuItem>
+          </Link>
+        ))}
 
         <Divider />
 

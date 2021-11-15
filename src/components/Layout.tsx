@@ -38,7 +38,7 @@ const Layout = ({ children }: any) => {
     []
   );
 
-  const hasUser = me.data && !me.isError;
+  const isMenuVisible = me.data && !me.isError;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -58,9 +58,9 @@ const Layout = ({ children }: any) => {
             </Typography>
           </Link>
 
-          {hasUser && (
+          {isMenuVisible && (
             <Box sx={{ display: { xs: "none", md: "block" } }}>
-              {getMainMenuLinks(me.data.login).map(({ label, href }) => (
+              {getMainMenuLinks(me.data).map(({ label, href }) => (
                 <Link key={href} href={href} passHref>
                   <Button color="inherit">{label}</Button>
                 </Link>
