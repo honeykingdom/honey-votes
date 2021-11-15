@@ -3,7 +3,7 @@ import getIsVotingOwner from "./getIsVotingOwner";
 
 const getCanCreateVotingOptions = (
   voting?: Voting,
-  votingOptions?: VotingOption[],
+  votingOptions?: { votingOption: VotingOption }[],
   me?: User,
   meRoles?: UserRoles
 ): [boolean] | [boolean, string] => {
@@ -23,7 +23,7 @@ const getCanCreateVotingOptions = (
   }
 
   const votingOptionsByUser = votingOptions.filter(
-    (votingOption) => votingOption.authorId === me.id
+    (votingOption) => votingOption.votingOption.authorId === me.id
   );
 
   if (votingOptionsByUser.length >= 1) {

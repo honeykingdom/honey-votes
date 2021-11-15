@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { Box, Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import LockIcon from "@mui/icons-material/Lock";
-import Layout from "components/Layout";
+import { useAppSelector } from "app/hooks";
 import TwitchBadge from "components/TwitchBadge";
-import PageHeader from "components/PageHeader";
-import useUsername from "hooks/useUsername";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingOptionCard from "features/voting/components/VotingOptionCard";
 import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
@@ -19,8 +17,8 @@ import {
   useVotesQuery,
   useVotingOptionsQuery,
   useVotingQuery,
-  votingOptionsSelectors,
 } from "features/api/apiSlice";
+import { renderedVotingOptionsSelector } from "features/api/apiSelectors";
 import UserBadges from "features/voting/components/UserBadges";
 import useVotingId from "features/voting/hooks/useVotingId";
 import getCanManageVoting from "features/voting/utils/getCanManageVoting";
@@ -29,7 +27,6 @@ import getVotingPermissionsBadges from "features/voting/utils/getVotingPermissio
 import getMeBadges from "features/voting/utils/getMeBadges";
 import getCanVote from "features/voting/utils/getCanVote";
 import useSnackbar from "features/snackbar/useSnackbar";
-import { VotingOptionWithAuthor } from "features/api/apiTypes";
 
 const CLOSED = (
   <Typography
@@ -45,14 +42,13 @@ const CLOSED = (
 
 const VotingComponent = () => {
   const login = useChannelLogin();
-  const username = useUsername();
   const votingId = useVotingId();
   const snackbar = useSnackbar();
 
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
   const votingOptions = useVotingOptionsQuery(votingId, { skip: !votingId });
-  const votes = useVotesQuery(votingId, { skip: !votingId });
+  useVotesQuery(votingId, { skip: !votingId });
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
 
@@ -61,33 +57,13 @@ const VotingComponent = () => {
   const [isVotingOptionModalOpened, setIsVotingOptionModalOpened] =
     useState(false);
 
+  const renderedVotingOptions = useAppSelector((state) =>
+    renderedVotingOptionsSelector(state, votingId)
+  );
+
   // TODO: handle not existing voting
   if (voting.isSuccess && !voting.data) {
     return null;
-  }
-
-  const fullVoteValues: Record<number, number> = Object.values(
-    votes.data?.entities || []
-  ).reduce(
-    (acc, vote) => ({
-      ...acc,
-      [vote.votingOptionId]: (acc[vote.votingOptionId] || 0) + 1,
-    }),
-    {}
-  );
-
-  let renderedVotingOptions: VotingOptionWithAuthor[] = [];
-
-  if (votingOptions.data) {
-    renderedVotingOptions = votingOptionsSelectors.selectAll(
-      votingOptions.data
-    );
-
-    if (voting.data?.showValues) {
-      renderedVotingOptions = [...renderedVotingOptions].sort(
-        (a, b) => (fullVoteValues[b.id] || 0) - (fullVoteValues[a.id] || 0)
-      );
-    }
   }
 
   const canManageVoting = getCanManageVoting(
@@ -254,23 +230,18 @@ const VotingComponent = () => {
       )}
       {votingOptions.data && renderedVotingOptions.length > 0 && (
         <Grid container flexDirection="column">
-          {renderedVotingOptions.map((votingOption) => (
-            <Grid item sx={{ mb: 2 }} key={votingOption.id}>
-              <VotingOptionCard
-                key={votingOption.id}
-                votingOption={votingOption}
-                isActive={
-                  votes.data?.entities[me.data?.id]?.votingOptionId ===
-                  votingOption.id
-                }
-                fullVotesValue={
-                  voting.data?.showValues
-                    ? fullVoteValues[votingOption.id]
-                    : "-"
-                }
-              />
-            </Grid>
-          ))}
+          {renderedVotingOptions.map(
+            ({ votingOption, isActive, fullVotesValue }) => (
+              <Grid item sx={{ mb: 2 }} key={votingOption.id}>
+                <VotingOptionCard
+                  key={votingOption.id}
+                  votingOption={votingOption}
+                  isActive={isActive}
+                  fullVotesValue={fullVotesValue}
+                />
+              </Grid>
+            )
+          )}
         </Grid>
       )}
       {votingOptions.data && renderedVotingOptions.length === 0 && (

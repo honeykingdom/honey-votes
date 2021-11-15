@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -292,4 +292,4 @@ const VotingOptionCard = ({
   );
 };
 
-export default VotingOptionCard;
+export default React.memo(VotingOptionCard);
