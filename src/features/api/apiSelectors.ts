@@ -26,13 +26,22 @@ const votesSelector = (state: AppState, votingId: number) =>
 
 const meSelector = api.endpoints.me.select();
 
+const getFullVoteValues = (votes: EntityState<Vote>) =>
+  votes.ids.reduce((acc, id) => {
+    const vote = votes.entities[id];
+
+    return {
+      ...acc,
+      [vote.votingOptionId]: (acc[vote.votingOptionId] || 0) + 1,
+    };
+  }, {});
+
 export const renderedVotingOptionsSelector = createSelector(
   votingSelector,
   votingOptionsSelector,
   votesSelector,
   meSelector,
   (voting, votingOptions, votes, me) => {
-    console.log({ voting, votingOptions, votes });
     if (!voting || !votingOptions || !votes || !me) return [];
     if (!voting.data || !votingOptions.data) return [];
     if (voting.data.showValues && !votes.data) return [];
@@ -40,13 +49,7 @@ export const renderedVotingOptionsSelector = createSelector(
     let fullVoteValues: Record<number, number> = {};
 
     if (voting.data.showValues) {
-      fullVoteValues = Object.values(votes.data?.entities || []).reduce(
-        (acc, vote) => ({
-          ...acc,
-          [vote.votingOptionId]: (acc[vote.votingOptionId] || 0) + 1,
-        }),
-        {}
-      );
+      fullVoteValues = getFullVoteValues(votes.data);
     }
 
     const result = votingOptions.data.ids.map((id) => {
