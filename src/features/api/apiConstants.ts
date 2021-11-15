@@ -61,3 +61,9 @@ export enum ChatGoalEventType {
   Upvote = "upvote",
   Downvote = "downvote",
 }
+
+export enum BroadcasterType {
+  None = "",
+  Partner = "partner",
+  Affiliate = "affiliate",
+}

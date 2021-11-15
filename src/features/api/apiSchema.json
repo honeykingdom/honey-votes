@@ -3,6 +3,9 @@
     "displayName": {
       "default": ""
     },
+    "broadcasterType": {
+      "default": ""
+    },
     "areTokensValid": {
       "default": true
     }

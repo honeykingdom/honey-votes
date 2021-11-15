@@ -75,11 +75,13 @@ export interface components {
       accessToken: string;
       refreshToken: string;
     };
+    BroadcasterType: "" | "partner" | "affiliate";
     User: {
       id: string;
       login: string;
       displayName: string;
       avatarUrl: string;
+      broadcasterType: components["schemas"]["BroadcasterType"];
       areTokensValid: boolean;
       createdAt: string;
       updatedAt: string;
