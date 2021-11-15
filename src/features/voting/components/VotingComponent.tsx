@@ -133,6 +133,7 @@ const VotingComponent = () => {
                     voting.data.permissions,
                     "canVote"
                   )}
+                  channelId={channel.data.id}
                 />
               </Typography>
             </Box>
@@ -158,6 +159,7 @@ const VotingComponent = () => {
                     voting.data.permissions,
                     "canAddOptions"
                   )}
+                  channelId={channel.data.id}
                 />
               </Typography>
             </Box>
@@ -177,7 +179,10 @@ const VotingComponent = () => {
                   Вы:
                 </Typography>
                 <Typography variant="caption">
-                  <UserBadges badges={getMeBadges(me.data, meRoles.data)} />
+                  <UserBadges
+                    badges={getMeBadges(me.data, meRoles.data)}
+                    channelId={channel.data.id}
+                  />
                 </Typography>
               </Box>
             )}
