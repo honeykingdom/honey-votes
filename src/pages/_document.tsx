@@ -4,12 +4,12 @@ import createEmotionServer from "@emotion/server/create-instance";
 import theme from "app/theme";
 import createEmotionCache from "utils/createEmotionCache";
 
-// const gaScript = `
-//   window.dataLayer = window.dataLayer || [];
-//   function gtag(){dataLayer.push(arguments);}
-//   gtag('js', new Date());
-//   gtag('config', '${process.env.GA_TRACKING_ID}', { page_path: window.location.pathname });
-// `;
+const gaScript = `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${process.env.GA_TRACKING_ID}', { page_path: window.location.pathname });
+`;
 
 export default class MyDocument extends Document {
   render() {
@@ -40,11 +40,11 @@ export default class MyDocument extends Document {
           />
           <link rel="manifest" href="/manifest.json" /> */}
 
-          {/* <script
+          <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_TRACKING_ID}`}
           />
-          <script dangerouslySetInnerHTML={{ __html: gaScript }} /> */}
+          <script dangerouslySetInnerHTML={{ __html: gaScript }} />
         </Head>
         <body>
           <Main />
