@@ -1,11 +1,12 @@
 import NextLink from "next/link";
-import { Box, Button } from "@mui/material";
+import { Avatar, Box, Button } from "@mui/material";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
 import useUsername from "hooks/useUsername";
 import { useUserQuery } from "features/api/apiSlice";
 import getMainMenuLinks from "utils/getMainMenuLinks";
+import TwitchUsername from "components/TwitchUsername";
 
 const ChannelPage = () => {
   const login = useChannelLogin();
@@ -17,7 +18,16 @@ const ChannelPage = () => {
       <PageHeader
         title={username}
         pageTitle={username}
-        breadcrumbs={[{ title: username }]}
+        breadcrumbs={[
+          {
+            title: (
+              <TwitchUsername
+                username={username}
+                avatarUrl={channel.data?.avatarUrl}
+              />
+            ),
+          },
+        ]}
       />
 
       {channel.data && (

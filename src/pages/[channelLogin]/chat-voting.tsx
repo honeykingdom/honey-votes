@@ -1,5 +1,6 @@
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
+import TwitchUsername from "components/TwitchUsername";
 import useUsername from "hooks/useUsername";
 import useChannelLogin from "hooks/useChannelLogin";
 import ChatVotingComponent from "features/chat-voting/components/ChatVotingComponent";
@@ -20,7 +21,15 @@ const ChatVotesPage = () => {
         }
         pageTitle="Голосование в чате"
         breadcrumbs={[
-          { title: username, href: `/${login}` },
+          {
+            title: (
+              <TwitchUsername
+                username={username}
+                avatarUrl={channel.data?.avatarUrl}
+              />
+            ),
+            href: `/${login}`,
+          },
           { title: "Голосование в чате" },
         ]}
       />

@@ -4,6 +4,7 @@ import { Button, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
+import TwitchUsername from "components/TwitchUsername";
 import useChannelLogin from "hooks/useChannelLogin";
 import useUsername from "hooks/useUsername";
 import VotingList from "features/voting/components/VotingList";
@@ -71,7 +72,15 @@ const VotingListPage = () => {
         title={username ? `${username} - Голосование` : "Голосование"}
         pageTitle="Голосование"
         breadcrumbs={[
-          { title: username, href: `/${login}` },
+          {
+            title: (
+              <TwitchUsername
+                username={username}
+                avatarUrl={channel.data?.avatarUrl}
+              />
+            ),
+            href: `/${login}`,
+          },
           { title: "Голосование" },
         ]}
       />

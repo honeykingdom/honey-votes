@@ -5,7 +5,7 @@ const useUsername = () => {
   const login = useChannelLogin();
   const channel = useUserQuery({ login }, { skip: !login });
 
-  return channel.data?.displayName || login;
+  return channel.data?.displayName || login || "";
 };
 
 export default useUsername;

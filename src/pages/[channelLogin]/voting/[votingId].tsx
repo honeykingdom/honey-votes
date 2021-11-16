@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
+import TwitchUsername from "components/TwitchUsername";
 import useUsername from "hooks/useUsername";
 import useChannelLogin from "hooks/useChannelLogin";
 import { useUserQuery, useVotingQuery } from "features/api/apiSlice";
@@ -34,7 +35,12 @@ const VotingPage = () => {
         pageTitle={getTitle()}
         breadcrumbs={[
           {
-            title: channel.data?.displayName || login,
+            title: (
+              <TwitchUsername
+                username={username}
+                avatarUrl={channel.data?.avatarUrl}
+              />
+            ),
             href: `/${login}`,
           },
           {
