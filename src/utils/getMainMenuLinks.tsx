@@ -5,28 +5,28 @@ import { User } from "features/api/apiTypes";
 
 const ADMINS = process.env.NEXT_PUBLIC_ADMINS.split(";");
 
-const getMainMenuLinks = (me: User) => {
-  if (!me) return [];
+const getMainMenuLinks = (user: Pick<User, "login" | "broadcasterType">) => {
+  if (!user) return [];
 
-  const isPartner = me.broadcasterType !== BroadcasterType.None;
-  const isAdmin = ADMINS.includes(me.login);
+  const isPartner = user.broadcasterType !== BroadcasterType.None;
+  const isAdmin = ADMINS.includes(user.login);
 
   if (!isPartner && !isAdmin) return [];
 
   return [
     {
       label: "Голосование",
-      href: `/${me.login}/voting`,
+      href: `/${user.login}/voting`,
       IconComponent: PollIcon,
     },
     {
       label: "Голосование в чате",
-      href: `/${me.login}/chat-voting`,
+      href: `/${user.login}/chat-voting`,
       IconComponent: PollIcon,
     },
     {
       label: "Чатгол",
-      href: `/${me.login}/chat-goal`,
+      href: `/${user.login}/chat-goal`,
       IconComponent: ThumbsUpDownIcon,
     },
   ];

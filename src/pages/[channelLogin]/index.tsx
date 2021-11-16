@@ -4,14 +4,13 @@ import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
 import useUsername from "hooks/useUsername";
-import { useMeQuery } from "features/api/apiSlice";
+import { useUserQuery } from "features/api/apiSlice";
 import getMainMenuLinks from "utils/getMainMenuLinks";
 
 const ChannelPage = () => {
   const login = useChannelLogin();
+  const channel = useUserQuery({ login }, { skip: !login });
   const username = useUsername();
-
-  const me = useMeQuery();
 
   return (
     <Layout>
@@ -21,15 +20,17 @@ const ChannelPage = () => {
         breadcrumbs={[{ title: username }]}
       />
 
-      {me.data && (
+      {channel.data && (
         <>
-          {getMainMenuLinks(me.data).map(({ href, label, IconComponent }) => (
-            <Box key={href}>
-              <NextLink href={href} passHref>
-                <Button startIcon={<IconComponent />}>{label}</Button>
-              </NextLink>
-            </Box>
-          ))}
+          {getMainMenuLinks(channel.data).map(
+            ({ href, label, IconComponent }) => (
+              <Box key={href}>
+                <NextLink href={href} passHref>
+                  <Button startIcon={<IconComponent />}>{label}</Button>
+                </NextLink>
+              </Box>
+            )
+          )}
         </>
       )}
     </Layout>
