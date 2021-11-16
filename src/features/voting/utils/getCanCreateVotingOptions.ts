@@ -19,7 +19,7 @@ const getCanCreateVotingOptions = (
 
   if (!votingOptions) return [false];
   if (votingOptions.length >= voting.votingOptionsLimit) {
-    return [false, "Достигнут лимит вариантов голосования"];
+    return [false, "Достигнут лимит количества вариантов для голосования."];
   }
 
   const votingOptionsByUser = votingOptions.filter(
@@ -27,7 +27,7 @@ const getCanCreateVotingOptions = (
   );
 
   if (votingOptionsByUser.length >= 1) {
-    return [false, "Вы уже добавили вариант для голосования"];
+    return [false, "Вы уже добавили вариант для голосования."];
   }
 
   if (voting.permissions.viewer.canAddOptions) return [true];

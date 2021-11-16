@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import LockIcon from "@mui/icons-material/Lock";
 import { useAppSelector } from "app/hooks";
@@ -19,6 +19,7 @@ import {
   useVotingQuery,
 } from "features/api/apiSlice";
 import { renderedVotingOptionsSelector } from "features/api/apiSelectors";
+import apiSchema from "features/api/apiSchema.json";
 import UserBadges from "features/voting/components/UserBadges";
 import useVotingId from "features/voting/hooks/useVotingId";
 import getCanManageVoting from "features/voting/utils/getCanManageVoting";
@@ -48,7 +49,7 @@ const VotingComponent = () => {
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
   const votingOptions = useVotingOptionsQuery(votingId, { skip: !votingId });
-  useVotesQuery(votingId, { skip: !votingId });
+  const votes = useVotesQuery(votingId, { skip: !votingId });
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
 
@@ -113,95 +114,86 @@ const VotingComponent = () => {
           )}
 
           <Box sx={{ mb: 2 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                mb: { xs: 1, sm: 0 },
-              }}
-            >
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mr: 1 }}
-              >
-                Голосовать могут:
-              </Typography>
-              <Typography variant="caption">
-                <UserBadges
-                  badges={getVotingPermissionsBadges(
-                    voting.data.permissions,
-                    "canVote"
-                  )}
-                  channelId={channel.data.id}
-                />
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                mb: { xs: 1, sm: 0 },
-              }}
-            >
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ mr: 1 }}
-              >
-                Добавлять варианты могут:
-              </Typography>
-              <Typography variant="caption">
-                <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
-                <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
-                <UserBadges
-                  badges={getVotingPermissionsBadges(
-                    voting.data.permissions,
-                    "canAddOptions"
-                  )}
-                  channelId={channel.data.id}
-                />
-              </Typography>
-            </Box>
-            {me.data && (
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", sm: "row" },
-                  mb: { xs: 1, sm: 0 },
-                }}
-              >
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ mr: 1 }}
+            {canManageVoting && (
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    mb: { xs: 1, sm: 0 },
+                  }}
                 >
-                  Вы:
-                </Typography>
-                <Typography variant="caption">
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mr: 1 }}
+                  >
+                    Голосовать могут:
+                  </Typography>
+                  <Typography variant="caption">
+                    <UserBadges
+                      badges={getVotingPermissionsBadges(
+                        voting.data.permissions,
+                        "canVote"
+                      )}
+                      channelId={channel.data.id}
+                    />
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    mb: { xs: 1, sm: 0 },
+                  }}
+                >
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mr: 1 }}
+                  >
+                    Добавлять варианты могут:
+                  </Typography>
+                  <Typography variant="caption">
+                    <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
+                    <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
+                    <UserBadges
+                      badges={getVotingPermissionsBadges(
+                        voting.data.permissions,
+                        "canAddOptions"
+                      )}
+                      channelId={channel.data.id}
+                    />
+                  </Typography>
+                </Box>
+              </>
+            )}
+
+            {me.data && voting.data?.canManageVotes && !canVote && (
+              <Box mt={1}>
+                <Alert severity="warning">
+                  Вы не можете участвовать в этом голосовании. <br />
+                  Голосовать могут:{" "}
+                  <UserBadges
+                    badges={getVotingPermissionsBadges(
+                      voting.data.permissions,
+                      "canVote"
+                    )}
+                    channelId={channel.data.id}
+                  />
+                  <br />
+                  Вы:{" "}
                   <UserBadges
                     badges={getMeBadges(me.data, meRoles.data)}
                     channelId={channel.data.id}
                   />
-                </Typography>
+                </Alert>
               </Box>
             )}
-
-            {me.data &&
-              voting.data?.canManageVotes &&
-              !canVote &&
-              !meRoles.data?.broadcaster && (
-                <Box mt={1}>
-                  <Typography variant="body2" color="error.light">
-                    Вы не можете голосовать в этом голосовании.
-                  </Typography>
-                </Box>
-              )}
             {!voting.data?.canManageVotes && (
               <Box mt={1}>
-                <Typography variant="body2" color="error.light">
-                  [Голосование закрыто]
-                </Typography>
+                <Alert severity="error">Голосование закрыто.</Alert>
               </Box>
             )}
           </Box>
@@ -212,10 +204,17 @@ const VotingComponent = () => {
             </Box>
           )}
 
-          <Divider sx={{ mb: 2 }} />
+          <Typography component="div" variant="h5" sx={{ mb: 1 }}>
+            Вариантов: {renderedVotingOptions.length}/
+            {voting.data?.votingOptionsLimit ||
+              apiSchema.Voting.votingOptionsLimit.default}
+            , голосов: {votes.data?.ids.length || 0}{" "}
+          </Typography>
+
+          <Divider sx={{ mb: 1 }} />
 
           {canCreateVotingOptions && (
-            <Box sx={{ mb: 2 }}>
+            <Box sx={{ mb: 1 }}>
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
@@ -227,9 +226,9 @@ const VotingComponent = () => {
           )}
 
           {!canCreateVotingOptions && canCreateVotingOptionsReason && (
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-              {canCreateVotingOptionsReason}
-            </Typography>
+            <Alert severity="info" sx={{ mb: 1 }}>
+              {canCreateVotingOptionsReason} <br />
+            </Alert>
           )}
         </>
       )}
