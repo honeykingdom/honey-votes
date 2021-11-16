@@ -191,6 +191,7 @@ export interface components {
       cardSubtitle?: string;
       cardDescription?: string;
       cardImageUrl?: string;
+      cardImageId?: string;
       cardUrl?: string;
       createdAt: string;
       updatedAt: string;
