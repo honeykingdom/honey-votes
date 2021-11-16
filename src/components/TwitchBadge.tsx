@@ -3,6 +3,16 @@ import {
   useChannelBadgesQuery,
   useGlobalBadgesQuery,
 } from "features/twitch-api/twitchApiSlice";
+import { BadgeSets } from "features/twitch-api/twitchApiTypes";
+
+const getBadge = (
+  name: string,
+  version: string | number,
+  globalBadges?: BadgeSets,
+  channelBadges?: BadgeSets
+) =>
+  channelBadges?.[name]?.versions?.[version] ||
+  globalBadges?.[name]?.versions?.[version];
 
 type Props = {
   channelId?: string;
@@ -15,9 +25,11 @@ const TwitchBadge = ({ channelId, name, version = "1", children }: Props) => {
   const globalBadges = useGlobalBadgesQuery();
   const channelBadges = useChannelBadgesQuery(channelId, { skip: !channelId });
 
-  const badge =
-    channelBadges.data?.[name]?.versions?.[version] ||
-    globalBadges.data?.[name]?.versions?.[version];
+  let badge = getBadge(name, version, globalBadges.data, channelBadges.data);
+
+  if (!badge && name === "subscriber") {
+    badge = getBadge(name, "0", globalBadges.data, channelBadges.data);
+  }
 
   if (!badge) return null;
 

@@ -1,7 +1,11 @@
 import { Fragment } from "react";
 import TwitchBadge from "components/TwitchBadge";
 
-export type Badge = { title: string; name: string };
+export type Badge = {
+  title: string;
+  name: string;
+  version?: string;
+};
 
 type Props = {
   badges: Badge[];

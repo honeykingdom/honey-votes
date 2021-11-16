@@ -46,16 +46,19 @@ const getVotingPermissionsBadges = (
   if (sub[mode]) {
     const requiredTier = sub[SUB_TIER[mode]];
     let title: string;
+    let version = "0";
 
     if (requiredTier === SubTier.Tier1) {
       title = "Сабы";
     } else if (requiredTier === SubTier.Tier2) {
       title = "Сабы (Уровень 2+)";
+      version = "2000";
     } else if (requiredTier === SubTier.Tier3) {
       title = "Сабы (Уровень 3)";
+      version = "3000";
     }
 
-    badges.push({ title, name: "subscriber" });
+    badges.push({ title, name: "subscriber", version });
   }
 
   if (follower[mode]) {

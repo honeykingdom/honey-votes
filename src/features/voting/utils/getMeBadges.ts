@@ -20,14 +20,17 @@ const getMeBadges = (me: User, meRoles: UserRoles): Badge[] => {
 
   if (meRoles.sub) {
     let title = "Саб";
+    let version = "0";
 
     if (meRoles.subTier === SubTier.Tier2) {
       title = "Саб (Уровень 2)";
+      version = "2000";
     } else if (meRoles.subTier === SubTier.Tier2) {
       title = "Саб (Уровень 3)";
+      version = "3000";
     }
 
-    badges.push({ title, name: "subscriber" });
+    badges.push({ title, name: "subscriber", version });
   }
 
   if (meRoles.follower) {
