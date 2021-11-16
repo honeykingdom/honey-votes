@@ -14,9 +14,9 @@ type Props = {
 
 const UserBadges = ({ badges, channelId }: Props) => (
   <>
-    {badges.map(({ title, name }) => (
+    {badges.map(({ title, name, version }) => (
       <Fragment key={name}>
-        <TwitchBadge name={name} channelId={channelId}>
+        <TwitchBadge name={name} version={version} channelId={channelId}>
           {title}
         </TwitchBadge>{" "}
       </Fragment>
