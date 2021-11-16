@@ -26,10 +26,17 @@ import useSnackbar from "features/snackbar/useSnackbar";
 import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
 import getCanVote from "../utils/getCanVote";
 
+const IGDB_IMAGES_BASE_URL = "https://images.igdb.com/igdb/image/upload";
+
 const getAuthorName = (votingOption?: VotingOption): string =>
   (votingOption as any).author?.displayName ||
   (votingOption as any).author?.login ||
   "";
+
+const getIgdbImageSrc = (id: string) =>
+  `${IGDB_IMAGES_BASE_URL}/t_cover_small/${id}.jpg`;
+const getIgdbImageSrcSet = (id: string) =>
+  `${IGDB_IMAGES_BASE_URL}/t_cover_small/${id}.jpg, ${IGDB_IMAGES_BASE_URL}/t_cover_small_2x/${id}.jpg 2x`;
 
 // 1 min
 const VOTE_INTERVAL = 60 * 1000;
@@ -54,6 +61,7 @@ const VotingOptionCard = ({
     cardSubtitle,
     cardDescription,
     cardImageUrl,
+    cardImageId,
     cardUrl,
   } = votingOption;
 
@@ -79,6 +87,14 @@ const VotingOptionCard = ({
     me.data,
     meRoles.data
   );
+
+  let imageUrl = cardImageUrl;
+  let imageSrcSet = null;
+
+  if (cardImageId) {
+    imageUrl = getIgdbImageSrc(cardImageId);
+    imageSrcSet = getIgdbImageSrcSet(cardImageId);
+  }
 
   const handleCardClick = async () => {
     if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
@@ -146,7 +162,7 @@ const VotingOptionCard = ({
   };
 
   const renderCardImage = () =>
-    cardImageUrl ? (
+    imageUrl ? (
       <CardActionArea
         component="a"
         target="_blank"
@@ -162,7 +178,8 @@ const VotingOptionCard = ({
             flexShrink: 0,
             bgcolor: "background.paper",
           }}
-          image={cardImageUrl}
+          src={imageUrl}
+          srcSet={imageSrcSet}
           alt={cardTitle}
         />
       </CardActionArea>
