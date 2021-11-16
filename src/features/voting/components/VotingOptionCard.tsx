@@ -257,7 +257,7 @@ const VotingOptionCard = ({
         sx={{
           display: "flex",
           flexGrow: 1,
-          bgcolor: isActive ? "#66bb6a88" : undefined,
+          bgcolor: isActive ? "rgba(102, 187, 106, 0.53)" : undefined,
         }}
         variant="elevation"
       >
