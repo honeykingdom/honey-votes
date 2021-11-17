@@ -103,6 +103,54 @@ const VotingComponent = () => {
     setIsVotingOptionModalOpened(false);
   };
 
+  const renderPermissions = () => (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          mb: { xs: 1, sm: 0 },
+        }}
+      >
+        <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
+          Голосовать могут:
+        </Typography>
+        <Typography variant="caption">
+          <UserBadges
+            badges={getVotingPermissionsBadges(
+              voting.data.permissions,
+              "canVote"
+            )}
+            channelId={channel.data.id}
+          />
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          mb: { xs: 1, sm: 0 },
+        }}
+      >
+        <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
+          Добавлять варианты могут:
+        </Typography>
+        <Typography variant="caption">
+          <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
+          <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
+          <UserBadges
+            badges={getVotingPermissionsBadges(
+              voting.data.permissions,
+              "canAddOptions"
+            )}
+            channelId={channel.data.id}
+          />
+        </Typography>
+      </Box>
+    </>
+  );
+
   return (
     <>
       {channel.data && voting.data && (
@@ -114,23 +162,16 @@ const VotingComponent = () => {
           )}
 
           <Box sx={{ mb: 2 }}>
-            {canManageVoting && (
-              <>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: { xs: "column", sm: "row" },
-                    mb: { xs: 1, sm: 0 },
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mr: 1 }}
-                  >
-                    Голосовать могут:
-                  </Typography>
-                  <Typography variant="caption">
+            {canManageVoting && renderPermissions()}
+
+            {me.data &&
+              meRoles.data &&
+              voting.data?.canManageVotes &&
+              !canVote && (
+                <Box mt={1}>
+                  <Alert severity="warning">
+                    Вы не можете участвовать в этом голосовании. <br />
+                    Голосовать могут:{" "}
                     <UserBadges
                       badges={getVotingPermissionsBadges(
                         voting.data.permissions,
@@ -138,59 +179,15 @@ const VotingComponent = () => {
                       )}
                       channelId={channel.data.id}
                     />
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: { xs: "column", sm: "row" },
-                    mb: { xs: 1, sm: 0 },
-                  }}
-                >
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mr: 1 }}
-                  >
-                    Добавлять варианты могут:
-                  </Typography>
-                  <Typography variant="caption">
-                    <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
-                    <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
+                    <br />
+                    Вы:{" "}
                     <UserBadges
-                      badges={getVotingPermissionsBadges(
-                        voting.data.permissions,
-                        "canAddOptions"
-                      )}
+                      badges={getMeBadges(me.data, meRoles.data)}
                       channelId={channel.data.id}
                     />
-                  </Typography>
+                  </Alert>
                 </Box>
-              </>
-            )}
-
-            {me.data && voting.data?.canManageVotes && !canVote && (
-              <Box mt={1}>
-                <Alert severity="warning">
-                  Вы не можете участвовать в этом голосовании. <br />
-                  Голосовать могут:{" "}
-                  <UserBadges
-                    badges={getVotingPermissionsBadges(
-                      voting.data.permissions,
-                      "canVote"
-                    )}
-                    channelId={channel.data.id}
-                  />
-                  <br />
-                  Вы:{" "}
-                  <UserBadges
-                    badges={getMeBadges(me.data, meRoles.data)}
-                    channelId={channel.data.id}
-                  />
-                </Alert>
-              </Box>
-            )}
+              )}
             {!voting.data?.canManageVotes && (
               <Box mt={1}>
                 <Alert severity="error">Голосование закрыто.</Alert>
