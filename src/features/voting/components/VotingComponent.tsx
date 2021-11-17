@@ -29,18 +29,6 @@ import getMeBadges from "features/voting/utils/getMeBadges";
 import getCanVote from "features/voting/utils/getCanVote";
 import useSnackbar from "features/snackbar/useSnackbar";
 
-const CLOSED = (
-  <Typography
-    component="span"
-    color="text.secondary"
-    display="flex"
-    alignItems="center"
-    sx={{ mr: 1 }}
-  >
-    <LockIcon />
-  </Typography>
-);
-
 const VotingComponent = () => {
   const login = useChannelLogin();
   const votingId = useVotingId();
@@ -63,10 +51,11 @@ const VotingComponent = () => {
     renderedVotingOptionsSelector(state, votingId)
   );
 
-  // TODO: handle not existing voting
   if (voting.isSuccess && !voting.data) {
-    return null;
+    return "Голосование удалено или не существует.";
   }
+
+  if (!voting.data) return null;
 
   const canManageVoting = getCanManageVoting(
     voting.data,
@@ -121,7 +110,7 @@ const VotingComponent = () => {
               voting.data.permissions,
               "canVote"
             )}
-            channelId={channel.data.id}
+            channelId={channel.data?.id}
           />
         </Typography>
       </Box>
@@ -144,7 +133,7 @@ const VotingComponent = () => {
               voting.data.permissions,
               "canAddOptions"
             )}
-            channelId={channel.data.id}
+            channelId={channel.data?.id}
           />
         </Typography>
       </Box>
@@ -153,82 +142,76 @@ const VotingComponent = () => {
 
   return (
     <>
-      {channel.data && voting.data && (
-        <>
-          {voting.data.description && (
-            <Typography variant="body1" sx={{ mb: 2 }}>
-              {voting.data.description}
-            </Typography>
-          )}
-
-          <Box sx={{ mb: 2 }}>
-            {canManageVoting && renderPermissions()}
-
-            {me.data &&
-              meRoles.data &&
-              voting.data?.canManageVotes &&
-              !canVote && (
-                <Box mt={1}>
-                  <Alert severity="warning">
-                    Вы не можете участвовать в этом голосовании. <br />
-                    Голосовать могут:{" "}
-                    <UserBadges
-                      badges={getVotingPermissionsBadges(
-                        voting.data.permissions,
-                        "canVote"
-                      )}
-                      channelId={channel.data.id}
-                    />
-                    <br />
-                    Вы:{" "}
-                    <UserBadges
-                      badges={getMeBadges(me.data, meRoles.data)}
-                      channelId={channel.data.id}
-                    />
-                  </Alert>
-                </Box>
-              )}
-            {!voting.data?.canManageVotes && (
-              <Box mt={1}>
-                <Alert severity="error">Голосование закрыто.</Alert>
-              </Box>
-            )}
-          </Box>
-
-          {canManageVoting && (
-            <Box sx={{ mb: 2 }}>
-              <VotingActions voting={voting.data} />
-            </Box>
-          )}
-
-          <Typography component="div" variant="h5" sx={{ mb: 1 }}>
-            Вариантов: {renderedVotingOptions.length}/
-            {voting.data?.votingOptionsLimit ||
-              apiSchema.Voting.votingOptionsLimit.default}
-            , голосов: {votes.data?.ids.length || 0}{" "}
-          </Typography>
-
-          <Divider sx={{ mb: 1 }} />
-
-          {canCreateVotingOptions && (
-            <Box sx={{ mb: 1 }}>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => setIsVotingOptionModalOpened(true)}
-              >
-                Добавить вариант
-              </Button>
-            </Box>
-          )}
-
-          {!canCreateVotingOptions && canCreateVotingOptionsReason && (
-            <Alert severity="info" sx={{ mb: 1 }}>
-              {canCreateVotingOptionsReason} <br />
-            </Alert>
-          )}
-        </>
+      {voting.data.description && (
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          {voting.data.description}
+        </Typography>
       )}
+
+      <Box sx={{ mb: 2 }}>
+        {canManageVoting && renderPermissions()}
+
+        {me.data && meRoles.data && voting.data?.canManageVotes && !canVote && (
+          <Box mt={1}>
+            <Alert severity="warning">
+              Вы не можете участвовать в этом голосовании. <br />
+              Голосовать могут:{" "}
+              <UserBadges
+                badges={getVotingPermissionsBadges(
+                  voting.data.permissions,
+                  "canVote"
+                )}
+                channelId={channel.data?.id}
+              />
+              <br />
+              Вы:{" "}
+              <UserBadges
+                badges={getMeBadges(me.data, meRoles.data)}
+                channelId={channel.data?.id}
+              />
+            </Alert>
+          </Box>
+        )}
+        {!voting.data?.canManageVotes && (
+          <Box mt={1}>
+            <Alert severity="error">Голосование закрыто.</Alert>
+          </Box>
+        )}
+      </Box>
+
+      {canManageVoting && (
+        <Box sx={{ mb: 2 }}>
+          <VotingActions voting={voting.data} />
+        </Box>
+      )}
+
+      <Typography component="div" variant="h5" sx={{ mb: 1 }}>
+        Вариантов: {renderedVotingOptions.length}/
+        {voting.data?.votingOptionsLimit ||
+          apiSchema.Voting.votingOptionsLimit.default}
+        , голосов: {votes.data?.ids.length || 0}{" "}
+      </Typography>
+
+      <Divider sx={{ mb: 1 }} />
+
+      {canCreateVotingOptions && (
+        <Box sx={{ mb: 1 }}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setIsVotingOptionModalOpened(true)}
+          >
+            Добавить вариант
+          </Button>
+        </Box>
+      )}
+
+      {!canCreateVotingOptions && canCreateVotingOptionsReason && (
+        <Alert severity="info" sx={{ mb: 1 }}>
+          {canCreateVotingOptionsReason}
+        </Alert>
+      )}
+
       {votingOptions.data && renderedVotingOptions.length > 0 && (
         <Grid container flexDirection="column">
           {renderedVotingOptions.map(

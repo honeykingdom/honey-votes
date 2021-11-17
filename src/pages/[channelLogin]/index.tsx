@@ -1,5 +1,5 @@
 import NextLink from "next/link";
-import { Avatar, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Layout from "components/Layout";
 import PageHeader from "components/PageHeader";
 import useChannelLogin from "hooks/useChannelLogin";
