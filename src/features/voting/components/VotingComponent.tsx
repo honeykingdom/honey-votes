@@ -1,9 +1,21 @@
 import React, { useRef, useState } from "react";
-import { Alert, Box, Button, Divider, Grid, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Divider,
+  Grid,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import LockIcon from "@mui/icons-material/Lock";
 import { useAppSelector } from "app/hooks";
-import TwitchBadge from "components/TwitchBadge";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingOptionCard from "features/voting/components/VotingOptionCard";
 import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
@@ -13,6 +25,7 @@ import {
   useCreateVotingOptionMutation,
   useMeQuery,
   useMeRolesQuery,
+  useUpdateVotingMutation,
   useUserQuery,
   useVotesQuery,
   useVotingOptionsQuery,
@@ -41,6 +54,7 @@ const VotingComponent = () => {
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
 
+  const [updateVoting, updateVotingResult] = useUpdateVotingMutation();
   const [createVotingOption] = useCreateVotingOptionMutation();
 
   const lastVoteTimestampRef = useRef(0);
@@ -73,6 +87,50 @@ const VotingComponent = () => {
 
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
 
+  const notifyAfterUpdate = (error: boolean) => {
+    if (error) {
+      snackbar({
+        message: "Не удалось обновить голосование",
+        variant: "error",
+      });
+    } else {
+      snackbar({
+        message: "Голосование успешно обновлено",
+        variant: "success",
+      });
+    }
+  };
+
+  const handleToggleCanManageVotes = async () => {
+    const result = await updateVoting({
+      votingId,
+      body: { canManageVotes: !voting.data?.canManageVotes },
+    });
+
+    // @ts-expect-error
+    notifyAfterUpdate(result.error);
+  };
+
+  const handleToggleCanManageVotingOptions = async () => {
+    const result = await updateVoting({
+      votingId,
+      body: { canManageVotingOptions: !voting.data?.canManageVotingOptions },
+    });
+
+    // @ts-expect-error
+    notifyAfterUpdate(result.error);
+  };
+
+  const handleToggleShowValues = async () => {
+    const result = await updateVoting({
+      votingId,
+      body: { showValues: !voting.data?.showValues },
+    });
+
+    // @ts-expect-error
+    notifyAfterUpdate(result.error);
+  };
+
   const handleCreateVotingOption = async (body: VotingOptionDefaultValues) => {
     const result = await createVotingOption({ votingId, ...body });
 
@@ -92,65 +150,89 @@ const VotingComponent = () => {
     setIsVotingOptionModalOpened(false);
   };
 
-  const renderPermissions = () => (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          mb: { xs: 1, sm: 0 },
-        }}
-      >
-        <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
-          Голосовать могут:
-        </Typography>
-        <Typography variant="caption">
-          <UserBadges
-            badges={getVotingPermissionsBadges(
-              voting.data.permissions,
-              "canVote"
-            )}
-            channelId={channel.data?.id}
-          />
-        </Typography>
-      </Box>
+  const renderAdminTable = () => (
+    <Box mb={2}>
+      <TableContainer sx={{ mb: 1, color: "text.secondary" }}>
+        <Table size="small">
+          <TableBody>
+            <TableRow>
+              <TableCell sx={{ color: "inherit", width: { sm: 270 } }}>
+                Голосование открыто
+              </TableCell>
+              <TableCell>
+                <Switch
+                  size="small"
+                  checked={voting.data?.canManageVotes}
+                  disabled={updateVotingResult.isLoading}
+                  onClick={handleToggleCanManageVotes}
+                />
+              </TableCell>
+            </TableRow>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          mb: { xs: 1, sm: 0 },
-        }}
-      >
-        <Typography variant="caption" color="text.secondary" sx={{ mr: 1 }}>
-          Добавлять варианты могут:
-        </Typography>
-        <Typography variant="caption">
-          <TwitchBadge name="broadcaster">Стример</TwitchBadge>{" "}
-          <TwitchBadge name="moderator">Редакторы</TwitchBadge>{" "}
-          <UserBadges
-            badges={getVotingPermissionsBadges(
-              voting.data.permissions,
-              "canAddOptions"
-            )}
-            channelId={channel.data?.id}
-          />
-        </Typography>
-      </Box>
-    </>
+            <TableRow>
+              <TableCell sx={{ color: "inherit" }}>
+                Добавление вариантов открыто
+              </TableCell>
+              <TableCell>
+                <Switch
+                  size="small"
+                  checked={voting.data?.canManageVotingOptions}
+                  disabled={updateVotingResult.isLoading}
+                  onClick={handleToggleCanManageVotingOptions}
+                />
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell sx={{ color: "inherit" }}>Голосовать могут</TableCell>
+              <TableCell sx={{ color: "inherit" }}>
+                <UserBadges
+                  badges={getVotingPermissionsBadges(
+                    voting.data.permissions,
+                    "canVote"
+                  )}
+                  channelId={channel.data?.id}
+                />
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell sx={{ color: "inherit" }}>
+                Добавлять варианты могут
+              </TableCell>
+              <TableCell sx={{ color: "inherit" }}>
+                <UserBadges
+                  badges={getVotingPermissionsBadges(
+                    voting.data.permissions,
+                    "canAddOptions"
+                  )}
+                  channelId={channel.data?.id}
+                />
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell sx={{ color: "inherit" }}>Показывать голоса</TableCell>
+              <TableCell>
+                <Switch
+                  size="small"
+                  checked={voting.data?.showValues}
+                  disabled={updateVotingResult.isLoading}
+                  onClick={handleToggleShowValues}
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <VotingActions voting={voting.data} buttons={["edit", "delete"]} />
+    </Box>
   );
 
   return (
     <>
-      {voting.data.description && (
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          {voting.data.description}
-        </Typography>
-      )}
-
       <Box sx={{ mb: 2 }}>
-        {canManageVoting && renderPermissions()}
-
         {me.data && meRoles.data && voting.data?.canManageVotes && !canVote && (
           <Box mt={1}>
             <Alert severity="warning">
@@ -179,38 +261,45 @@ const VotingComponent = () => {
         )}
       </Box>
 
-      {canManageVoting && (
-        <Box sx={{ mb: 2 }}>
-          <VotingActions voting={voting.data} />
-        </Box>
+      {voting.data.description && (
+        <Typography variant="body1" sx={{ mb: 2 }}>
+          {voting.data.description}
+        </Typography>
       )}
 
-      <Typography component="div" variant="h5" sx={{ mb: 1 }}>
-        Вариантов: {renderedVotingOptions.length}/
-        {voting.data?.votingOptionsLimit ||
-          apiSchema.Voting.votingOptionsLimit.default}
-        , голосов: {votes.data?.ids.length || 0}{" "}
+      {canManageVoting && renderAdminTable()}
+
+      <Typography
+        component="div"
+        variant="h5"
+        sx={{ display: { sm: "flex" }, mb: 1 }}
+      >
+        <Box>
+          Варианты&nbsp;({renderedVotingOptions.length}/
+          {voting.data?.votingOptionsLimit ||
+            apiSchema.Voting.votingOptionsLimit.default}
+          )
+          <Tooltip title={canCreateVotingOptionsReason || ""}>
+            <Box component="span">
+              <Button
+                size="small"
+                variant="contained"
+                startIcon={<AddIcon />}
+                sx={{ ml: 2 }}
+                disabled={!canCreateVotingOptions}
+                onClick={() => setIsVotingOptionModalOpened(true)}
+              >
+                Добавить
+              </Button>
+            </Box>
+          </Tooltip>
+        </Box>
+        <Box sx={{ ml: "auto" }}>
+          Голосов:&nbsp;{votes.data?.ids.length || 0}
+        </Box>
       </Typography>
 
-      <Divider sx={{ mb: 1 }} />
-
-      {canCreateVotingOptions && (
-        <Box sx={{ mb: 1 }}>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setIsVotingOptionModalOpened(true)}
-          >
-            Добавить вариант
-          </Button>
-        </Box>
-      )}
-
-      {!canCreateVotingOptions && canCreateVotingOptionsReason && (
-        <Alert severity="info" sx={{ mb: 1 }}>
-          {canCreateVotingOptionsReason}
-        </Alert>
-      )}
+      <Divider sx={{ mb: 2 }} />
 
       {votingOptions.data && renderedVotingOptions.length > 0 && (
         <Grid container flexDirection="column">
