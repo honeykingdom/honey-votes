@@ -27,11 +27,17 @@ const getVotingFormValues = R.pick<keyof Voting>([
   "votingOptionsLimit",
 ]);
 
+type ButtonType = "close" | "edit" | "delete";
+
 type Props = {
   voting: Voting;
+  buttons?: ButtonType[];
 };
 
-const VotingActions = ({ voting }: Props) => {
+const VotingActions = ({
+  voting,
+  buttons = ["close", "edit", "delete"],
+}: Props) => {
   const router = useRouter();
   const login = useChannelLogin();
 
@@ -108,36 +114,36 @@ const VotingActions = ({ voting }: Props) => {
         alignItems: "flex-start",
       }}
     >
-      <Button
-        color="primary"
-        startIcon={canManageVotes ? <LockIcon /> : <LockOpenIcon />}
-        disabled={disabled}
-        onClick={handleToggleVoting}
-      >
-        {canManageVotes ? "Закрыть голосование" : "Открыть голосование"}
-      </Button>
-      {/* {canManageVotes && (
-        <Button size="small" color="primary">
-        {canManageVotingOptions
-          ? "Закрыть создание вариантов"
-          : "Открыть создание вариантов"}
-          </Button>
-        )} */}
+      {buttons.includes("close") && (
+        <Button
+          color="primary"
+          startIcon={canManageVotes ? <LockIcon /> : <LockOpenIcon />}
+          disabled={disabled}
+          onClick={handleToggleVoting}
+        >
+          {canManageVotes ? "Закрыть голосование" : "Открыть голосование"}
+        </Button>
+      )}
 
-      <Button
-        startIcon={<EditIcon />}
-        disabled={disabled}
-        onClick={() => setIsVotingFormOpened(true)}
-      >
-        Редактировать
-      </Button>
-      <Button
-        startIcon={<DeleteIcon />}
-        disabled={disabled}
-        onClick={() => setIsDeleteDialogOpen(true)}
-      >
-        Удалить
-      </Button>
+      {buttons.includes("edit") && (
+        <Button
+          startIcon={<EditIcon />}
+          disabled={disabled}
+          onClick={() => setIsVotingFormOpened(true)}
+        >
+          Редактировать
+        </Button>
+      )}
+
+      {buttons.includes("delete") && (
+        <Button
+          startIcon={<DeleteIcon />}
+          disabled={disabled}
+          onClick={() => setIsDeleteDialogOpen(true)}
+        >
+          Удалить
+        </Button>
+      )}
 
       <VotingFormModal
         open={isVotingFormOpened}
