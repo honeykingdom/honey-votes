@@ -66,7 +66,7 @@ const VotingComponent = () => {
   );
 
   if (voting.isSuccess && !voting.data) {
-    return "Голосование удалено или не существует.";
+    return <>Голосование удалено или не существует.</>;
   }
 
   if (!voting.data) return null;
