@@ -29,9 +29,7 @@ import getCanVote from "../utils/getCanVote";
 const IGDB_IMAGES_BASE_URL = "https://images.igdb.com/igdb/image/upload";
 
 const getAuthorName = (votingOption?: VotingOption): string =>
-  (votingOption as any).author?.displayName ||
-  (votingOption as any).author?.login ||
-  "";
+  votingOption.authorData?.displayName || votingOption.authorData?.login || "";
 
 const getIgdbImageSrc = (id: string) =>
   `${IGDB_IMAGES_BASE_URL}/t_cover_small/${id}.jpg`;
@@ -241,11 +239,12 @@ const VotingOptionCard = ({
         Предложил:
         <Box sx={{ ml: 0.5, display: "inline-flex", alignItems: "center" }}>
           <Avatar
-            src={(votingOption as any).author?.avatarUrl}
-            sx={{ mr: 0.5, width: 24, height: 24 }}
+            src={votingOption.authorData?.avatarUrl}
+            sx={{ width: 24, height: 24 }}
           >
             {authorName[0].toUpperCase()}
-          </Avatar>{" "}
+          </Avatar>
+          &nbsp;
           {authorName}
         </Box>
       </Typography>

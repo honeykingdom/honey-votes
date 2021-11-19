@@ -1,17 +1,19 @@
-import { User, VotingOption, VotingOptionWithAuthor } from "../apiTypes";
+import { VotingOption } from "../apiTypes";
 
 type VotingOptionResponse = Omit<VotingOption, "authorId"> & {
-  authorId: User;
+  authorId: VotingOption["authorData"] & { id: VotingOption["authorId"] };
 };
 
-const transformVotingOption = (
-  votingOption: VotingOption
-): VotingOptionWithAuthor => {
-  const { authorId, ...rest } = votingOption as unknown as VotingOptionResponse;
+const transformVotingOption = (votingOption: VotingOption): VotingOption => {
+  const {
+    authorId: { id: authorId, ...authorData },
+    authorData: _,
+    ...rest
+  } = votingOption as unknown as VotingOptionResponse;
 
   return {
-    author: authorId,
-    authorId: authorId.id,
+    authorData,
+    authorId,
     ...rest,
   };
 };

@@ -28,7 +28,6 @@ import {
   Vote,
   Voting,
   VotingOption,
-  VotingOptionWithAuthor,
   DeleteVoteDto,
   ChatGoal,
   CreateChatGoalDto,
@@ -39,7 +38,7 @@ import transformVotingOption from "./utils/transformVotingOption";
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
 
 // https://redux-toolkit.js.org/rtk-query/usage/customizing-queries#normalizing-data-with-createentityadapter
-const votingOptionsAdapter = createEntityAdapter<VotingOptionWithAuthor>();
+const votingOptionsAdapter = createEntityAdapter<VotingOption>();
 
 export const votingOptionsSelectors = votingOptionsAdapter.getSelectors();
 
@@ -157,11 +156,11 @@ export const api = createApi({
       invalidatesTags: [{ type: "Voting", id: "LIST" }],
     }),
 
-    votingOptions: builder.query<EntityState<VotingOptionWithAuthor>, number>({
+    votingOptions: builder.query<EntityState<VotingOption>, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
-      transformResponse: (response: VotingOptionWithAuthor[]) =>
+      transformResponse: (response: VotingOption[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
           response.map(transformVotingOption)
@@ -182,12 +181,7 @@ export const api = createApi({
             .on("*", (payload) =>
               updateCachedData((draft) => {
                 if (payload.eventType === "INSERT") {
-                  const author = { login: payload.new.authorLogin } as User;
-
-                  votingOptionsAdapter.addOne(draft, {
-                    ...payload.new,
-                    author,
-                  });
+                  votingOptionsAdapter.addOne(draft, payload.new);
                 }
 
                 if (payload.eventType === "UPDATE") {
