@@ -67,3 +67,56 @@ export enum BroadcasterType {
   Partner = "partner",
   Affiliate = "affiliate",
 }
+
+export enum HoneyError {
+  VotingNoPermission = "VotingNoPermission",
+  // TODO:
+  VotingCreateLimitReached = "VotingCreateLimitReached",
+
+  VotingOptionCreateDisabled = "VotingOptionCreateDisabled",
+  VotingOptionCreateLimitReached = "VotingOptionCreateLimitReached",
+  VotingOptionCreateAlreadyCreatedByUser = "VotingOptionCreateAlreadyCreatedByUser",
+  VotingOptionCreateNoPermission = "VotingOptionCreateNoPermission",
+  VotingOptionCreateAlreadyExists = "VotingOptionCreateAlreadyExists",
+  VotingOptionCreateKinopoiskMovieNotFound = "VotingOptionCreateKinopoiskMovieNotFound",
+  VotingOptionCantIgdbGameNotFound = "VotingOptionCantIgdbGameNotFound",
+
+  VotingOptionDeleteDisabled = "VotingOptionDeleteDisabled",
+  VotingOptionDeleteNotOwner = "VotingOptionDeleteNotOwner",
+  VotingOptionDeleteHasVotes = "VotingOptionDeleteHasVotes",
+
+  VoteCreateDisabled = "VoteCreateDisabled",
+  VoteCreateTooQuickly = "VoteCreateTooQuickly",
+  VoteCreateNoPermission = "VoteCreateNoPermission",
+
+  VoteDeleteDisabled = "VoteDeleteDisabled",
+  VoteDeleteNotOwner = "VoteDeleteNotOwner",
+  VoteDeleteTooQuickly = "VoteDeleteTooQuickly",
+}
+
+// prettier-ignore
+export const API_ERRORS: Record<HoneyError, string> = {
+  [HoneyError.VotingNoPermission]: 'У вас недостаточно прав чтобы создать голосование.',
+  // TODO:
+  [HoneyError.VotingCreateLimitReached]: '',
+
+  [HoneyError.VotingOptionCreateDisabled]: 'Добавление/удаление вариантов для голосования отключено',
+  [HoneyError.VotingOptionCreateLimitReached]: 'Достигнут лимит вариантов для голосования',
+  [HoneyError.VotingOptionCreateAlreadyCreatedByUser]: 'Вы уже добавили вариант для голосования',
+  [HoneyError.VotingOptionCreateNoPermission]: 'У вас недостаточно прав чтобы добавить вариант для голосования',
+  [HoneyError.VotingOptionCreateAlreadyExists]: 'Такой вариант уже существует',
+  [HoneyError.VotingOptionCreateKinopoiskMovieNotFound]: 'Не удалось найти такой фильм на kinopoisk.ru',
+  [HoneyError.VotingOptionCantIgdbGameNotFound]: 'Не удалось найти такую игру на IGDB.com',
+
+  [HoneyError.VotingOptionDeleteDisabled]: 'Добавление/удаление вариантов для голосования отключено',
+  [HoneyError.VotingOptionDeleteNotOwner]: 'Вы пытаетесь удалить чужой вариант для голосования',
+  [HoneyError.VotingOptionDeleteHasVotes]: 'Невозможно удалить вариант для голосования, за который уже кто-то проголосовал',
+
+  [HoneyError.VoteCreateDisabled]: 'Голосование отключено',
+  [HoneyError.VoteCreateTooQuickly]: 'Вы голосуете слишком быстро',
+  [HoneyError.VoteCreateNoPermission]: 'У вас недостаточно прав чтобы голосовать',
+
+  [HoneyError.VoteDeleteDisabled]: 'Голосование отключено',
+  [HoneyError.VoteDeleteNotOwner]: 'Вы пытаетесь удалить чужой голоса',
+  [HoneyError.VoteDeleteTooQuickly]: 'Вы голосуете слишком быстро',
+}
