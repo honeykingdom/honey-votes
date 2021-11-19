@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSnackbar } from "notistack";
 import {
   Avatar,
   Box,
@@ -22,7 +23,6 @@ import {
 import { VotingOption } from "features/api/apiTypes";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
-import useSnackbar from "features/snackbar/useSnackbar";
 import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
 import getCanVote from "../utils/getCanVote";
 
@@ -64,7 +64,7 @@ const VotingOptionCard = ({
   } = votingOption;
 
   const [isDeleteVoteDialogOpen, setIsDeleteVoteDialogOpen] = useState(false);
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const login = useChannelLogin();
   const me = useMeQuery();
@@ -96,11 +96,10 @@ const VotingOptionCard = ({
 
   const handleCardClick = async () => {
     if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
-      snackbar({
-        message:
-          "Вы уже проголосовали. Менять голос можно будет только спустя 1 минуту.",
-        variant: "error",
-      });
+      enqueueSnackbar(
+        "Вы уже проголосовали. Менять голос можно будет только спустя 1 минуту.",
+        { variant: "error" }
+      );
 
       return;
     }
@@ -112,15 +111,9 @@ const VotingOptionCard = ({
 
       // @ts-expect-error
       if (result.error) {
-        snackbar({
-          message: "Не удалось удалить голос",
-          variant: "error",
-        });
+        enqueueSnackbar("Не удалось удалить голос", { variant: "error" });
       } else {
-        snackbar({
-          message: "Голос удалён",
-          variant: "success",
-        });
+        enqueueSnackbar("Голос удалён", { variant: "success" });
       }
     } else {
       const result = await createVote(id);
@@ -129,15 +122,9 @@ const VotingOptionCard = ({
 
       // @ts-expect-error
       if (result.error) {
-        snackbar({
-          message: "Не удалось проголосовать",
-          variant: "error",
-        });
+        enqueueSnackbar("Не удалось проголосовать", { variant: "error" });
       } else {
-        snackbar({
-          message: "Ваш голос защитан",
-          variant: "success",
-        });
+        enqueueSnackbar("Ваш голос защитан", { variant: "success" });
       }
     }
   };
@@ -147,15 +134,9 @@ const VotingOptionCard = ({
 
     // @ts-expect-error
     if (result.error) {
-      snackbar({
-        message: "Не удалось удалить вариант",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось удалить вариант", { variant: "error" });
     } else {
-      snackbar({
-        message: "Вариант удалён",
-        variant: "success",
-      });
+      enqueueSnackbar("Вариант удалён", { variant: "success" });
     }
   };
 

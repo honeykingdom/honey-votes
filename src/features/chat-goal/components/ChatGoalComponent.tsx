@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSnackbar } from "notistack";
 import {
   Typography,
   Paper,
@@ -30,7 +31,6 @@ import {
   useStartChatGoalMutation,
   useUpdateChatGoalMutation,
 } from "features/api/apiSlice";
-import useSnackbar from "features/snackbar/useSnackbar";
 import ChatGoalWidget from "./ChatGoalWidget";
 import ChatGoalOptions from "./ChatGoalOptions";
 import getWidgetLink from "../utils/getWidgetLink";
@@ -44,7 +44,7 @@ const ChatGoalComponent = () => {
   const meRoles = useMeRolesQuery({ login }, { skip: !login });
   const goal = useChatGoalQuery(channel.data?.id, { skip: !channel.data });
 
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [createChatGoal, createChatGoalResult] = useCreateChatGoalMutation();
   const [updateChatGoal, updateChatGoalResult] = useUpdateChatGoalMutation();
@@ -104,10 +104,9 @@ const ChatGoalComponent = () => {
     }
 
     if (error) {
-      snackbar({ message: "Не удалось включить чатгол", variant: "error" });
+      enqueueSnackbar("Не удалось включить чатгол", { variant: "error" });
     } else {
-      snackbar({
-        message: listening ? "Чатгол включен" : "Чатгол выключен",
+      enqueueSnackbar(listening ? "Чатгол включен" : "Чатгол выключен", {
         variant: "success",
       });
     }
@@ -177,7 +176,7 @@ const ChatGoalComponent = () => {
                 await navigator.clipboard.writeText(widgetLink);
               } catch (e) {}
 
-              snackbar({ message: "Ссылка скопирована", variant: "success" });
+              enqueueSnackbar("Ссылка скопирована", { variant: "success" });
             }}
           >
             <ContentCopyIcon />
@@ -219,16 +218,15 @@ const ChatGoalComponent = () => {
 
           // @ts-expect-error
           if (result.error) {
-            snackbar({
-              message:
-                "Не удалось обнулить количество потраченных пользователями голосов",
-              variant: "error",
-            });
+            enqueueSnackbar(
+              "Не удалось обнулить количество потраченных пользователями голосов",
+              { variant: "error" }
+            );
           } else {
-            snackbar({
-              message: "Количество потраченных пользователями голосов обнулено",
-              variant: "success",
-            });
+            enqueueSnackbar(
+              "Количество потраченных пользователями голосов обнулено",
+              { variant: "success" }
+            );
           }
         }}
       />

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useSnackbar } from "notistack";
 import {
   Alert,
   Box,
@@ -40,12 +41,11 @@ import getCanCreateVotingOptions from "features/voting/utils/getCanCreateVotingO
 import getVotingPermissionsBadges from "features/voting/utils/getVotingPermissionsBadges";
 import getMeBadges from "features/voting/utils/getMeBadges";
 import getCanVote from "features/voting/utils/getCanVote";
-import useSnackbar from "features/snackbar/useSnackbar";
 
 const VotingComponent = () => {
   const login = useChannelLogin();
   const votingId = useVotingId();
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
@@ -89,15 +89,9 @@ const VotingComponent = () => {
 
   const notifyAfterUpdate = (error: boolean) => {
     if (error) {
-      snackbar({
-        message: "Не удалось обновить голосование",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось обновить голосование", { variant: "error" });
     } else {
-      snackbar({
-        message: "Голосование успешно обновлено",
-        variant: "success",
-      });
+      enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
     }
   };
 
@@ -136,15 +130,9 @@ const VotingComponent = () => {
 
     // @ts-expect-error
     if (result.error) {
-      snackbar({
-        message: "Не удалось добавить вариант",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось добавить вариант", { variant: "error" });
     } else {
-      snackbar({
-        message: "Вариант добавлен",
-        variant: "success",
-      });
+      enqueueSnackbar("Вариант добавлен", { variant: "success" });
     }
 
     setIsVotingOptionModalOpened(false);

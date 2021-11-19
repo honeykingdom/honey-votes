@@ -1,6 +1,7 @@
 import * as R from "ramda";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { Box, Button } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -13,7 +14,6 @@ import {
 import { Voting } from "features/api/apiTypes";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
-import useSnackbar from "features/snackbar/useSnackbar";
 import VotingFormModal from "./VotingFormModal/VotingFormModal";
 
 const getVotingFormValues = R.pick<keyof Voting>([
@@ -41,7 +41,7 @@ const VotingActions = ({
   const router = useRouter();
   const login = useChannelLogin();
 
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [updateVoting, updateVotingResult] = useUpdateVotingMutation();
   const [deleteVoting, deleteVotingResult] = useDeleteVotingMutation();
@@ -58,15 +58,9 @@ const VotingActions = ({
 
     // @ts-expect-error
     if (result.error) {
-      snackbar({
-        message: "Не удалось обновить голосование",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось обновить голосование", { variant: "error" });
     } else {
-      snackbar({
-        message: "Голосование успешно обновлено",
-        variant: "success",
-      });
+      enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
     }
 
     return result;
@@ -90,15 +84,9 @@ const VotingActions = ({
 
     // @ts-expect-error
     if (result.error) {
-      snackbar({
-        message: "Не удалось удалить голосование",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось удалить голосование", { variant: "error" });
     } else {
-      snackbar({
-        message: "Голосование успешно удалено",
-        variant: "success",
-      });
+      enqueueSnackbar("Голосование успешно удалено", { variant: "success" });
     }
 
     router.push(`/${login}/voting`);

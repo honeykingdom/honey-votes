@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm, UseFormRegisterReturn } from "react-hook-form";
 import * as R from "ramda";
+import { useSnackbar } from "notistack";
 import {
   Box,
   Typography,
@@ -17,7 +18,6 @@ import TwitchBadge from "components/TwitchBadge";
 import useChannelLogin from "hooks/useChannelLogin";
 import { UpdateChatGoalDto } from "features/api/apiTypes";
 import { TwitchUserType } from "features/api/apiConstants";
-import useSnackbar from "features/snackbar/useSnackbar";
 import {
   useChatGoalQuery,
   useUpdateChatGoalMutation,
@@ -60,7 +60,7 @@ const withMui = ({ ref: inputRef, ...rest }: UseFormRegisterReturn) => ({
 });
 
 const ChatGoalOptions = () => {
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const login = useChannelLogin();
   const channel = useUserQuery({ login }, { skip: !login });
@@ -112,15 +112,9 @@ const ChatGoalOptions = () => {
 
     // @ts-expect-error
     if (result.error) {
-      snackbar({
-        message: "Не удалось обновить настройки",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось обновить настройки", { variant: "error" });
     } else {
-      snackbar({
-        message: "Настройки успешно сохранены",
-        variant: "success",
-      });
+      enqueueSnackbar("Настройки успешно сохранены", { variant: "success" });
     }
   });
 

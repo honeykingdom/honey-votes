@@ -5,6 +5,7 @@ import { DefaultSeo } from "next-seo";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { Provider as ReduxProvider } from "react-redux";
+import { SnackbarProvider } from "notistack";
 import createEmotionCache from "utils/createEmotionCache";
 import theme from "app/theme";
 import store from "app/store";
@@ -23,9 +24,11 @@ const App = (props: MyAppProps) => {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <ReduxProvider store={store}>
-          <DefaultSeo {...SEO} />
-          <CssBaseline />
-          <Component {...pageProps} />
+          <SnackbarProvider maxSnack={2} autoHideDuration={3000}>
+            <DefaultSeo {...SEO} />
+            <CssBaseline />
+            <Component {...pageProps} />
+          </SnackbarProvider>
         </ReduxProvider>
       </ThemeProvider>
     </CacheProvider>

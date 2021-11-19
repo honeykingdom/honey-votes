@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
 import { Button, Box } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Layout from "components/Layout";
@@ -16,14 +17,13 @@ import {
   useVotingListQuery,
 } from "features/api/apiSlice";
 import { UpdateVotingDto } from "features/api/apiTypes";
-import useSnackbar from "features/snackbar/useSnackbar";
 
 const VotingListPage = () => {
   const router = useRouter();
   const login = useChannelLogin();
   const username = useUsername();
 
-  const snackbar = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const channel = useUserQuery({ login }, { skip: !login });
   const me = useMeQuery();
@@ -47,15 +47,9 @@ const VotingListPage = () => {
 
     // @ts-expect-error
     if (newVoting.error) {
-      snackbar({
-        message: "Не удалось создать голосование",
-        variant: "error",
-      });
+      enqueueSnackbar("Не удалось создать голосование", { variant: "error" });
     } else {
-      snackbar({
-        message: "Голосование успешно создано",
-        variant: "success",
-      });
+      enqueueSnackbar("Голосование успешно создано", { variant: "success" });
     }
 
     // TODO:
