@@ -180,10 +180,16 @@ export interface components {
       igdbGame?: components["schemas"]["VotingOptionIgdbGame"];
       custom?: components["schemas"]["VotingOptionCustom"];
     };
+    VotingOptionAuthorData: {
+      login: string;
+      displayName: string;
+      avatarUrl: string;
+    };
     VotingOption: {
       id: number;
       authorId: string;
-      authorLogin: string;
+      /** This column needs only to get an author via ws */
+      authorData: components["schemas"]["VotingOptionAuthorData"];
       votingId: number;
       type: components["schemas"]["VotingOptionType"];
       cardId?: string;

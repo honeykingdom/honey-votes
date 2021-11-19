@@ -11,7 +11,6 @@ export type CreateVotingDto = components["schemas"]["CreateVotingDto"];
 export type UpdateVotingDto = components["schemas"]["UpdateVotingDto"];
 
 export type VotingOption = components["schemas"]["VotingOption"];
-export type VotingOptionWithAuthor = VotingOption & { author: User };
 export type CreateVotingOptionDto =
   components["schemas"]["CreateVotingOptionDto"];
 export type VotingPermissions = components["schemas"]["VotingPermissions"];

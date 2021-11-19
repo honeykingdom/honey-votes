@@ -73,8 +73,8 @@
     }
   },
   "VotingOption": {
-    "authorLogin": {
-      "default": ""
+    "authorData": {
+      "default": {}
     },
     "cardTitle": {
       "maxLength": 50
