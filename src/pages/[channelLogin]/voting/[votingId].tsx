@@ -18,40 +18,56 @@ const VotingPage = () => {
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
 
+  const isVotingExists = voting.isSuccess && voting.data;
+  const isVotingBelongsToChannel =
+    voting.isSuccess &&
+    channel.isSuccess &&
+    voting.data.broadcasterId === channel.data.id;
+
+  const isVotingVisible = isVotingExists && isVotingBelongsToChannel;
+
   const getTitle = () => {
-    if (!voting.data) return "Голосование";
+    if (!voting.data || !isVotingVisible) return "Голосование";
 
     return voting.data?.title || NO_TITLE;
   };
 
+  const title =
+    isVotingVisible && username
+      ? `${username} - ${voting.data?.title || "Без названия"}`
+      : "Голосование";
+
+  const breadcrumbs: Parameters<typeof PageHeader>[0]["breadcrumbs"] = [
+    {
+      title: (
+        <TwitchUsername
+          username={username}
+          avatarUrl={channel.data?.avatarUrl}
+        />
+      ),
+      href: `/${login}`,
+    },
+    {
+      title: "Голосование",
+      href: `/${login}/voting`,
+    },
+  ];
+
+  if (isVotingVisible) {
+    breadcrumbs.push({ title: voting.data?.title || NO_TITLE });
+  }
+
   return (
     <Layout>
       <PageHeader
-        title={
-          username
-            ? `${username} - ${voting.data?.title || "Без названия"}`
-            : "Голосование"
-        }
+        title={title}
         pageTitle={getTitle()}
-        breadcrumbs={[
-          {
-            title: (
-              <TwitchUsername
-                username={username}
-                avatarUrl={channel.data?.avatarUrl}
-              />
-            ),
-            href: `/${login}`,
-          },
-          {
-            title: "Голосование",
-            href: `/${login}/voting`,
-          },
-          { title: voting.data?.title || NO_TITLE },
-        ]}
+        breadcrumbs={breadcrumbs}
       />
 
-      <VotingComponent />
+      {isVotingVisible && <VotingComponent />}
+
+      {!isVotingVisible && <>Голосование удалено или не существует.</>}
     </Layout>
   );
 };

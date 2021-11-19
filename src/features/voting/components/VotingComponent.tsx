@@ -66,10 +66,6 @@ const VotingComponent = () => {
     renderedVotingOptionsSelector(state, votingId)
   );
 
-  if (voting.isSuccess && !voting.data) {
-    return <>Голосование удалено или не существует.</>;
-  }
-
   if (!voting.data) return null;
 
   const canManageVoting = getCanManageVoting(
