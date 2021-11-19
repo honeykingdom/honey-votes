@@ -34,6 +34,7 @@ import {
 } from "features/api/apiSlice";
 import { renderedVotingOptionsSelector } from "features/api/apiSelectors";
 import apiSchema from "features/api/apiSchema.json";
+import { API_ERRORS } from "features/api/apiConstants";
 import UserBadges from "features/voting/components/UserBadges";
 import useVotingId from "features/voting/hooks/useVotingId";
 import getCanManageVoting from "features/voting/utils/getCanManageVoting";
@@ -87,55 +88,52 @@ const VotingComponent = () => {
 
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
 
-  const notifyAfterUpdate = (error: boolean) => {
-    if (error) {
-      enqueueSnackbar("Не удалось обновить голосование", { variant: "error" });
-    } else {
+  const updateVotingAndNotify = async (
+    arg: Parameters<typeof updateVoting>[0]
+  ) => {
+    try {
+      await updateVoting(arg).unwrap();
+
       enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось обновить голосование",
+        { variant: "error" }
+      );
     }
   };
 
-  const handleToggleCanManageVotes = async () => {
-    const result = await updateVoting({
+  const handleToggleCanManageVotes = () =>
+    updateVotingAndNotify({
       votingId,
       body: { canManageVotes: !voting.data?.canManageVotes },
     });
 
-    // @ts-expect-error
-    notifyAfterUpdate(result.error);
-  };
-
-  const handleToggleCanManageVotingOptions = async () => {
-    const result = await updateVoting({
+  const handleToggleCanManageVotingOptions = () =>
+    updateVotingAndNotify({
       votingId,
       body: { canManageVotingOptions: !voting.data?.canManageVotingOptions },
     });
 
-    // @ts-expect-error
-    notifyAfterUpdate(result.error);
-  };
-
-  const handleToggleShowValues = async () => {
-    const result = await updateVoting({
+  const handleToggleShowValues = () =>
+    updateVotingAndNotify({
       votingId,
       body: { showValues: !voting.data?.showValues },
     });
 
-    // @ts-expect-error
-    notifyAfterUpdate(result.error);
-  };
-
   const handleCreateVotingOption = async (body: VotingOptionDefaultValues) => {
-    const result = await createVotingOption({ votingId, ...body });
+    try {
+      await createVotingOption({ votingId, ...body }).unwrap();
 
-    // @ts-expect-error
-    if (result.error) {
-      enqueueSnackbar("Не удалось добавить вариант", { variant: "error" });
-    } else {
       enqueueSnackbar("Вариант добавлен", { variant: "success" });
-    }
 
-    setIsVotingOptionModalOpened(false);
+      setIsVotingOptionModalOpened(false);
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось добавить вариант",
+        { variant: "error" }
+      );
+    }
   };
 
   const renderAdminTable = () => (

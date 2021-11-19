@@ -21,6 +21,7 @@ import {
   useVotingQuery,
 } from "features/api/apiSlice";
 import { VotingOption } from "features/api/apiTypes";
+import { API_ERRORS } from "features/api/apiConstants";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
@@ -107,36 +108,42 @@ const VotingOptionCard = ({
     if (createVoteResult.isLoading || deleteVoteResult.isLoading) return;
 
     if (isActive) {
-      const result = await deleteVote(id);
+      try {
+        await deleteVote(id).unwrap();
 
-      // @ts-expect-error
-      if (result.error) {
-        enqueueSnackbar("Не удалось удалить голос", { variant: "error" });
-      } else {
         enqueueSnackbar("Голос удалён", { variant: "success" });
+      } catch (e) {
+        enqueueSnackbar(
+          API_ERRORS[e.data?.message] || "Не удалось удалить голос",
+          { variant: "error" }
+        );
       }
     } else {
-      const result = await createVote(id);
+      try {
+        await createVote(id).unwrap();
 
-      lastVoteTimestampRef.current = Date.now();
+        lastVoteTimestampRef.current = Date.now();
 
-      // @ts-expect-error
-      if (result.error) {
-        enqueueSnackbar("Не удалось проголосовать", { variant: "error" });
-      } else {
         enqueueSnackbar("Ваш голос защитан", { variant: "success" });
+      } catch (e) {
+        enqueueSnackbar(
+          API_ERRORS[e.data?.message] || "Не удалось проголосовать",
+          { variant: "error" }
+        );
       }
     }
   };
 
   const handleDeleteVotingOption = async () => {
-    const result = await deleteVotingOption(id);
+    try {
+      await deleteVotingOption(id).unwrap();
 
-    // @ts-expect-error
-    if (result.error) {
-      enqueueSnackbar("Не удалось удалить вариант", { variant: "error" });
-    } else {
       enqueueSnackbar("Вариант удалён", { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось удалить вариант",
+        { variant: "error" }
+      );
     }
   };
 

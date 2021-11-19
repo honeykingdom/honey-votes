@@ -18,7 +18,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useChannelLogin from "hooks/useChannelLogin";
 import ConfirmationDialog from "components/ConfirmationDialog";
-import { ChatGoalStatus } from "features/api/apiConstants";
+import { API_ERRORS, ChatGoalStatus } from "features/api/apiConstants";
 import {
   useMeQuery,
   useMeRolesQuery,
@@ -75,40 +75,61 @@ const ChatGoalComponent = () => {
 
   const widgetLink = getWidgetLink(goal.data?.broadcasterId);
 
-  const toggleListening = async () => {
+  const handleToggleListening = async () => {
     if (!goal.isSuccess) return;
 
-    let error = false;
+    let error: string | null = null;
     let listening = false;
 
     if (goal.data) {
       listening = !goal.data?.listening;
 
-      const result = await updateChatGoal({
-        chatGoalId: goal.data.broadcasterId,
-        body: { listening },
-      });
-
-      // @ts-expect-error
-      error = !!result.error;
+      try {
+        await updateChatGoal({
+          chatGoalId: goal.data.broadcasterId,
+          body: { listening },
+        }).unwrap();
+      } catch (e) {
+        error = e.data?.message;
+      }
     } else {
       listening = true;
 
-      const result = await createChatGoal({
-        broadcasterId: channel.data.id,
-        listening,
-      });
-
-      // @ts-expect-error
-      error = !!result.error;
+      try {
+        await createChatGoal({
+          broadcasterId: channel.data.id,
+          listening,
+        }).unwrap();
+      } catch (e) {
+        error = e.data?.message;
+      }
     }
 
     if (error) {
-      enqueueSnackbar("Не удалось включить чатгол", { variant: "error" });
+      enqueueSnackbar(API_ERRORS[error] || "Не удалось включить чатгол", {
+        variant: "error",
+      });
     } else {
       enqueueSnackbar(listening ? "Чатгол включен" : "Чатгол выключен", {
         variant: "success",
       });
+    }
+  };
+
+  const handleResetUserVotes = async () => {
+    try {
+      await resetChatGoalVotes(channel.data.id).unwrap();
+
+      enqueueSnackbar(
+        "Количество потраченных пользователями голосов обнулено",
+        { variant: "success" }
+      );
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] ||
+          "Не удалось обнулить количество потраченных пользователями голосов",
+        { variant: "error" }
+      );
     }
   };
 
@@ -196,7 +217,7 @@ const ChatGoalComponent = () => {
             startIcon={goal.data?.listening ? <LockOpenIcon /> : <LockIcon />}
             sx={{ mb: 2 }}
             disabled={isDisabled}
-            onClick={toggleListening}
+            onClick={handleToggleListening}
           >
             {goal.data?.listening ? "Закрыть чатгол" : "Открыть чатгол"}
           </Button>
@@ -213,22 +234,7 @@ const ChatGoalComponent = () => {
         title="Сбросить голоса"
         description="Вы действительно хотите обнулить количество потраченных пользователями голосов?"
         handleClose={() => setIsClearVotesDialogOpen(false)}
-        handleYes={async () => {
-          const result = await resetChatGoalVotes(channel.data.id);
-
-          // @ts-expect-error
-          if (result.error) {
-            enqueueSnackbar(
-              "Не удалось обнулить количество потраченных пользователями голосов",
-              { variant: "error" }
-            );
-          } else {
-            enqueueSnackbar(
-              "Количество потраченных пользователями голосов обнулено",
-              { variant: "success" }
-            );
-          }
-        }}
+        handleYes={handleResetUserVotes}
       />
     </>
   );

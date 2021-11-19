@@ -12,6 +12,7 @@ import {
   useUpdateVotingMutation,
 } from "features/api/apiSlice";
 import { Voting } from "features/api/apiTypes";
+import { API_ERRORS } from "features/api/apiConstants";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import useChannelLogin from "hooks/useChannelLogin";
 import VotingFormModal from "./VotingFormModal/VotingFormModal";
@@ -54,24 +55,23 @@ const VotingActions = ({
   const updateVotingAndNotify = async (
     data: Parameters<typeof updateVoting>[0]
   ) => {
-    const result = await updateVoting(data);
+    try {
+      await updateVoting(data).unwrap();
 
-    // @ts-expect-error
-    if (result.error) {
-      enqueueSnackbar("Не удалось обновить голосование", { variant: "error" });
-    } else {
       enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось обновить голосование",
+        { variant: "error" }
+      );
     }
-
-    return result;
   };
 
-  const handleToggleVoting = async () => {
-    await updateVotingAndNotify({
+  const handleToggleVoting = () =>
+    updateVotingAndNotify({
       votingId,
       body: { canManageVotes: !canManageVotes },
     });
-  };
 
   const handleEditVoting = async (body: Partial<Voting>) => {
     await updateVotingAndNotify({ votingId, body });
@@ -80,16 +80,18 @@ const VotingActions = ({
   };
 
   const handleDeleteVoting = async () => {
-    const result = await deleteVoting(votingId);
+    try {
+      await deleteVoting(votingId).unwrap();
 
-    // @ts-expect-error
-    if (result.error) {
-      enqueueSnackbar("Не удалось удалить голосование", { variant: "error" });
-    } else {
       enqueueSnackbar("Голосование успешно удалено", { variant: "success" });
-    }
 
-    router.push(`/${login}/voting`);
+      router.push(`/${login}/voting`);
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось удалить голосование",
+        { variant: "error" }
+      );
+    }
   };
 
   const disabled = updateVotingResult.isLoading || deleteVotingResult.isLoading;

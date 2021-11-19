@@ -17,7 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import TwitchBadge from "components/TwitchBadge";
 import useChannelLogin from "hooks/useChannelLogin";
 import { UpdateChatGoalDto } from "features/api/apiTypes";
-import { TwitchUserType } from "features/api/apiConstants";
+import { API_ERRORS, TwitchUserType } from "features/api/apiConstants";
 import {
   useChatGoalQuery,
   useUpdateChatGoalMutation,
@@ -105,16 +105,18 @@ const ChatGoalOptions = () => {
 
     const body = { ...data, timerDuration };
 
-    const result = await updateChatGoal({
-      chatGoalId: goal.data.broadcasterId,
-      body,
-    });
+    try {
+      await updateChatGoal({
+        chatGoalId: goal.data.broadcasterId,
+        body,
+      }).unwrap();
 
-    // @ts-expect-error
-    if (result.error) {
-      enqueueSnackbar("Не удалось обновить настройки", { variant: "error" });
-    } else {
       enqueueSnackbar("Настройки успешно сохранены", { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(
+        API_ERRORS[e.data?.message] || "Не удалось обновить настройки",
+        { variant: "error" }
+      );
     }
   });
 
