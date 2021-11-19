@@ -206,6 +206,7 @@ const VotingOptionCard = ({
         px: { xs: 1, sm: 2 },
         py: { xs: 0.5, sm: 1 },
         height: "100%",
+        "&:last-child": { pb: { xs: 0.5, sm: 1 } },
       }}
     >
       <Box sx={{ flexGrow: 1 }}>
