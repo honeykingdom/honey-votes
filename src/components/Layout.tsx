@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Link from "next/link";
 import {
   AppBar,
@@ -9,34 +8,18 @@ import {
   Tooltip,
   IconButton,
   Button,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import PersonIcon from "@mui/icons-material/Person";
-import { useAppDispatch, useAppSelector } from "app/hooks";
 import getMainMenuLinks from "utils/getMainMenuLinks";
 import { useMeQuery } from "features/api/apiSlice";
-import { hideSnackbar } from "features/snackbar/snackbarSlice";
 import { useAuthRedirect } from "features/auth/useAuthRedirect";
 import AccountMenu from "./AccountMenu";
 
 const Layout = ({ children }: any) => {
-  const dispatch = useAppDispatch();
-
   const me = useMeQuery();
-  const snackbarState = useAppSelector((state) => state.snackbar);
 
   useAuthRedirect();
-
-  const handleSnackbarClose = useMemo(
-    () => (event?: React.SyntheticEvent, reason?: string) => {
-      if (reason === "clickaway") return;
-
-      dispatch(hideSnackbar());
-    },
-    []
-  );
 
   const isMenuVisible = me.data && !me.isError;
 
@@ -97,16 +80,6 @@ const Layout = ({ children }: any) => {
         </Toolbar>
       </AppBar>
       <Container sx={{ pt: 2 }}>{children}</Container>
-
-      <Snackbar
-        open={snackbarState.open}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbarState.variant}>
-          {snackbarState.message}
-        </Alert>
-      </Snackbar>
     </Box>
   );
 };
