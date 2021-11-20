@@ -1,22 +1,26 @@
 import { useMemo, useState } from "react";
 import { debounce } from "lodash";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
-import CircularProgress from "@mui/material/CircularProgress";
-import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
+import {
+  Autocomplete,
+  Box,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { VotingOptionType } from "features/api/apiConstants";
 import { useLazySearchMoviesQuery } from "features/kinopoisk-api/kinopoiskApiSlice";
-import { Box } from "@mui/material";
-
-const getOptionLabel = (option: Film) =>
-  `${option.nameRu || option.nameEn}${option.year ? ` (${option.year})` : ""}`;
-const getOptionImage = (option: Film) => option.posterUrlPreview;
-const isOptionEqualToValue = (option: Film, value: Film) =>
-  option.filmId === value.filmId;
+import { useLazySearchGamesQuery } from "features/igdb-api/igdbApiSlice";
 
 type Props = {
   id: string;
   name: string;
   label: string;
+  type: VotingOptionType.KinopoiskMovie | VotingOptionType.IgdbGame;
+  getOptionLabel: (option: any) => string;
+  getOptionImage: (option: any) => string;
+  getOptionTitle: (option: any) => string;
+  getOptionDescription: (option: any) => string;
+  isOptionEqualToValue: (option: any, value: any) => boolean;
   onBlur: () => void;
   onChange: (event: React.SyntheticEvent<Element, Event>, value: any) => void;
 };
@@ -25,23 +29,37 @@ const VotingOptionAutocomplete = ({
   id,
   name,
   label,
+  type,
+  getOptionLabel,
+  getOptionImage,
+  getOptionTitle,
+  getOptionDescription,
+  isOptionEqualToValue,
   onBlur,
   onChange,
 }: Props) => {
   const [open, setOpen] = useState(false);
   const [searchMovies, searchMoviesResult] = useLazySearchMoviesQuery();
+  const [searchGames, searchGamesResult] = useLazySearchGamesQuery();
 
-  const options = searchMoviesResult.data || [];
-  const loading = open && searchMoviesResult.isLoading;
+  const options =
+    type === VotingOptionType.KinopoiskMovie
+      ? searchMoviesResult.data || []
+      : searchGamesResult.data || [];
+  const loading =
+    open && type === VotingOptionType.KinopoiskMovie
+      ? searchMoviesResult.isLoading
+      : searchGamesResult.isLoading;
 
   const handleChange = useMemo(
     () =>
       debounce((event: React.ChangeEvent<{ value: string }>) => {
-        const search = event.target.value;
+        const search = event.target.value.trim();
 
         if (!search) return;
 
-        searchMovies(search);
+        if (type === VotingOptionType.KinopoiskMovie) searchMovies(search);
+        if (type === VotingOptionType.IgdbGame) searchGames(search);
       }, 500),
     []
   );
@@ -71,7 +89,12 @@ const VotingOptionAutocomplete = ({
             src={getOptionImage(option)}
             alt={getOptionLabel(option)}
           />
-          {getOptionLabel(option)}
+          <Box>
+            <Typography variant="inherit">{getOptionTitle(option)}</Typography>
+            <Typography variant="caption" color="text.secondary">
+              {getOptionDescription(option)}
+            </Typography>
+          </Box>
         </Box>
       )}
       renderInput={(params) => (
