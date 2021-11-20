@@ -35,11 +35,18 @@ const VotingOptionFormModal = ({
   onSubmit,
 }: Props) => {
   const useFormReturn = useForm<VotingOptionDefaultValues>({ defaultValues });
-  const { setValue, getValues } = useFormReturn;
+  const { setValue, getValues, resetField } = useFormReturn;
 
   useEffect(() => {
     setValue("type", allowedVotingOptionTypes[0]);
   }, [allowedVotingOptionTypes]);
+
+  useEffect(() => {
+    if (open) {
+      resetField(`${VotingOptionType.IgdbGame}.slug`);
+      resetField(`${VotingOptionType.KinopoiskMovie}.id`);
+    }
+  }, [open]);
 
   // TODO: refactor this
   const handleSubmit = () => {
@@ -62,12 +69,9 @@ const VotingOptionFormModal = ({
     }
 
     if (values.type === VotingOptionType.IgdbGame) {
-      const url = values[VotingOptionType.IgdbGame].slug;
-      const slug = url.replace("https://www.igdb.com/games/", "").trim();
-
       body = {
         type: VotingOptionType.IgdbGame,
-        [VotingOptionType.IgdbGame]: { slug },
+        [VotingOptionType.IgdbGame]: values[VotingOptionType.IgdbGame],
       };
     }
 
@@ -88,7 +92,6 @@ const VotingOptionFormModal = ({
       <DialogContent dividers={true} sx={{ minHeight: 320 }}>
         <VotingOptionForm
           useFormReturn={useFormReturn}
-          defaultValues={defaultValues}
           allowedVotingOptionTypes={allowedVotingOptionTypes}
         />
       </DialogContent>
