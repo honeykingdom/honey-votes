@@ -30,6 +30,7 @@
     "d3-array": "^3.1.1",
     "d3-ease": "^3.0.1",
     "date-fns": "^2.26.0",
+    "igdb-api-types": "^0.1.0",
     "immer": "^9.0.6",
     "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",

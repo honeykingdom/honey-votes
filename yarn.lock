@@ -2308,6 +2308,11 @@ ieee754@^1.1.4:
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
 
+igdb-api-types@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/igdb-api-types/-/igdb-api-types-0.1.0.tgz#f6dfdf5e656428e9f82d717f711868dd130fbc83"
+  integrity sha512-KUM6izUNUiAzrFJZyoadlUW+XEOY3J6b9CJ+/bCY9fYCtJUWI+0LG1OZdgth5VKK6qySHle20K83K5KNPhwkMg==
+
 ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
