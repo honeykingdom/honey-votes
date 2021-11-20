@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -86,7 +87,13 @@ const VotingFormModal = ({
   const useFormReturn = useForm<VotingFormParams>({
     defaultValues: transformToFormValues(defaultValues),
   });
-  const { getValues } = useFormReturn;
+  const { reset, getValues } = useFormReturn;
+
+  useEffect(() => {
+    if (open) {
+      reset(transformToFormValues(defaultValues));
+    }
+  }, [open]);
 
   const handleSubmit = () => {
     const values = getValues();
