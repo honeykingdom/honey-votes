@@ -59,7 +59,7 @@ export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 export const api = createApi({
   reducerPath: "api",
   baseQuery: apiQuery,
-  tagTypes: ["Voting"],
+  tagTypes: ["Voting", "ChatVote"],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -341,6 +341,7 @@ export const api = createApi({
         url: `${API_BASE}/chat-votes/${chatVotingId}/clear`,
         method: "POST",
       }),
+      invalidatesTags: [{ type: "ChatVote", id: "LIST" }],
     }),
 
     chatVotes: builder.query<EntityState<ChatVote>, string>({
@@ -348,6 +349,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}`,
         params: { chatVotingId: `eq.${chatVotingId}` },
       }),
+      providesTags: [{ type: "ChatVote", id: "LIST" }],
       transformResponse: (response: ChatVote[]) =>
         chatVotesAdapter.addMany(chatVotesAdapter.getInitialState(), response),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
