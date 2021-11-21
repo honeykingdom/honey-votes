@@ -1,11 +1,12 @@
-import * as React from "react";
+import { useRef } from "react";
 import { AppProps, NextWebVitalsMetric } from "next/app";
-import { ThemeProvider } from "@mui/material/styles";
 import { DefaultSeo } from "next-seo";
-import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { CssBaseline, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { Provider as ReduxProvider } from "react-redux";
-import { SnackbarProvider } from "notistack";
+import { SnackbarKey, SnackbarProvider } from "notistack";
 import createEmotionCache from "utils/createEmotionCache";
 import theme from "app/theme";
 import store from "app/store";
@@ -20,11 +21,27 @@ interface MyAppProps extends AppProps {
 
 const App = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const notistackRef = useRef<SnackbarProvider>(null);
+
+  const onClickDismiss = (key: SnackbarKey) => () => {
+    notistackRef.current.closeSnackbar(key);
+  };
+
   return (
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <ReduxProvider store={store}>
-          <SnackbarProvider maxSnack={2} autoHideDuration={3000}>
+          <SnackbarProvider
+            ref={notistackRef}
+            maxSnack={2}
+            autoHideDuration={3000}
+            preventDuplicate
+            action={(key) => (
+              <IconButton onClick={onClickDismiss(key)}>
+                <CloseIcon />
+              </IconButton>
+            )}
+          >
             <DefaultSeo {...SEO} />
             <CssBaseline />
             <Component {...pageProps} />
