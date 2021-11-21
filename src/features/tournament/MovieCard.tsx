@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Box,
   Card,
@@ -13,24 +14,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 // import { KinopoiskMovie } from "api/kinopoisk";
 import { getMovieDescription } from "./utils/getMovieDescription";
-import { Movie } from "./types";
+import { CardSize, Movie } from "./tournamentTypes";
+import {
+  CARD_HEIGHT_MAP,
+  CARD_IMAGE_WIDTH_MAP,
+  NO_POSTER_URL,
+} from "./tournamentConstants";
 // import MoviePicker from "./MoviePicker";
-
-const cardHeightMap: Record<CardSize, number> = {
-  small: 48,
-  medium: 64,
-  large: 80,
-};
-
-const imageWidthMap: Record<CardSize, number> = {
-  small: cardHeightMap.small * (3 / 4),
-  medium: cardHeightMap.medium * (3 / 4),
-  large: cardHeightMap.large * (3 / 4),
-};
-
-const NO_POSTER_URL = "https://st.kp.yandex.net/images/no-poster.gif";
-
-type CardSize = "small" | "medium" | "large";
 
 type Props = {
   movie: Movie;
@@ -64,7 +54,7 @@ const MovieCard = ({
   onChange = () => {},
 }: Props) => {
   const { filmId, year } = movie.info || {};
-  const cardHeight = cardHeightMap[size] || "auto";
+  const cardHeight = CARD_HEIGHT_MAP[size] || "auto";
 
   // const [movieTitle, setMovieTitle] = useState("");
   // const [suggestions, setSuggestions] = useState<KinopoiskMovie[]>([]);
@@ -175,7 +165,6 @@ const MovieCard = ({
 
   return (
     <Card
-      raised={active}
       sx={{
         display: "flex",
         position: "relative",
@@ -183,12 +172,17 @@ const MovieCard = ({
         "&:hover :last-child": {
           visibility: "visible",
         },
+        bgcolor: active ? "rgba(102, 187, 106, 0.53)" : undefined,
       }}
     >
       <a
         href={filmId ? `//kinopoisk.ru/film/${filmId}/` : null}
         target="_blank"
-        style={{ display: "block", width: imageWidthMap[size], flexShrink: 0 }}
+        style={{
+          display: "block",
+          width: CARD_IMAGE_WIDTH_MAP[size],
+          flexShrink: 0,
+        }}
       >
         <CardMedia
           sx={{ height: "100%" }}
@@ -235,4 +229,4 @@ const MovieCard = ({
   );
 };
 
-export default MovieCard;
+export default memo(MovieCard);

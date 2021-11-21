@@ -1,3 +1,4 @@
+import { TwitchUserType } from "features/api/apiConstants";
 import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
 
 export type Movie = {
@@ -47,3 +48,13 @@ export type Step =
   | StepStreamerChoice
   | StepRandomChoice
   | StepShowWinner;
+
+export type CardSize = "small" | "medium" | "large";
+
+export type Permissions = Record<
+  | TwitchUserType.Mod
+  | TwitchUserType.Vip
+  | TwitchUserType.Sub
+  | TwitchUserType.Viewer,
+  boolean
+>;

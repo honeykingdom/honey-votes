@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import useSound from "use-sound";
 import { shuffle } from "d3-array";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { useWindowSize } from "react-use";
 import Confetti from "react-confetti";
 import SpinningWheel from "react-spinning-canvas-wheel";
@@ -13,11 +20,19 @@ import type {
 import VolumeControl from "components/VolumeControl";
 import ArrowRightIcon from "icons/arrow-right.svg";
 import getRandomInt from "utils/getRandomInt";
+import { useMeQuery } from "features/api/apiSlice";
 import MovieCard from "./MovieCard";
 // import MoviePicker from "./MoviePicker";
 import useTournament from "./useTournament";
 import timingFunction from "./utils/timingFunction";
-import { Step, StepType } from "./types";
+import { Permissions, Step, StepType } from "./tournamentTypes";
+import useChatVoting from "./useChatVoting";
+import {
+  CARD_IMAGE_WIDTH_MAP,
+  DEFAULT_PERMISSIONS,
+  USER_TYPES,
+  WHEEL_COLORS,
+} from "./tournamentConstants";
 
 const TOURNAMENT_ASSETS_URL = process.env.NEXT_PUBLIC_TOURNAMENT_ASSETS_URL;
 
@@ -68,18 +83,16 @@ const STEPS_TEXT: Record<StepType, StepText> = {
   },
 };
 
-const WHEEL_COLORS = {
-  wheelBackground: "#212121",
-  text: "#fff",
-  border: "#fff",
-};
-
 const getCardSize = (itemsCount: number) => {
   if (itemsCount <= 6) return "large";
 
   if (itemsCount <= 8) return "medium";
 
   return "small";
+};
+
+const getPercent = (value: number, total: number) => {
+  return ((value / total) * 100 || 0).toFixed(2);
 };
 
 type Segment = WheelSegment & { id: string };
@@ -124,6 +137,16 @@ const Tournament = ({ initialMovies }: Props) => {
   const [mode, setMode] = useState<"edit" | "view">("view");
 
   const [wheelSegments, setWheelSegments] = useState<Segment[]>([]);
+
+  const me = useMeQuery();
+
+  const [permissions, setPermissions] =
+    useState<Permissions>(DEFAULT_PERMISSIONS);
+  const chatVoting = useChatVoting(
+    me.data?.login,
+    step.movies.length,
+    permissions
+  );
 
   useEffect(() => {
     if (step.type === StepType.ADD_MOVIES) {
@@ -193,6 +216,10 @@ const Tournament = ({ initialMovies }: Props) => {
     }
   }
 
+  if (step.type === StepType.VIEWERS_CHOICE && chatVoting.isActive) {
+    isNextButtonDisabled = true;
+  }
+
   const showMoviesList =
     step.type !== StepType.RANDOM_CHOICE && step.type !== StepType.SHOW_WINNER;
 
@@ -249,7 +276,44 @@ const Tournament = ({ initialMovies }: Props) => {
                 >
                   {i + 1}.
                 </Typography>
-                <Box sx={{ flexGrow: 1 }}>
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    "&:before": {
+                      display:
+                        step.type === StepType.VIEWERS_CHOICE
+                          ? "block"
+                          : "none",
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: `${CARD_IMAGE_WIDTH_MAP[cardSize]}px`,
+                      bottom: 0,
+                      width: `calc(${getPercent(
+                        chatVoting.votes[i],
+                        chatVoting.votesCount
+                      )}% - ${CARD_IMAGE_WIDTH_MAP[cardSize]}px)`,
+                      backgroundColor: "rgba(0, 0, 0, 0.3)",
+                      pointerEvents: "none",
+                      zIndex: 1,
+                    },
+                    "&:after": {
+                      display:
+                        step.type === StepType.VIEWERS_CHOICE ? "flex" : "none",
+                      content: `"${getPercent(
+                        chatVoting.votes[i],
+                        chatVoting.votesCount
+                      )}% (${chatVoting.votes[i]})"`,
+                      position: "absolute",
+                      top: 0,
+                      bottom: 0,
+                      left: "calc(100% + 16px)",
+                      width: "128px",
+                      alignItems: "center",
+                      color: "text.secondary",
+                    },
+                  }}
+                >
                   <MovieCard
                     movie={movie}
                     size={cardSize}
@@ -351,8 +415,108 @@ const Tournament = ({ initialMovies }: Props) => {
     </>
   );
 
+  const renderChatVotingControls = () => (
+    <Box
+      justifyContent="center"
+      sx={{
+        position: "absolute",
+        top: 72,
+        left: 0,
+        width: 220,
+      }}
+    >
+      <Typography component="div" variant="h6" sx={{ mb: 2 }}>
+        Голосование в чате
+      </Typography>
+
+      {!me.data && (
+        <Typography component="div" variant="body1">
+          Войдите, чтобы включить голосование в чате
+        </Typography>
+      )}
+
+      {me.data && (
+        <>
+          <Box sx={{ mb: 1 }}>
+            <Typography component="span" variant="body2" color="text.secondary">
+              Канал:
+            </Typography>{" "}
+            <Typography component="span" variant="body2">
+              {me.data?.login}
+            </Typography>
+          </Box>
+
+          <Box sx={{ mb: 1 }}>
+            <Typography component="span" variant="body2" color="text.secondary">
+              Всего голосов:
+            </Typography>{" "}
+            <Typography component="span" variant="body2">
+              {chatVoting.votesCount}
+            </Typography>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography color="text.secondary" variant="body2">
+              Голосовать могут:
+            </Typography>
+            {USER_TYPES.map(({ label, name }) => (
+              <Box key={name}>
+                <FormControlLabel
+                  control={
+                    <Checkbox size="small" checked={permissions[name]} />
+                  }
+                  label={
+                    <Typography color="text.secondary" variant="body2">
+                      {label}
+                    </Typography>
+                  }
+                  name={name}
+                  sx={{ fontSize: "0.875rem !important" }}
+                  onChange={(e) =>
+                    setPermissions((prev) => ({
+                      ...prev,
+                      // @ts-expect-error
+                      [name]: e.target.checked,
+                    }))
+                  }
+                />
+              </Box>
+            ))}
+          </Box>
+          <Button
+            variant="contained"
+            size="small"
+            color={chatVoting.isActive ? "error" : "success"}
+            onClick={() => {
+              if (chatVoting.isActive) {
+                chatVoting.stopVoting();
+
+                const maxVotesValue = Math.max(...chatVoting.votes);
+                const maxVotesCount = chatVoting.votes.filter(
+                  (v) => v === maxVotesValue
+                ).length;
+
+                if (maxVotesCount === 1) {
+                  const i = chatVoting.votes.indexOf(maxVotesValue);
+
+                  setSelectedMovieId(step.movies[i].id);
+                }
+              } else {
+                chatVoting.startVoting();
+              }
+            }}
+          >
+            {chatVoting.isActive
+              ? "Остановить голосование"
+              : "Начать голосование"}
+          </Button>
+        </>
+      )}
+    </Box>
+  );
+
   return (
-    <>
+    <Box sx={{ position: "relative" }}>
       <Typography
         variant="h3"
         textAlign="center"
@@ -369,10 +533,11 @@ const Tournament = ({ initialMovies }: Props) => {
         {showMoviesList && renderMoviesList()}
         {step.type === StepType.RANDOM_CHOICE && renderSpinningWheel()}
         {step.type === StepType.SHOW_WINNER && renderWinner()}
+        {step.type === StepType.VIEWERS_CHOICE && renderChatVotingControls()}
       </Box>
 
       {renderMainInfo()}
-    </>
+    </Box>
   );
 };
 

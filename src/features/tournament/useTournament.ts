@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import produce from "immer";
 import getRandomInt from "utils/getRandomInt";
 import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
-import { Movie, Step, StepAddMovies, StepType } from "./types";
+import { Movie, Step, StepAddMovies, StepType } from "./tournamentTypes";
 
 const choiceStepTypes = [
   StepType.VIEWERS_CHOICE,

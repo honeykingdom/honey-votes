@@ -1,5 +1,5 @@
 import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
-import { Movie } from "../types";
+import { Movie } from "../tournamentTypes";
 
 const transformKinopoiskMovie = (movie: Film): Movie => ({
   id: `${movie.filmId}`,

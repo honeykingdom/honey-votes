@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { getMovieDescription } from "./utils/getMovieDescription";
-import { Movie } from "./types";
+import { Movie } from "./tournamentTypes";
 import transformKinopoiskMovie from "./utils/transformKinopoiskMovie";
 
 type Props = {
