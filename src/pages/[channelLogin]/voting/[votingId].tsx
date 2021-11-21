@@ -18,11 +18,16 @@ const VotingPage = () => {
   const channel = useUserQuery({ login }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
 
+  const isLoading =
+    voting.isLoading ||
+    channel.isLoading ||
+    voting.isUninitialized ||
+    channel.isUninitialized;
   const isVotingExists = voting.isSuccess && voting.data;
   const isVotingBelongsToChannel =
     voting.isSuccess &&
     channel.isSuccess &&
-    voting.data.broadcasterId === channel.data.id;
+    voting.data?.broadcasterId === channel.data?.id;
 
   const isVotingVisible = isVotingExists && isVotingBelongsToChannel;
 
@@ -65,9 +70,11 @@ const VotingPage = () => {
         breadcrumbs={breadcrumbs}
       />
 
-      {isVotingVisible && <VotingComponent />}
+      {!isLoading && isVotingVisible && <VotingComponent />}
 
-      {!isVotingVisible && <>Голосование удалено или не существует.</>}
+      {!isLoading && !isVotingVisible && (
+        <>Голосование удалено или не существует.</>
+      )}
     </Layout>
   );
 };
