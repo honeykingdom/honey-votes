@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Dialog,
@@ -6,7 +6,9 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  CircularProgress,
 } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 import { CreateVotingOptionDto } from "features/api/apiTypes";
 import { VotingOptionType } from "features/api/apiConstants";
 import VotingOptionForm from "./VotingOptionForm";
@@ -20,7 +22,7 @@ type Props = {
   submitButtonText: string;
   allowedVotingOptionTypes: VotingOptionType[];
   defaultValues?: VotingOptionDefaultValues;
-  onSubmit: (votingOption: VotingOptionDefaultValues) => void;
+  onSubmit: (votingOption: VotingOptionDefaultValues) => void | Promise<void>;
   onClose: () => void;
 };
 
@@ -34,6 +36,7 @@ const VotingOptionFormModal = ({
   onClose,
   onSubmit,
 }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const useFormReturn = useForm<VotingOptionDefaultValues>({ defaultValues });
   const { setValue, getValues, resetField } = useFormReturn;
 
@@ -49,7 +52,7 @@ const VotingOptionFormModal = ({
   }, [open]);
 
   // TODO: refactor this
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const values = getValues();
     let body: VotingOptionDefaultValues;
 
@@ -75,7 +78,11 @@ const VotingOptionFormModal = ({
       };
     }
 
-    onSubmit(body);
+    setIsLoading(true);
+
+    await onSubmit(body);
+
+    setIsLoading(false);
   };
 
   return (
@@ -97,7 +104,12 @@ const VotingOptionFormModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          disabled={isLoading}
+          startIcon={isLoading ? <CircularProgress size={20} /> : <SaveIcon />}
+          onClick={handleSubmit}
+        >
           {submitButtonText}
         </Button>
       </DialogActions>

@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 import { UpdateVotingDto } from "features/api/apiTypes";
 import { VotingOptionType } from "features/api/apiConstants";
 import apiSchema from "features/api/apiSchema.json";
@@ -71,7 +73,7 @@ type Props = {
   cancelButtonText: string;
   submitButtonText: string;
   defaultValues?: UpdateVotingDto;
-  onSubmit: (voting: UpdateVotingDto) => void;
+  onSubmit: (voting: UpdateVotingDto) => void | Promise<void>;
   onClose: () => void;
 };
 
@@ -84,6 +86,7 @@ const VotingFormModal = ({
   onSubmit,
   onClose,
 }: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const useFormReturn = useForm<VotingFormParams>({
     defaultValues: transformToFormValues(defaultValues),
   });
@@ -95,10 +98,14 @@ const VotingFormModal = ({
     }
   }, [open]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const values = getValues();
 
-    onSubmit(transformToValues(values));
+    setIsLoading(true);
+
+    await onSubmit(transformToValues(values));
+
+    setIsLoading(false);
   };
 
   return (
@@ -120,7 +127,12 @@ const VotingFormModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>{cancelButtonText}</Button>
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          disabled={isLoading}
+          startIcon={isLoading ? <CircularProgress size={20} /> : <SaveIcon />}
+          onClick={handleSubmit}
+        >
           {submitButtonText}
         </Button>
       </DialogActions>
