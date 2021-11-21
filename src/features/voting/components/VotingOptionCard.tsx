@@ -97,10 +97,7 @@ const VotingOptionCard = ({
 
   const handleCardClick = async () => {
     if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
-      enqueueSnackbar(
-        "Вы уже проголосовали. Менять голос можно будет только спустя 1 минуту.",
-        { variant: "error" }
-      );
+      enqueueSnackbar("Вы голосуете слишком быстро", { variant: "error" });
 
       return;
     }
