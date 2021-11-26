@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { useSnackbar } from "notistack";
+import React, { useRef, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import {
   Alert,
   Box,
@@ -14,14 +14,14 @@ import {
   TableRow,
   Tooltip,
   Typography,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import { useAppSelector } from "app/hooks";
-import useChannelLogin from "hooks/useChannelLogin";
-import VotingOptionCard from "features/voting/components/VotingOptionCard";
-import VotingOptionFormModal from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
-import type { VotingOptionDefaultValues } from "features/voting/components/VotingOptionFormModal/VotingOptionFormModal";
-import VotingActions from "features/voting/components/VotingActions";
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { useAppSelector } from 'app/hooks';
+import useChannelLogin from 'hooks/useChannelLogin';
+import VotingOptionCard from 'features/voting/components/VotingOptionCard';
+import VotingOptionFormModal from 'features/voting/components/VotingOptionFormModal/VotingOptionFormModal';
+import type { VotingOptionDefaultValues } from 'features/voting/components/VotingOptionFormModal/VotingOptionFormModal';
+import VotingActions from 'features/voting/components/VotingActions';
 import {
   useCreateVotingOptionMutation,
   useMeQuery,
@@ -31,17 +31,17 @@ import {
   useVotesQuery,
   useVotingOptionsQuery,
   useVotingQuery,
-} from "features/api/apiSlice";
-import { renderedVotingOptionsSelector } from "features/api/apiSelectors";
-import apiSchema from "features/api/apiSchema.json";
-import { API_ERRORS } from "features/api/apiConstants";
-import UserBadges from "features/voting/components/UserBadges";
-import useVotingId from "features/voting/hooks/useVotingId";
-import getCanManageVoting from "features/voting/utils/getCanManageVoting";
-import getCanCreateVotingOptions from "features/voting/utils/getCanCreateVotingOptions";
-import getVotingPermissionsBadges from "features/voting/utils/getVotingPermissionsBadges";
-import getMeBadges from "features/voting/utils/getMeBadges";
-import getCanVote from "features/voting/utils/getCanVote";
+} from 'features/api/apiSlice';
+import { renderedVotingOptionsSelector } from 'features/api/apiSelectors';
+import apiSchema from 'features/api/apiSchema.json';
+import { API_ERRORS } from 'features/api/apiConstants';
+import UserBadges from 'features/voting/components/UserBadges';
+import useVotingId from 'features/voting/hooks/useVotingId';
+import getCanManageVoting from 'features/voting/utils/getCanManageVoting';
+import getCanCreateVotingOptions from 'features/voting/utils/getCanCreateVotingOptions';
+import getVotingPermissionsBadges from 'features/voting/utils/getVotingPermissionsBadges';
+import getMeBadges from 'features/voting/utils/getMeBadges';
+import getCanVote from 'features/voting/utils/getCanVote';
 
 const VotingComponent = () => {
   const login = useChannelLogin();
@@ -63,7 +63,7 @@ const VotingComponent = () => {
     useState(false);
 
   const renderedVotingOptions = useAppSelector((state) =>
-    renderedVotingOptionsSelector(state, votingId)
+    renderedVotingOptionsSelector(state, votingId),
   );
 
   if (!voting.data) return null;
@@ -71,7 +71,7 @@ const VotingComponent = () => {
   const canManageVoting = getCanManageVoting(
     voting.data,
     me.data,
-    meRoles.data
+    meRoles.data,
   );
 
   const [canCreateVotingOptions, canCreateVotingOptionsReason] =
@@ -79,22 +79,22 @@ const VotingComponent = () => {
       voting.data,
       renderedVotingOptions,
       me.data,
-      meRoles.data
+      meRoles.data,
     );
 
   const canVote = getCanVote(voting.data, me.data, meRoles.data);
 
   const updateVotingAndNotify = async (
-    arg: Parameters<typeof updateVoting>[0]
+    arg: Parameters<typeof updateVoting>[0],
   ) => {
     try {
       await updateVoting(arg).unwrap();
 
-      enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
+      enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось обновить голосование",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
+        { variant: 'error' },
       );
     }
   };
@@ -121,24 +121,24 @@ const VotingComponent = () => {
     try {
       await createVotingOption({ votingId, ...body }).unwrap();
 
-      enqueueSnackbar("Вариант добавлен", { variant: "success" });
+      enqueueSnackbar('Вариант добавлен', { variant: 'success' });
 
       setIsVotingOptionModalOpened(false);
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось добавить вариант",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось добавить вариант',
+        { variant: 'error' },
       );
     }
   };
 
   const renderAdminTable = () => (
     <Box mb={2}>
-      <TableContainer sx={{ mb: 1, color: "text.secondary" }}>
+      <TableContainer sx={{ mb: 1, color: 'text.secondary' }}>
         <Table size="small">
           <TableBody>
             <TableRow>
-              <TableCell sx={{ color: "inherit", width: { sm: 270 } }}>
+              <TableCell sx={{ color: 'inherit', width: { sm: 270 } }}>
                 Голосование открыто
               </TableCell>
               <TableCell>
@@ -152,7 +152,7 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: "inherit" }}>
+              <TableCell sx={{ color: 'inherit' }}>
                 Добавление вариантов открыто
               </TableCell>
               <TableCell>
@@ -166,12 +166,12 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: "inherit" }}>Голосовать могут</TableCell>
-              <TableCell sx={{ color: "inherit" }}>
+              <TableCell sx={{ color: 'inherit' }}>Голосовать могут</TableCell>
+              <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
                     voting.data.permissions,
-                    "canVote"
+                    'canVote',
                   )}
                   channelId={channel.data?.id}
                 />
@@ -179,14 +179,14 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: "inherit" }}>
+              <TableCell sx={{ color: 'inherit' }}>
                 Добавлять варианты могут
               </TableCell>
-              <TableCell sx={{ color: "inherit" }}>
+              <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
                     voting.data.permissions,
-                    "canAddOptions"
+                    'canAddOptions',
                   )}
                   channelId={channel.data?.id}
                 />
@@ -194,7 +194,7 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: "inherit" }}>Показывать голоса</TableCell>
+              <TableCell sx={{ color: 'inherit' }}>Показывать голоса</TableCell>
               <TableCell>
                 <Switch
                   size="small"
@@ -208,7 +208,7 @@ const VotingComponent = () => {
         </Table>
       </TableContainer>
 
-      <VotingActions voting={voting.data} buttons={["edit", "delete"]} />
+      <VotingActions voting={voting.data} buttons={['edit', 'delete']} />
     </Box>
   );
 
@@ -219,16 +219,16 @@ const VotingComponent = () => {
           <Box mt={1}>
             <Alert severity="warning">
               Вы не можете участвовать в этом голосовании. <br />
-              Голосовать могут:{" "}
+              Голосовать могут:{' '}
               <UserBadges
                 badges={getVotingPermissionsBadges(
                   voting.data.permissions,
-                  "canVote"
+                  'canVote',
                 )}
                 channelId={channel.data?.id}
               />
               <br />
-              Вы:{" "}
+              Вы:{' '}
               <UserBadges
                 badges={getMeBadges(me.data, meRoles.data)}
                 channelId={channel.data?.id}
@@ -254,14 +254,14 @@ const VotingComponent = () => {
       <Typography
         component="div"
         variant="h5"
-        sx={{ display: { sm: "flex" }, mb: 1 }}
+        sx={{ display: { sm: 'flex' }, mb: 1 }}
       >
         <Box>
           Варианты&nbsp;({renderedVotingOptions.length}/
           {voting.data?.votingOptionsLimit ||
             apiSchema.Voting.votingOptionsLimit.default}
           )
-          <Tooltip title={canCreateVotingOptionsReason || ""}>
+          <Tooltip title={canCreateVotingOptionsReason || ''}>
             <Box component="span">
               <Button
                 size="small"
@@ -276,7 +276,7 @@ const VotingComponent = () => {
             </Box>
           </Tooltip>
         </Box>
-        <Box sx={{ ml: "auto" }}>
+        <Box sx={{ ml: 'auto' }}>
           Голосов:&nbsp;{votes.data?.ids.length || 0}
         </Box>
       </Typography>
@@ -296,7 +296,7 @@ const VotingComponent = () => {
                   lastVoteTimestampRef={lastVoteTimestampRef}
                 />
               </Grid>
-            )
+            ),
           )}
         </Grid>
       )}

@@ -1,8 +1,8 @@
-import { useCallback, useState } from "react";
-import produce from "immer";
-import getRandomInt from "utils/getRandomInt";
-import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
-import { Movie, Step, StepAddMovies, StepType } from "./tournamentTypes";
+import { useCallback, useState } from 'react';
+import produce from 'immer';
+import getRandomInt from 'utils/getRandomInt';
+import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
+import { Movie, Step, StepAddMovies, StepType } from './tournamentTypes';
 
 const choiceStepTypes = [
   StepType.VIEWERS_CHOICE,
@@ -15,7 +15,7 @@ const getInitialSteps = (initialMovies: string[] = []) => {
     type: StepType.ADD_MOVIES,
     movies: Array.from({ length: 10 }, (_, i) => ({
       id: `${i + 1}`,
-      title: initialMovies[i] || "",
+      title: initialMovies[i] || '',
     })),
   };
 
@@ -33,7 +33,7 @@ const getRandomChoiceStep = (movies: Movie[]): Step => {
 
 const getNextStep = (
   prevStep: Step,
-  selectedMovieId?: number | string
+  selectedMovieId?: number | string,
 ): Step => {
   if (prevStep.type === StepType.SHOW_WINNER) return null;
 
@@ -70,7 +70,7 @@ const getCurrentStep = (steps: Step[]) => steps[steps.length - 1];
 
 const useTournament = (initialMovies: string[]) => {
   const [steps, setSteps] = useState<Step[]>(() =>
-    getInitialSteps(initialMovies)
+    getInitialSteps(initialMovies),
   );
 
   const step = getCurrentStep(steps);
@@ -84,7 +84,7 @@ const useTournament = (initialMovies: string[]) => {
         if (currentStep.type !== StepType.ADD_MOVIES) return prev;
 
         currentStep.movies.push(movie);
-      })
+      }),
     );
   }, []);
 
@@ -100,7 +100,7 @@ const useTournament = (initialMovies: string[]) => {
         if (id) {
           currentStep.movies[index] = movie;
         }
-      })
+      }),
     );
   }, []);
 
@@ -119,10 +119,10 @@ const useTournament = (initialMovies: string[]) => {
           if (info !== null) {
             currentStep.movies[index].info = info;
           }
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const nextStep = useCallback((selectedMovieId?: number | string) => {
@@ -134,7 +134,7 @@ const useTournament = (initialMovies: string[]) => {
         if (next) {
           state.push(next);
         }
-      })
+      }),
     );
   }, []);
 
@@ -144,7 +144,7 @@ const useTournament = (initialMovies: string[]) => {
     setSteps((prev) =>
       produce(prev, (state) => {
         state.pop();
-      })
+      }),
     );
   }, []);
 

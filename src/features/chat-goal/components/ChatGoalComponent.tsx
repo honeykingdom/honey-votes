@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useSnackbar } from "notistack";
+import { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import {
   Typography,
   Paper,
@@ -8,17 +8,17 @@ import {
   Box,
   Grid,
   IconButton,
-} from "@mui/material";
-import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import PauseIcon from "@mui/icons-material/Pause";
-import ClearIcon from "@mui/icons-material/Clear";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import useChannelLogin from "hooks/useChannelLogin";
-import ConfirmationDialog from "components/ConfirmationDialog";
-import { API_ERRORS, ChatGoalStatus } from "features/api/apiConstants";
+} from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import ClearIcon from '@mui/icons-material/Clear';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import useChannelLogin from 'hooks/useChannelLogin';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import { API_ERRORS, ChatGoalStatus } from 'features/api/apiConstants';
 import {
   useMeQuery,
   useMeRolesQuery,
@@ -30,10 +30,10 @@ import {
   useResetChatGoalVotesMutation,
   useStartChatGoalMutation,
   useUpdateChatGoalMutation,
-} from "features/api/apiSlice";
-import ChatGoalWidget from "./ChatGoalWidget";
-import ChatGoalOptions from "./ChatGoalOptions";
-import getWidgetLink from "../utils/getWidgetLink";
+} from 'features/api/apiSlice';
+import ChatGoalWidget from './ChatGoalWidget';
+import ChatGoalOptions from './ChatGoalOptions';
+import getWidgetLink from '../utils/getWidgetLink';
 
 const ChatGoalComponent = () => {
   const [isClearVotesDialogOpen, setIsClearVotesDialogOpen] = useState(false);
@@ -106,12 +106,12 @@ const ChatGoalComponent = () => {
     }
 
     if (error) {
-      enqueueSnackbar(API_ERRORS[error] || "Не удалось включить чатгол", {
-        variant: "error",
+      enqueueSnackbar(API_ERRORS[error] || 'Не удалось включить чатгол', {
+        variant: 'error',
       });
     } else {
-      enqueueSnackbar(listening ? "Чатгол включен" : "Чатгол выключен", {
-        variant: "success",
+      enqueueSnackbar(listening ? 'Чатгол включен' : 'Чатгол выключен', {
+        variant: 'success',
       });
     }
   };
@@ -121,21 +121,21 @@ const ChatGoalComponent = () => {
       await resetChatGoalVotes(channel.data.id).unwrap();
 
       enqueueSnackbar(
-        "Количество потраченных пользователями голосов обнулено",
-        { variant: "success" }
+        'Количество потраченных пользователями голосов обнулено',
+        { variant: 'success' },
       );
     } catch (e) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] ||
-          "Не удалось обнулить количество потраченных пользователями голосов",
-        { variant: "error" }
+          'Не удалось обнулить количество потраченных пользователями голосов',
+        { variant: 'error' },
       );
     }
   };
 
   const renderControls = () => (
     <Typography variant="body2" component="div">
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <Button
           variant="contained"
           startIcon={isGoalRunning ? <PauseIcon /> : <PlayArrowIcon />}
@@ -149,7 +149,7 @@ const ChatGoalComponent = () => {
               : startChatGoal(goal.data?.broadcasterId)
           }
         >
-          {isGoalRunning ? "Пауза" : "Старт"}
+          {isGoalRunning ? 'Пауза' : 'Старт'}
         </Button>
         <Button
           startIcon={<ClearIcon />}
@@ -186,18 +186,18 @@ const ChatGoalComponent = () => {
         Ссылка для OBS/XSplit
       </Typography>
 
-      <Paper sx={{ p: 2, display: "flex", alignItems: "center" }}>
+      <Paper sx={{ p: 2, display: 'flex', alignItems: 'center' }}>
         <Box>{widgetLink}</Box>
 
         <Tooltip title="Скопировать ссылку">
           <IconButton
-            sx={{ ml: "auto", flexShrink: 0 }}
+            sx={{ ml: 'auto', flexShrink: 0 }}
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(widgetLink);
               } catch (e) {}
 
-              enqueueSnackbar("Ссылка скопирована", { variant: "success" });
+              enqueueSnackbar('Ссылка скопирована', { variant: 'success' });
             }}
           >
             <ContentCopyIcon />
@@ -213,13 +213,13 @@ const ChatGoalComponent = () => {
         <Grid item lg={6}>
           <Button
             variant="contained"
-            color={goal.data?.listening ? "success" : "error"}
+            color={goal.data?.listening ? 'success' : 'error'}
             startIcon={goal.data?.listening ? <LockOpenIcon /> : <LockIcon />}
             sx={{ mb: 2 }}
             disabled={isDisabled}
             onClick={handleToggleListening}
           >
-            {goal.data?.listening ? "Закрыть чатгол" : "Открыть чатгол"}
+            {goal.data?.listening ? 'Закрыть чатгол' : 'Открыть чатгол'}
           </Button>
           {goal.data?.listening && renderControls()}
           {goal.data?.listening && renderChatGoalPreview()}

@@ -1,10 +1,10 @@
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import { ChatVoting } from "features/api/apiTypes";
-import { SyntheticEvent } from "react";
-import { OnChatVotingChange } from "../types";
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
+import { ChatVoting } from 'features/api/apiTypes';
+import { SyntheticEvent } from 'react';
+import { OnChatVotingChange } from '../types';
 
 type Props = {
-  permissions: ChatVoting["permissions"];
+  permissions: ChatVoting['permissions'];
   disabled?: boolean;
   onChange: OnChatVotingChange;
 };
@@ -17,10 +17,10 @@ const PermissionsForm = ({
   const { mod, vip, sub, viewer, subMonthsRequired, subTierRequired } =
     permissions;
   const checkboxes = [
-    { name: "mod", label: "Модеры", value: mod },
-    { name: "vip", label: "Випы", value: vip },
-    { name: "sub", label: "Сабы", value: sub },
-    { name: "viewer", label: "Зрители", value: viewer },
+    { name: 'mod', label: 'Модеры', value: mod },
+    { name: 'vip', label: 'Випы', value: vip },
+    { name: 'sub', label: 'Сабы', value: sub },
+    { name: 'viewer', label: 'Зрители', value: viewer },
   ];
 
   const handleCheckboxChange =
@@ -32,7 +32,7 @@ const PermissionsForm = ({
 
   return (
     <>
-      <FormGroup sx={{ display: "inline-flex", flexDirection: "row" }}>
+      <FormGroup sx={{ display: 'inline-flex', flexDirection: 'row' }}>
         {checkboxes.map(({ name, label, value }) => (
           <FormControlLabel
             key={name}

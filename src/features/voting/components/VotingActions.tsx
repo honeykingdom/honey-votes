@@ -1,34 +1,34 @@
-import * as R from "ramda";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { Box, Button } from "@mui/material";
-import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import * as R from 'ramda';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { Box, Button } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   useDeleteVotingMutation,
   useUpdateVotingMutation,
-} from "features/api/apiSlice";
-import { Voting } from "features/api/apiTypes";
-import { API_ERRORS } from "features/api/apiConstants";
-import ConfirmationDialog from "components/ConfirmationDialog";
-import useChannelLogin from "hooks/useChannelLogin";
-import VotingFormModal from "./VotingFormModal/VotingFormModal";
+} from 'features/api/apiSlice';
+import { Voting } from 'features/api/apiTypes';
+import { API_ERRORS } from 'features/api/apiConstants';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import useChannelLogin from 'hooks/useChannelLogin';
+import VotingFormModal from './VotingFormModal/VotingFormModal';
 
 const getVotingFormValues = R.pick<keyof Voting>([
-  "title",
-  "description",
-  "canManageVotes",
-  "canManageVotingOptions",
-  "permissions",
-  "showValues",
-  "allowedVotingOptionTypes",
-  "votingOptionsLimit",
+  'title',
+  'description',
+  'canManageVotes',
+  'canManageVotingOptions',
+  'permissions',
+  'showValues',
+  'allowedVotingOptionTypes',
+  'votingOptionsLimit',
 ]);
 
-type ButtonType = "close" | "edit" | "delete";
+type ButtonType = 'close' | 'edit' | 'delete';
 
 type Props = {
   voting: Voting;
@@ -37,7 +37,7 @@ type Props = {
 
 const VotingActions = ({
   voting,
-  buttons = ["close", "edit", "delete"],
+  buttons = ['close', 'edit', 'delete'],
 }: Props) => {
   const router = useRouter();
   const login = useChannelLogin();
@@ -53,16 +53,16 @@ const VotingActions = ({
   const { id: votingId, canManageVotes } = voting;
 
   const updateVotingAndNotify = async (
-    data: Parameters<typeof updateVoting>[0]
+    data: Parameters<typeof updateVoting>[0],
   ) => {
     try {
       await updateVoting(data).unwrap();
 
-      enqueueSnackbar("Голосование успешно обновлено", { variant: "success" });
+      enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось обновить голосование",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
+        { variant: 'error' },
       );
     }
   };
@@ -83,13 +83,13 @@ const VotingActions = ({
     try {
       await deleteVoting(votingId).unwrap();
 
-      enqueueSnackbar("Голосование успешно удалено", { variant: "success" });
+      enqueueSnackbar('Голосование успешно удалено', { variant: 'success' });
 
       router.push(`/${login}/voting`);
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось удалить голосование",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось удалить голосование',
+        { variant: 'error' },
       );
     }
   };
@@ -99,23 +99,23 @@ const VotingActions = ({
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "row" },
-        alignItems: "flex-start",
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        alignItems: 'flex-start',
       }}
     >
-      {buttons.includes("close") && (
+      {buttons.includes('close') && (
         <Button
           color="primary"
           startIcon={canManageVotes ? <LockIcon /> : <LockOpenIcon />}
           disabled={disabled}
           onClick={handleToggleVoting}
         >
-          {canManageVotes ? "Закрыть голосование" : "Открыть голосование"}
+          {canManageVotes ? 'Закрыть голосование' : 'Открыть голосование'}
         </Button>
       )}
 
-      {buttons.includes("edit") && (
+      {buttons.includes('edit') && (
         <Button
           startIcon={<EditIcon />}
           disabled={disabled}
@@ -125,7 +125,7 @@ const VotingActions = ({
         </Button>
       )}
 
-      {buttons.includes("delete") && (
+      {buttons.includes('delete') && (
         <Button
           startIcon={<DeleteIcon />}
           disabled={disabled}

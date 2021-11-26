@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { Controller, useForm, UseFormRegisterReturn } from "react-hook-form";
-import * as R from "ramda";
-import { useSnackbar } from "notistack";
+import { useEffect, useState } from 'react';
+import { Controller, useForm, UseFormRegisterReturn } from 'react-hook-form';
+import * as R from 'ramda';
+import { useSnackbar } from 'notistack';
 import {
   Box,
   Typography,
@@ -12,46 +12,46 @@ import {
   FormLabel,
   Checkbox,
   Button,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import TwitchBadge from "components/TwitchBadge";
-import useChannelLogin from "hooks/useChannelLogin";
-import { UpdateChatGoalDto } from "features/api/apiTypes";
-import { API_ERRORS, TwitchUserType } from "features/api/apiConstants";
+} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import TwitchBadge from 'components/TwitchBadge';
+import useChannelLogin from 'hooks/useChannelLogin';
+import { UpdateChatGoalDto } from 'features/api/apiTypes';
+import { API_ERRORS, TwitchUserType } from 'features/api/apiConstants';
 import {
   useChatGoalQuery,
   useUpdateChatGoalMutation,
   useUserQuery,
-} from "features/api/apiSlice";
+} from 'features/api/apiSlice';
 
 const USER_TYPES_ITEMS = [
-  { label: "Модеры", type: TwitchUserType.Mod, badge: ["moderator"] },
-  { label: "Випы", type: TwitchUserType.Vip, badge: ["vip"] },
+  { label: 'Модеры', type: TwitchUserType.Mod, badge: ['moderator'] },
+  { label: 'Випы', type: TwitchUserType.Vip, badge: ['vip'] },
   {
-    label: "Сабы (Tier 1)",
+    label: 'Сабы (Tier 1)',
     type: TwitchUserType.SubTier1,
-    badge: ["subscriber", 0],
+    badge: ['subscriber', 0],
   },
   {
-    label: "Сабы (Tier 2)",
+    label: 'Сабы (Tier 2)',
     type: TwitchUserType.SubTier2,
-    badge: ["subscriber", 2000],
+    badge: ['subscriber', 2000],
   },
   {
-    label: "Сабы (Tier 3)",
+    label: 'Сабы (Tier 3)',
     type: TwitchUserType.SubTier3,
-    badge: ["subscriber", 3000],
+    badge: ['subscriber', 3000],
   },
-  { label: "Зрители", type: TwitchUserType.Viewer, badge: ["glhf-pledge"] },
+  { label: 'Зрители', type: TwitchUserType.Viewer, badge: ['glhf-pledge'] },
 ] as const;
 
 const pickOptions = R.pick<keyof UpdateChatGoalDto>([
-  "permissions",
-  "title",
-  "upvoteCommand",
-  "downvoteCommand",
-  "maxVotesValue",
-  "timerDuration",
+  'permissions',
+  'title',
+  'upvoteCommand',
+  'downvoteCommand',
+  'maxVotesValue',
+  'timerDuration',
 ]);
 
 const withMui = ({ ref: inputRef, ...rest }: UseFormRegisterReturn) => ({
@@ -111,11 +111,11 @@ const ChatGoalOptions = () => {
         body,
       }).unwrap();
 
-      enqueueSnackbar("Настройки успешно сохранены", { variant: "success" });
+      enqueueSnackbar('Настройки успешно сохранены', { variant: 'success' });
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось обновить настройки",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось обновить настройки',
+        { variant: 'error' },
       );
     }
   });
@@ -133,7 +133,7 @@ const ChatGoalOptions = () => {
             variant="outlined"
             fullWidth
             disabled={isDisabled}
-            {...withMui(register("title"))}
+            {...withMui(register('title'))}
           />
         </Box>
 
@@ -144,7 +144,7 @@ const ChatGoalOptions = () => {
               variant="outlined"
               fullWidth
               disabled={isDisabled}
-              {...withMui(register("upvoteCommand"))}
+              {...withMui(register('upvoteCommand'))}
             />
           </Grid>
           <Grid item md={6}>
@@ -153,7 +153,7 @@ const ChatGoalOptions = () => {
               variant="outlined"
               fullWidth
               disabled={isDisabled}
-              {...withMui(register("downvoteCommand"))}
+              {...withMui(register('downvoteCommand'))}
             />
           </Grid>
         </Grid>
@@ -168,7 +168,7 @@ const ChatGoalOptions = () => {
                 fullWidth
                 disabled={isDisabled}
                 {...withMui(
-                  register("maxVotesValue", { valueAsNumber: true, min: 0 })
+                  register('maxVotesValue', { valueAsNumber: true, min: 0 }),
                 )}
               />
             </Tooltip>
@@ -182,7 +182,7 @@ const ChatGoalOptions = () => {
                 fullWidth
                 disabled={isDisabled}
                 {...withMui(
-                  register("timerDuration", { valueAsNumber: true, min: 0 })
+                  register('timerDuration', { valueAsNumber: true, min: 0 }),
                 )}
               />
             </Tooltip>
@@ -197,13 +197,13 @@ const ChatGoalOptions = () => {
           <Grid item sm={6}>
             <FormLabel>Могут голосовать:</FormLabel>
           </Grid>
-          <Grid item sm={2} sx={{ textAlign: "center" }}>
+          <Grid item sm={2} sx={{ textAlign: 'center' }}>
             <FormLabel>За</FormLabel>
           </Grid>
-          <Grid item sm={2} sx={{ textAlign: "center" }}>
+          <Grid item sm={2} sx={{ textAlign: 'center' }}>
             <FormLabel>Против</FormLabel>
           </Grid>
-          <Grid item sm={2} sx={{ textAlign: "center" }}>
+          <Grid item sm={2} sx={{ textAlign: 'center' }}>
             <FormLabel>Голоса</FormLabel>
           </Grid>
         </Grid>
@@ -211,18 +211,18 @@ const ChatGoalOptions = () => {
           <Grid
             container
             key={type}
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
             <Grid item sm={6}>
               <TwitchBadge
                 name={name}
                 version={version}
                 channelId={goal.data?.broadcasterId}
-              />{" "}
+              />{' '}
               {label}
             </Grid>
 
-            <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <Grid item sm={2} sx={{ textAlign: 'center' }}>
               <Controller
                 name={`permissions.${type}.canUpvote`}
                 control={control}
@@ -237,7 +237,7 @@ const ChatGoalOptions = () => {
               />
             </Grid>
 
-            <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <Grid item sm={2} sx={{ textAlign: 'center' }}>
               <Controller
                 name={`permissions.${type}.canDownvote`}
                 control={control}
@@ -252,7 +252,7 @@ const ChatGoalOptions = () => {
               />
             </Grid>
 
-            <Grid item sm={2} sx={{ textAlign: "center" }}>
+            <Grid item sm={2} sx={{ textAlign: 'center' }}>
               <TextField
                 id="title"
                 size="small"
@@ -269,7 +269,7 @@ const ChatGoalOptions = () => {
                   register(`permissions.${type}.votesAmount`, {
                     valueAsNumber: true,
                     min: 0,
-                  })
+                  }),
                 )}
               />
             </Grid>

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useCallback } from "react";
-import useSound from "use-sound";
-import { shuffle } from "d3-array";
+import { useEffect, useRef, useState, useCallback } from 'react';
+import useSound from 'use-sound';
+import { shuffle } from 'd3-array';
 import {
   Box,
   Button,
@@ -8,31 +8,31 @@ import {
   FormControlLabel,
   Grid,
   Typography,
-} from "@mui/material";
-import { useWindowSize } from "react-use";
-import Confetti from "react-confetti";
-import SpinningWheel from "react-spinning-canvas-wheel";
+} from '@mui/material';
+import { useWindowSize } from 'react-use';
+import Confetti from 'react-confetti';
+import SpinningWheel from 'react-spinning-canvas-wheel';
 import type {
   SpinningWheelRef,
   WheelSegment,
-} from "react-spinning-canvas-wheel";
+} from 'react-spinning-canvas-wheel';
 
-import VolumeControl from "components/VolumeControl";
-import ArrowRightIcon from "icons/arrow-right.svg";
-import getRandomInt from "utils/getRandomInt";
-import { useMeQuery } from "features/api/apiSlice";
-import MovieCard from "./MovieCard";
+import VolumeControl from 'components/VolumeControl';
+import ArrowRightIcon from 'icons/arrow-right.svg';
+import getRandomInt from 'utils/getRandomInt';
+import { useMeQuery } from 'features/api/apiSlice';
+import MovieCard from './MovieCard';
 // import MoviePicker from "./MoviePicker";
-import useTournament from "./useTournament";
-import timingFunction from "./utils/timingFunction";
-import { Permissions, Step, StepType } from "./tournamentTypes";
-import useChatVoting from "./useChatVoting";
+import useTournament from './useTournament';
+import timingFunction from './utils/timingFunction';
+import { Permissions, Step, StepType } from './tournamentTypes';
+import useChatVoting from './useChatVoting';
 import {
   CARD_IMAGE_WIDTH_MAP,
   DEFAULT_PERMISSIONS,
   USER_TYPES,
   WHEEL_COLORS,
-} from "./tournamentConstants";
+} from './tournamentConstants';
 
 const TOURNAMENT_ASSETS_URL = process.env.NEXT_PUBLIC_TOURNAMENT_ASSETS_URL;
 
@@ -52,43 +52,43 @@ type StepText = {
 
 const STEPS_TEXT: Record<StepType, StepText> = {
   [StepType.ADD_MOVIES]: {
-    title: "Добавление фильмов",
-    description: "",
-    buttonTitle: "Начать турнир",
+    title: 'Добавление фильмов',
+    description: '',
+    buttonTitle: 'Начать турнир',
   },
   [StepType.START_TOURNAMENT]: {
-    title: "Турнир начинается",
-    description: "",
-    buttonTitle: "Пропустить вступление",
+    title: 'Турнир начинается',
+    description: '',
+    buttonTitle: 'Пропустить вступление',
   },
   [StepType.VIEWERS_CHOICE]: {
-    title: "Зрители решают",
-    description: "Выберите фильм, который нужно убрать",
-    buttonTitle: "Далее",
+    title: 'Зрители решают',
+    description: 'Выберите фильм, который нужно убрать',
+    buttonTitle: 'Далее',
   },
   [StepType.STREAMER_CHOICE]: {
-    title: "Стример решает",
-    description: "Выберите фильм, который нужно убрать",
-    buttonTitle: "Далее",
+    title: 'Стример решает',
+    description: 'Выберите фильм, который нужно убрать',
+    buttonTitle: 'Далее',
   },
   [StepType.RANDOM_CHOICE]: {
-    title: "Рандом решает",
-    description: "Выпавший в колесе вариант вылетает",
-    buttonTitle: "Далее",
+    title: 'Рандом решает',
+    description: 'Выпавший в колесе вариант вылетает',
+    buttonTitle: 'Далее',
   },
   [StepType.SHOW_WINNER]: {
-    title: "Победитель",
-    description: "",
-    buttonTitle: "Турнир окончен",
+    title: 'Победитель',
+    description: '',
+    buttonTitle: 'Турнир окончен',
   },
 };
 
 const getCardSize = (itemsCount: number) => {
-  if (itemsCount <= 6) return "large";
+  if (itemsCount <= 6) return 'large';
 
-  if (itemsCount <= 8) return "medium";
+  if (itemsCount <= 8) return 'medium';
 
-  return "small";
+  return 'small';
 };
 
 const getPercent = (value: number, total: number) => {
@@ -112,7 +112,7 @@ const Tournament = ({ initialMovies }: Props) => {
   const volumeRef = useRef(volume);
   volumeRef.current = volume;
 
-  const currentStepType = useRef<Step["type"]>(step.type);
+  const currentStepType = useRef<Step['type']>(step.type);
   currentStepType.current = step.type;
 
   const spinningWheelRef = useRef<SpinningWheelRef>();
@@ -134,7 +134,7 @@ const Tournament = ({ initialMovies }: Props) => {
   const [playViewersChoice] = useSound(viewersChoiceSfx, { volume });
 
   // TODO: hack to prevent material ui render bug
-  const [mode, setMode] = useState<"edit" | "view">("view");
+  const [mode, setMode] = useState<'edit' | 'view'>('view');
 
   const [wheelSegments, setWheelSegments] = useState<Segment[]>([]);
 
@@ -145,14 +145,14 @@ const Tournament = ({ initialMovies }: Props) => {
   const chatVoting = useChatVoting(
     me.data?.login,
     step.movies.length,
-    permissions
+    permissions,
   );
 
   useEffect(() => {
     if (step.type === StepType.ADD_MOVIES) {
-      setMode("edit");
+      setMode('edit');
     } else {
-      setMode("view");
+      setMode('view');
     }
 
     if (step.type === StepType.RANDOM_CHOICE) {
@@ -160,8 +160,8 @@ const Tournament = ({ initialMovies }: Props) => {
         shuffle([...step.movies]).map((m, i) => ({
           id: m.id,
           title: m.title,
-          backgroundColor: i % 2 === 0 ? "#2f2f2f" : "#212121",
-        }))
+          backgroundColor: i % 2 === 0 ? '#2f2f2f' : '#212121',
+        })),
       );
 
       isWheelStarted.current = false;
@@ -259,17 +259,17 @@ const Tournament = ({ initialMovies }: Props) => {
         <Grid container spacing={1}>
           {step.movies.map((movie, i) => (
             <Grid item xs={12} key={movie.id}>
-              <Box sx={{ position: "relative" }}>
+              <Box sx={{ position: 'relative' }}>
                 <Typography
                   variant="body1"
                   color="text.secondary"
                   component="span"
                   textAlign="center"
                   sx={{
-                    position: "absolute",
+                    position: 'absolute',
                     left: -48,
-                    top: "50%",
-                    transform: "translateY(-50%)",
+                    top: '50%',
+                    transform: 'translateY(-50%)',
                     width: 48,
                     flexShrink: 0,
                   }}
@@ -279,38 +279,38 @@ const Tournament = ({ initialMovies }: Props) => {
                 <Box
                   sx={{
                     flexGrow: 1,
-                    "&:before": {
+                    '&:before': {
                       display:
                         step.type === StepType.VIEWERS_CHOICE
-                          ? "block"
-                          : "none",
+                          ? 'block'
+                          : 'none',
                       content: '""',
-                      position: "absolute",
+                      position: 'absolute',
                       top: 0,
                       left: `${CARD_IMAGE_WIDTH_MAP[cardSize]}px`,
                       bottom: 0,
                       width: `calc(${getPercent(
                         chatVoting.votes[i],
-                        chatVoting.votesCount
+                        chatVoting.votesCount,
                       )}% - ${CARD_IMAGE_WIDTH_MAP[cardSize]}px)`,
-                      backgroundColor: "rgba(0, 0, 0, 0.3)",
-                      pointerEvents: "none",
+                      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                      pointerEvents: 'none',
                       zIndex: 1,
                     },
-                    "&:after": {
+                    '&:after': {
                       display:
-                        step.type === StepType.VIEWERS_CHOICE ? "flex" : "none",
+                        step.type === StepType.VIEWERS_CHOICE ? 'flex' : 'none',
                       content: `"${getPercent(
                         chatVoting.votes[i],
-                        chatVoting.votesCount
+                        chatVoting.votesCount,
                       )}% (${chatVoting.votes[i]})"`,
-                      position: "absolute",
+                      position: 'absolute',
                       top: 0,
                       bottom: 0,
-                      left: "calc(100% + 16px)",
-                      width: "128px",
-                      alignItems: "center",
-                      color: "text.secondary",
+                      left: 'calc(100% + 16px)',
+                      width: '128px',
+                      alignItems: 'center',
+                      color: 'text.secondary',
                     },
                   }}
                 >
@@ -334,7 +334,7 @@ const Tournament = ({ initialMovies }: Props) => {
 
   const renderSpinningWheel = () => (
     <Box display="flex" justifyContent="center">
-      <Box sx={{ position: "relative", width: 540 }}>
+      <Box sx={{ position: 'relative', width: 540 }}>
         <SpinningWheel
           size={540}
           segments={wheelSegments}
@@ -348,14 +348,14 @@ const Tournament = ({ initialMovies }: Props) => {
         />
         <ArrowRightIcon
           style={{
-            position: "absolute",
-            top: "50%",
+            position: 'absolute',
+            top: '50%',
             left: 1,
             width: 32,
             height: 32,
-            transform: "translateY(-50%)",
-            fill: "#212121",
-            stroke: "#fff",
+            transform: 'translateY(-50%)',
+            fill: '#212121',
+            stroke: '#fff',
           }}
         />
       </Box>
@@ -419,7 +419,7 @@ const Tournament = ({ initialMovies }: Props) => {
     <Box
       justifyContent="center"
       sx={{
-        position: "absolute",
+        position: 'absolute',
         top: 72,
         left: 0,
         width: 220,
@@ -440,7 +440,7 @@ const Tournament = ({ initialMovies }: Props) => {
           <Box sx={{ mb: 1 }}>
             <Typography component="span" variant="body2" color="text.secondary">
               Канал:
-            </Typography>{" "}
+            </Typography>{' '}
             <Typography component="span" variant="body2">
               {me.data?.login}
             </Typography>
@@ -449,7 +449,7 @@ const Tournament = ({ initialMovies }: Props) => {
           <Box sx={{ mb: 1 }}>
             <Typography component="span" variant="body2" color="text.secondary">
               Всего голосов:
-            </Typography>{" "}
+            </Typography>{' '}
             <Typography component="span" variant="body2">
               {chatVoting.votesCount}
             </Typography>
@@ -471,7 +471,7 @@ const Tournament = ({ initialMovies }: Props) => {
                     </Typography>
                   }
                   name={name}
-                  sx={{ fontSize: "0.875rem !important" }}
+                  sx={{ fontSize: '0.875rem !important' }}
                   onChange={(e) =>
                     setPermissions((prev) => ({
                       ...prev,
@@ -486,14 +486,14 @@ const Tournament = ({ initialMovies }: Props) => {
           <Button
             variant="contained"
             size="small"
-            color={chatVoting.isActive ? "error" : "success"}
+            color={chatVoting.isActive ? 'error' : 'success'}
             onClick={() => {
               if (chatVoting.isActive) {
                 chatVoting.stopVoting();
 
                 const maxVotesValue = Math.max(...chatVoting.votes);
                 const maxVotesCount = chatVoting.votes.filter(
-                  (v) => v === maxVotesValue
+                  (v) => v === maxVotesValue,
                 ).length;
 
                 if (maxVotesCount === 1) {
@@ -507,8 +507,8 @@ const Tournament = ({ initialMovies }: Props) => {
             }}
           >
             {chatVoting.isActive
-              ? "Остановить голосование"
-              : "Начать голосование"}
+              ? 'Остановить голосование'
+              : 'Начать голосование'}
           </Button>
         </>
       )}
@@ -516,15 +516,15 @@ const Tournament = ({ initialMovies }: Props) => {
   );
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box sx={{ position: 'relative' }}>
       <Typography
         variant="h3"
         textAlign="center"
-        sx={{ position: "relative", mt: 1, mb: 2, fontWeight: 300 }}
+        sx={{ position: 'relative', mt: 1, mb: 2, fontWeight: 300 }}
       >
         Фильмовый турнир
         <VolumeControl
-          sx={{ position: "absolute", right: 0, top: 16, width: 120 }}
+          sx={{ position: 'absolute', right: 0, top: 16, width: 120 }}
           onChange={handleVolumeChange}
         />
       </Typography>

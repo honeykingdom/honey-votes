@@ -1,5 +1,5 @@
-import { components } from "./kinopoiskApiTypes.generated";
+import { components } from './kinopoiskApiTypes.generated';
 
-export type Film = components["schemas"]["FilmSearchResponse_films"];
+export type Film = components['schemas']['FilmSearchResponse_films'];
 export type FilmSearchByFiltersResponse =
-  components["schemas"]["FilmSearchByFiltersResponse"];
+  components['schemas']['FilmSearchByFiltersResponse'];

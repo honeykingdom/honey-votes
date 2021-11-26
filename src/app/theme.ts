@@ -1,8 +1,8 @@
-import { createTheme } from "@mui/material";
+import { createTheme } from '@mui/material';
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
+    mode: 'dark',
   },
   typography: {
     htmlFontSize: 16,

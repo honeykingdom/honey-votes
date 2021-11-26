@@ -1,5 +1,5 @@
-import { FormControl, InputLabel, Select } from "@mui/material";
-import { Control, Controller } from "react-hook-form";
+import { FormControl, InputLabel, Select } from '@mui/material';
+import { Control, Controller } from 'react-hook-form';
 
 type Props = {
   id: string;
@@ -10,7 +10,7 @@ type Props = {
 };
 
 const FormControlSelect = ({ id, name, label, control, children }: Props) => (
-  <FormControl variant="standard" sx={{ display: "flex" }}>
+  <FormControl variant="standard" sx={{ display: 'flex' }}>
     <InputLabel id={`${id}-select-label`}>{label}</InputLabel>
     <Controller
       name={name}

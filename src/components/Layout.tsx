@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   AppBar,
   Toolbar,
@@ -8,13 +8,13 @@ import {
   Tooltip,
   IconButton,
   Button,
-} from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import PersonIcon from "@mui/icons-material/Person";
-import getMainMenuLinks from "utils/getMainMenuLinks";
-import { useMeQuery } from "features/api/apiSlice";
-import { useAuthRedirect } from "features/auth/useAuthRedirect";
-import AccountMenu from "./AccountMenu";
+} from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import PersonIcon from '@mui/icons-material/Person';
+import getMainMenuLinks from 'utils/getMainMenuLinks';
+import { useMeQuery } from 'features/api/apiSlice';
+import { useAuthRedirect } from 'features/auth/useAuthRedirect';
+import AccountMenu from './AccountMenu';
 
 const Layout = ({ children }: any) => {
   const me = useMeQuery();
@@ -33,8 +33,8 @@ const Layout = ({ children }: any) => {
               component="a"
               style={{
                 marginRight: 16,
-                color: "inherit",
-                textDecoration: "none",
+                color: 'inherit',
+                textDecoration: 'none',
               }}
             >
               HoneyVotes
@@ -42,7 +42,7 @@ const Layout = ({ children }: any) => {
           </Link>
 
           {isMenuVisible && (
-            <Box sx={{ display: { xs: "none", md: "block" } }}>
+            <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               {getMainMenuLinks(me.data).map(({ label, href }) => (
                 <Link key={href} href={href} passHref>
                   <Button color="inherit">{label}</Button>
@@ -51,11 +51,11 @@ const Layout = ({ children }: any) => {
             </Box>
           )}
 
-          <Box sx={{ ml: "auto" }}>
+          <Box sx={{ ml: 'auto' }}>
             <Tooltip title="Автор - DmitryScaletta">
               <IconButton
                 color="inherit"
-                sx={{ display: { xs: "none", sm: "inline-flex" }, mr: 1 }}
+                sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
                 href="//github.com/DmitryScaletta"
                 target="_blank"
                 rel="noreferrer noopener"
@@ -66,7 +66,7 @@ const Layout = ({ children }: any) => {
             <Tooltip title="Репозиторий на GitHub">
               <IconButton
                 color="inherit"
-                sx={{ display: { xs: "none", sm: "inline-flex" }, mr: 1 }}
+                sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
                 href="//github.com/honeykingdom/honey-votes"
                 target="_blank"
                 rel="noreferrer noopener"

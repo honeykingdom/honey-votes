@@ -1,4 +1,4 @@
-import { User, UserRoles, Voting } from "features/api/apiTypes";
+import { User, UserRoles, Voting } from 'features/api/apiTypes';
 
 const getCanVote = (voting?: Voting, me?: User, meRoles?: UserRoles) => {
   if (!voting || !me) return false;

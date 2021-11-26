@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
-import Layout from "components/Layout";
+import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import Layout from 'components/Layout';
 
-const Tournament = dynamic(() => import("features/tournament/Tournament"));
+const Tournament = dynamic(() => import('features/tournament/Tournament'));
 
 const getInitialMovies = () => {
-  if (typeof window === "undefined") return [];
+  if (typeof window === 'undefined') return [];
 
   const params = new URLSearchParams(window.location.search);
 
-  return params.get("movies")?.split(";") || [];
+  return params.get('movies')?.split(';') || [];
 };
 
 const TournamentPage = () => {
@@ -21,7 +21,7 @@ const TournamentPage = () => {
   useEffect(() => {
     if (!router.query.movies) return;
 
-    router.push("/tournament");
+    router.push('/tournament');
   }, []);
 
   return (

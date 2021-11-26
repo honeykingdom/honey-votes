@@ -1,15 +1,15 @@
-import { useMemo, useState } from "react";
-import { debounce } from "lodash";
+import { useMemo, useState } from 'react';
+import { debounce } from 'lodash';
 import {
   Autocomplete,
   Box,
   CircularProgress,
   TextField,
   Typography,
-} from "@mui/material";
-import { VotingOptionType } from "features/api/apiConstants";
-import { useLazySearchMoviesQuery } from "features/kinopoisk-api/kinopoiskApiSlice";
-import { useLazySearchGamesQuery } from "features/igdb-api/igdbApiSlice";
+} from '@mui/material';
+import { VotingOptionType } from 'features/api/apiConstants';
+import { useLazySearchMoviesQuery } from 'features/kinopoisk-api/kinopoiskApiSlice';
+import { useLazySearchGamesQuery } from 'features/igdb-api/igdbApiSlice';
 
 type Props = {
   id: string;
@@ -61,7 +61,7 @@ const VotingOptionAutocomplete = ({
         if (type === VotingOptionType.KinopoiskMovie) searchMovies(search);
         if (type === VotingOptionType.IgdbGame) searchGames(search);
       }, 500),
-    []
+    [],
   );
 
   return (
@@ -80,7 +80,7 @@ const VotingOptionAutocomplete = ({
       renderOption={(props, option) => (
         <Box
           component="li"
-          sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
           {...props}
         >
           <img

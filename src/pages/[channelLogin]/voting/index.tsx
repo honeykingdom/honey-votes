@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { useSnackbar } from "notistack";
-import { Button, Box } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Layout from "components/Layout";
-import PageHeader from "components/PageHeader";
-import TwitchUsername from "components/TwitchUsername";
-import useChannelLogin from "hooks/useChannelLogin";
-import useUsername from "hooks/useUsername";
-import VotingList from "features/voting/components/VotingList";
-import VotingFormModal from "features/voting/components/VotingFormModal/VotingFormModal";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useSnackbar } from 'notistack';
+import { Button, Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import Layout from 'components/Layout';
+import PageHeader from 'components/PageHeader';
+import TwitchUsername from 'components/TwitchUsername';
+import useChannelLogin from 'hooks/useChannelLogin';
+import useUsername from 'hooks/useUsername';
+import VotingList from 'features/voting/components/VotingList';
+import VotingFormModal from 'features/voting/components/VotingFormModal/VotingFormModal';
 import {
   useCreateVotingMutation,
   useMeQuery,
   useUserQuery,
   useVotingListQuery,
-} from "features/api/apiSlice";
-import { UpdateVotingDto } from "features/api/apiTypes";
+} from 'features/api/apiSlice';
+import { UpdateVotingDto } from 'features/api/apiTypes';
 
 const VotingListPage = () => {
   const router = useRouter();
@@ -47,9 +47,9 @@ const VotingListPage = () => {
 
     // @ts-expect-error
     if (newVoting.error) {
-      enqueueSnackbar("Не удалось создать голосование", { variant: "error" });
+      enqueueSnackbar('Не удалось создать голосование', { variant: 'error' });
     } else {
-      enqueueSnackbar("Голосование успешно создано", { variant: "success" });
+      enqueueSnackbar('Голосование успешно создано', { variant: 'success' });
     }
 
     // TODO:
@@ -63,7 +63,7 @@ const VotingListPage = () => {
   return (
     <Layout>
       <PageHeader
-        title={username ? `${username} - Голосование` : "Голосование"}
+        title={username ? `${username} - Голосование` : 'Голосование'}
         pageTitle="Голосование"
         breadcrumbs={[
           {
@@ -75,7 +75,7 @@ const VotingListPage = () => {
             ),
             href: `/${login}`,
           },
-          { title: "Голосование" },
+          { title: 'Голосование' },
         ]}
       />
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -8,8 +8,8 @@ import {
   MenuList,
   Paper,
   Popper,
-} from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+} from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 type Option = {
   title: string;
@@ -47,8 +47,8 @@ const DropdownButton = ({ button, options = [] }: Props) => {
         {button}
         <Button
           size="small"
-          aria-controls={open ? "dropdown-button-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
+          aria-controls={open ? 'dropdown-button-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
           // aria-label=""
           aria-haspopup="menu"
           onClick={handleToggle}
@@ -68,7 +68,7 @@ const DropdownButton = ({ button, options = [] }: Props) => {
             {...TransitionProps}
             style={{
               transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
+                placement === 'bottom' ? 'center top' : 'center bottom',
             }}
           >
             <Paper>

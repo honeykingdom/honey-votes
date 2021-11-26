@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
+import { useState } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import {
   Box,
   Button,
@@ -13,19 +13,19 @@ import {
   Switch,
   TextField,
   Tooltip,
-} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import { UpdateVotingDto } from "features/api/apiTypes";
-import { SubTier, TwitchUserType } from "features/api/apiConstants";
-import apiSchema from "features/api/apiSchema.json";
+} from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import { UpdateVotingDto } from 'features/api/apiTypes';
+import { SubTier, TwitchUserType } from 'features/api/apiConstants';
+import apiSchema from 'features/api/apiSchema.json';
 import {
   FOLLOWED_TIME_VALUES,
   SUB_TIERS,
   USER_TYPES_ITEMS,
   VOTING_OPTION_TYPES,
-} from "features/voting/votingConstants";
-import FormControlSelect from "./FormControlSelect";
-import type { VotingFormParams } from "./VotingFormModal";
+} from 'features/voting/votingConstants';
+import FormControlSelect from './FormControlSelect';
+import type { VotingFormParams } from './VotingFormModal';
 
 const VOTING_OPTIONS_LIMIT_MARKS = Array.from({ length: 10 }, (_, i) => ({
   value: (i + 1) * 20,
@@ -43,16 +43,16 @@ const FOLLOWED_TIME_MENU_ITEMS = FOLLOWED_TIME_VALUES.map(
     <MenuItem key={value} value={value}>
       {label}
     </MenuItem>
-  )
+  ),
 );
 
 const SWITCHES: { label: string; name: keyof UpdateVotingDto }[] = [
-  { label: "Открыть голосование", name: "canManageVotes" },
+  { label: 'Открыть голосование', name: 'canManageVotes' },
   {
-    label: "Открыть добавление вариантов для голосования",
-    name: "canManageVotingOptions",
+    label: 'Открыть добавление вариантов для голосования',
+    name: 'canManageVotingOptions',
   },
-  { label: "Показывать голоса", name: "showValues" },
+  { label: 'Показывать голоса', name: 'showValues' },
 ];
 
 const getInitialIsExtended = (values?: UpdateVotingDto) => {
@@ -73,7 +73,7 @@ type Props = {
 
 const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
   const [isExtended, setIsExtended] = useState(
-    getInitialIsExtended(defaultValues)
+    getInitialIsExtended(defaultValues),
   );
   const { control, register } = useFormReturn;
 
@@ -85,7 +85,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           label="Заголовок"
           variant="outlined"
           inputProps={{ maxLength: apiSchema.Voting.title.maxLength }}
-          {...register("title")}
+          {...register('title')}
         />
       </FormGroup>
 
@@ -97,7 +97,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           rows={2}
           variant="outlined"
           inputProps={{ maxLength: apiSchema.Voting.description.maxLength }}
-          {...register("description")}
+          {...register('description')}
         />
       </FormGroup>
 
@@ -152,7 +152,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
       <Box mb={2}>
         <FormControl component="fieldset">
           <FormLabel component="legend">Кто может голосовать</FormLabel>
-          <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+          <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
             {USER_TYPES_ITEMS.map(({ label, type }) => (
               <FormControlLabel
                 key={type}
@@ -175,7 +175,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           </FormGroup>
         </FormControl>
 
-        <Box sx={{ display: isExtended ? "flex" : "none" }}>
+        <Box sx={{ display: isExtended ? 'flex' : 'none' }}>
           <Box width={240} mr={2}>
             <FormControlSelect
               id="subTierRequiredToVote"
@@ -205,11 +205,11 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             Кто может добавлять варианты для голосования
             <Tooltip title="Владелец канала и редакторы всегда могут создавать и удалять варианты для голосования">
               <InfoIcon
-                sx={{ verticalAlign: "middle", fontSize: "1.2rem", ml: 1 }}
+                sx={{ verticalAlign: 'middle', fontSize: '1.2rem', ml: 1 }}
               />
             </Tooltip>
           </FormLabel>
-          <FormGroup sx={{ display: "flex", flexDirection: "row" }}>
+          <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
             {USER_TYPES_ITEMS.map(({ label, type }) => (
               <FormControlLabel
                 key={type}
@@ -232,7 +232,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
           </FormGroup>
         </FormControl>
 
-        <Box sx={{ display: isExtended ? "flex" : "none" }}>
+        <Box sx={{ display: isExtended ? 'flex' : 'none' }}>
           <Box width={240} mr={2}>
             <FormControlSelect
               id="subTierRequiredToAddOptions"
@@ -284,8 +284,8 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Button onClick={() => setIsExtended((v) => !v)}>
         {isExtended
-          ? "Скрыть расширенные настройки"
-          : "Показать расширенные настройки"}
+          ? 'Скрыть расширенные настройки'
+          : 'Показать расширенные настройки'}
       </Button>
     </>
   );

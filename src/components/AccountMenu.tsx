@@ -1,6 +1,6 @@
 // https://mui.com/components/menus/#account-menu
-import { useState } from "react";
-import Link from "next/link";
+import { useState } from 'react';
+import Link from 'next/link';
 import {
   Avatar,
   Box,
@@ -10,21 +10,21 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-} from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { useAppDispatch } from "app/hooks";
-import getMainMenuLinks from "utils/getMainMenuLinks";
-import TwitchIcon from "icons/twitch.svg";
-import { useMeQuery } from "features/api/apiSlice";
+} from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAppDispatch } from 'app/hooks';
+import getMainMenuLinks from 'utils/getMainMenuLinks';
+import TwitchIcon from 'icons/twitch.svg';
+import { useMeQuery } from 'features/api/apiSlice';
 import {
   AUTH_URL,
   LS_ACCESS_TOKEN,
   LS_REFRESH_TOKEN,
   LS_REDIRECT_PATH,
-} from "features/auth/authConstants";
-import { clearTokens } from "features/auth/authSlice";
-import PurpleButton from "./PurpleButton";
+} from 'features/auth/authConstants';
+import { clearTokens } from 'features/auth/authSlice';
+import PurpleButton from './PurpleButton';
 
 const AccountMenu = () => {
   const dispatch = useAppDispatch();
@@ -76,14 +76,14 @@ const AccountMenu = () => {
         }
         endIcon={<ArrowDropDownIcon />}
         sx={{
-          textTransform: "none",
-          color: "inherit",
-          fontWeight: "bold",
-          fontSize: "inherit",
+          textTransform: 'none',
+          color: 'inherit',
+          fontWeight: 'bold',
+          fontSize: 'inherit',
         }}
         onClick={handleClick}
       >
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
           {me.data.displayName}
         </Box>
       </Button>
@@ -96,31 +96,31 @@ const AccountMenu = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1,
-            "& .MuiAvatar-root": {
+            '& .MuiAvatar-root': {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            "&:before": {
+            '&:before': {
               content: '""',
-              display: "block",
-              position: "absolute",
+              display: 'block',
+              position: 'absolute',
               top: 0,
               right: 14,
               width: 10,
               height: 10,
-              bgcolor: "background.paper",
-              transform: "translateY(-50%) rotate(45deg)",
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {getMainMenuLinks(me.data).map(({ label, href, IconComponent }) => (
           <Link key={href} href={href} passHref>

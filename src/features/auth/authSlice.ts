@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from "./authConstants";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from './authConstants';
 
 export type AuthState = {
   accessToken: string | null;
@@ -8,17 +8,17 @@ export type AuthState = {
 
 const initialState: AuthState = {
   accessToken:
-    typeof window !== "undefined"
+    typeof window !== 'undefined'
       ? localStorage.getItem(LS_ACCESS_TOKEN)
       : null,
   refreshToken:
-    typeof window !== "undefined"
+    typeof window !== 'undefined'
       ? localStorage.getItem(LS_REFRESH_TOKEN)
       : null,
 };
 
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     updateTokens: (state, { payload }: PayloadAction<AuthState>) => {

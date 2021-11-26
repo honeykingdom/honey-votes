@@ -1,10 +1,10 @@
-import { ChatVoting } from "features/api/apiTypes";
-import { OnChatVotingChange } from "../types";
-import PermissionsLabels from "./PermissionsLabels";
-import PermissionsForm from "./PermissionsForm";
+import { ChatVoting } from 'features/api/apiTypes';
+import { OnChatVotingChange } from '../types';
+import PermissionsLabels from './PermissionsLabels';
+import PermissionsForm from './PermissionsForm';
 
 type Props = {
-  permissions: ChatVoting["permissions"];
+  permissions: ChatVoting['permissions'];
   canManage: boolean;
   disabled?: boolean;
   onChange: OnChatVotingChange;

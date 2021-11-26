@@ -1,15 +1,15 @@
-import Link from "next/link";
+import Link from 'next/link';
 import {
   Card,
   CardActionArea,
   CardActions,
   CardContent,
   Typography,
-} from "@mui/material";
-import LockIcon from "@mui/icons-material/Lock";
-import { format } from "date-fns";
-import { Voting } from "features/api/apiTypes";
-import VotingActions from "./VotingActions";
+} from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import { format } from 'date-fns';
+import { Voting } from 'features/api/apiTypes';
+import VotingActions from './VotingActions';
 
 const NO_TITLE = (
   <Typography
@@ -35,7 +35,7 @@ const CLOSED = (
   </Typography>
 );
 
-const formatDate = (date: string) => format(new Date(date), "PPp");
+const formatDate = (date: string) => format(new Date(date), 'PPp');
 
 type Props = {
   voting: Voting;
@@ -72,7 +72,7 @@ const VotingCard = ({ voting, canManage, href }: Props) => {
         </CardActionArea>
       </Link>
       {canManage && (
-        <CardActions sx={{ display: "block" }}>
+        <CardActions sx={{ display: 'block' }}>
           <VotingActions voting={voting} />
         </CardActions>
       )}

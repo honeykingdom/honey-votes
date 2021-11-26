@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Button,
   CircularProgress,
@@ -7,16 +7,16 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import { UpdateVotingDto } from "features/api/apiTypes";
-import { VotingOptionType } from "features/api/apiConstants";
-import apiSchema from "features/api/apiSchema.json";
-import VotingForm from "./VotingForm";
+} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import { UpdateVotingDto } from 'features/api/apiTypes';
+import { VotingOptionType } from 'features/api/apiConstants';
+import apiSchema from 'features/api/apiSchema.json';
+import VotingForm from './VotingForm';
 
 export const VOTING_DEFAULT: UpdateVotingDto = {
-  title: "",
-  description: "",
+  title: '',
+  description: '',
   canManageVotes: apiSchema.Voting.canManageVotes.default,
   canManageVotingOptions: apiSchema.Voting.canManageVotingOptions.default,
   permissions: apiSchema.Voting.permissions.default,
@@ -28,7 +28,7 @@ export const VOTING_DEFAULT: UpdateVotingDto = {
 
 export type VotingFormParams = Omit<
   UpdateVotingDto,
-  "allowedVotingOptionTypes"
+  'allowedVotingOptionTypes'
 > & {
   allowedVotingOptionTypes: { [key in VotingOptionType]: boolean };
 };
@@ -37,13 +37,13 @@ const transformToFormValues = (values: UpdateVotingDto): VotingFormParams => ({
   ...values,
   allowedVotingOptionTypes: {
     [VotingOptionType.Custom]: values.allowedVotingOptionTypes.includes(
-      VotingOptionType.Custom
+      VotingOptionType.Custom,
     ),
     [VotingOptionType.KinopoiskMovie]: values.allowedVotingOptionTypes.includes(
-      VotingOptionType.KinopoiskMovie
+      VotingOptionType.KinopoiskMovie,
     ),
     [VotingOptionType.IgdbGame]: values.allowedVotingOptionTypes.includes(
-      VotingOptionType.IgdbGame
+      VotingOptionType.IgdbGame,
     ),
   },
 });

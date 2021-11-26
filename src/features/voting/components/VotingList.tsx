@@ -1,6 +1,6 @@
-import { Grid } from "@mui/material";
-import { Voting } from "features/api/apiTypes";
-import VotingCard from "./VotingCard";
+import { Grid } from '@mui/material';
+import { Voting } from 'features/api/apiTypes';
+import VotingCard from './VotingCard';
 
 type Props = {
   canManage: boolean;

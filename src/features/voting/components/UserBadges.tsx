@@ -1,5 +1,5 @@
-import { Fragment } from "react";
-import TwitchBadge from "components/TwitchBadge";
+import { Fragment } from 'react';
+import TwitchBadge from 'components/TwitchBadge';
 
 export type Badge = {
   title: string;
@@ -18,7 +18,7 @@ const UserBadges = ({ badges, channelId }: Props) => (
       <Fragment key={name}>
         <TwitchBadge name={name} version={version} channelId={channelId}>
           {title}
-        </TwitchBadge>{" "}
+        </TwitchBadge>{' '}
       </Fragment>
     ))}
   </>

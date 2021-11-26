@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
-import { getYear } from "date-fns";
+import { useState } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
+import { getYear } from 'date-fns';
 import {
   Box,
   FormGroup,
@@ -9,31 +9,31 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Typography,
-} from "@mui/material";
-import { CreateVotingOptionDto } from "features/api/apiTypes";
-import { VotingOptionType } from "features/api/apiConstants";
-import apiSchema from "features/api/apiSchema.json";
-import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
-import { IgdbGame } from "features/igdb-api/igdbApiSlice";
-import VotingOptionAutocomplete from "./VotingOptionAutocomplete";
+} from '@mui/material';
+import { CreateVotingOptionDto } from 'features/api/apiTypes';
+import { VotingOptionType } from 'features/api/apiConstants';
+import apiSchema from 'features/api/apiSchema.json';
+import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
+import { IgdbGame } from 'features/igdb-api/igdbApiSlice';
+import VotingOptionAutocomplete from './VotingOptionAutocomplete';
 
 const VOTING_OPTION_TYPES = [
-  { label: "Пользовательский вариант", name: VotingOptionType.Custom },
-  { label: "Фильм (kinopoisk.ru)", name: VotingOptionType.KinopoiskMovie },
-  { label: "Игра (IGDB.com)", name: VotingOptionType.IgdbGame },
+  { label: 'Пользовательский вариант', name: VotingOptionType.Custom },
+  { label: 'Фильм (kinopoisk.ru)', name: VotingOptionType.KinopoiskMovie },
+  { label: 'Игра (IGDB.com)', name: VotingOptionType.IgdbGame },
 ] as const;
 
 // TODO: sync with backend
 const KP = {
   getOptionLabel: (option: Film) =>
     `${option.nameRu || option.nameEn}${
-      option.year ? ` (${option.year})` : ""
+      option.year ? ` (${option.year})` : ''
     }`,
   getOptionTitle: (option: Film) => option.nameRu || option.nameEn,
   getOptionDescription: (option: Film) =>
-    `${[option.year, option.genres?.map((g) => g.genre).join(", ")]
+    `${[option.year, option.genres?.map((g) => g.genre).join(', ')]
       .filter(Boolean)
-      .join(" - ")}`,
+      .join(' - ')}`,
   getOptionImage: (option: Film) => option.posterUrlPreview,
   isOptionEqualToValue: (option: Film, value: Film) =>
     option.filmId === value.filmId,
@@ -44,30 +44,30 @@ const IGDB = {
     `${option.name}${
       option.first_release_date
         ? ` (${getYear(option.first_release_date * 1000)})`
-        : ""
+        : ''
     }`,
   getOptionTitle: (option: IgdbGame) => option.name,
   getOptionDescription: (option: IgdbGame) =>
     `${[
       getYear(option.first_release_date * 1000),
-      option.genres?.map((g) => g.name).join(", "),
+      option.genres?.map((g) => g.name).join(', '),
     ]
       .filter(Boolean)
-      .join(" - ")}`,
+      .join(' - ')}`,
   getOptionImage: (option: IgdbGame) =>
     option.cover
       ? `https://images.igdb.com/igdb/image/upload/t_cover_small/${option.cover?.image_id}.jpg`
-      : "https://images.igdb.com/igdb/image/upload/t_cover_small/nocover.png",
+      : 'https://images.igdb.com/igdb/image/upload/t_cover_small/nocover.png',
   isOptionEqualToValue: (option: IgdbGame, value: IgdbGame) =>
     option.slug === value.slug,
 };
 
 enum FieldType {
-  Search = "search",
-  Link = "link",
+  Search = 'search',
+  Link = 'link',
 }
 
-type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, "votingId">;
+type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, 'votingId'>;
 
 type Props = {
   useFormReturn: UseFormReturn<VotingOptionDefaultValues>;
@@ -82,10 +82,10 @@ const VotingOptionForm = ({
 
   const { control, register, watch, setValue } = useFormReturn;
 
-  const watchType = watch("type");
+  const watchType = watch('type');
 
   const renderedVotingOptionTypes = VOTING_OPTION_TYPES.filter(({ name }) =>
-    allowedVotingOptionTypes.includes(name)
+    allowedVotingOptionTypes.includes(name),
   );
 
   return (
@@ -93,8 +93,8 @@ const VotingOptionForm = ({
       <Box
         sx={{
           mb: 2,
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
         }}
       >
         <Controller
@@ -107,7 +107,7 @@ const VotingOptionForm = ({
               size="small"
               value={field.value}
               exclusive
-              sx={{ flexDirection: { xs: "column", sm: "row" } }}
+              sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
               onChange={(...args) => {
                 setFieldType(FieldType.Search);
                 field.onChange(...args);
@@ -117,7 +117,7 @@ const VotingOptionForm = ({
                 <ToggleButton
                   key={name}
                   value={name}
-                  sx={{ textTransform: "none" }}
+                  sx={{ textTransform: 'none' }}
                 >
                   {label}
                 </ToggleButton>
@@ -132,18 +132,18 @@ const VotingOptionForm = ({
             size="small"
             value={fieldType}
             exclusive
-            sx={{ ml: { md: "auto" }, mt: { xs: 2, md: 0 } }}
+            sx={{ ml: { md: 'auto' }, mt: { xs: 2, md: 0 } }}
             onChange={(v: any) => setFieldType(v.target.value)}
           >
             <ToggleButton
               value={FieldType.Search}
-              sx={{ textTransform: "none" }}
+              sx={{ textTransform: 'none' }}
             >
               Поиск
             </ToggleButton>
-            <ToggleButton value={FieldType.Link} sx={{ textTransform: "none" }}>
-              Ссылка на{" "}
-              {watchType === VotingOptionType.KinopoiskMovie ? "фильм" : "игру"}
+            <ToggleButton value={FieldType.Link} sx={{ textTransform: 'none' }}>
+              Ссылка на{' '}
+              {watchType === VotingOptionType.KinopoiskMovie ? 'фильм' : 'игру'}
             </ToggleButton>
           </ToggleButtonGroup>
         )}
@@ -215,11 +215,11 @@ const VotingOptionForm = ({
                 sx={{ mb: 2 }}
                 {...register(`${VotingOptionType.KinopoiskMovie}.id`, {
                   setValueAs: (v) => {
-                    if (typeof v !== "string" || !v) return v;
+                    if (typeof v !== 'string' || !v) return v;
 
                     const id = v.replace(
                       /https:\/\/www\.kinopoisk\.ru\/film\/(\d+)\/?/,
-                      "$1"
+                      '$1',
                     );
 
                     return Number.parseInt(id, 10);
@@ -274,9 +274,9 @@ const VotingOptionForm = ({
                 sx={{ mb: 2 }}
                 {...register(`${VotingOptionType.IgdbGame}.slug`, {
                   setValueAs: (v) => {
-                    if (!v.startsWith("https://www.igdb.com/games/")) return v;
+                    if (!v.startsWith('https://www.igdb.com/games/')) return v;
 
-                    return v.replace("https://www.igdb.com/games/", "").trim();
+                    return v.replace('https://www.igdb.com/games/', '').trim();
                   },
                 })}
               />

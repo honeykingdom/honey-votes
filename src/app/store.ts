@@ -1,10 +1,10 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 
-import auth from "features/auth/authSlice";
-import { api } from "features/api/apiSlice";
-import { igdbApi } from "features/igdb-api/igdbApiSlice";
-import { kinopoiskApi } from "features/kinopoisk-api/kinopoiskApiSlice";
-import { twitchApi } from "features/twitch-api/twitchApiSlice";
+import auth from 'features/auth/authSlice';
+import { api } from 'features/api/apiSlice';
+import { igdbApi } from 'features/igdb-api/igdbApiSlice';
+import { kinopoiskApi } from 'features/kinopoisk-api/kinopoiskApiSlice';
+import { twitchApi } from 'features/twitch-api/twitchApiSlice';
 
 export const makeStore = () => {
   return configureStore({

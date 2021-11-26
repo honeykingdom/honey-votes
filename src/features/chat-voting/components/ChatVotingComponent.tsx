@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Typography,
   Table,
@@ -12,18 +12,18 @@ import {
   Button,
   Tooltip,
   Box,
-} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
-import getRandomInt from "utils/getRandomInt";
-import useChannelLogin from "hooks/useChannelLogin";
-import TwitchNickName from "components/TwitchNickName";
-import TwitchChatMessage from "components/TwitchChatMessage";
-import ConfirmationDialog from "components/ConfirmationDialog";
-import { ChatVote } from "features/api/apiTypes";
-import apiSchema from "features/api/apiSchema.json";
+} from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import ClearAllIcon from '@mui/icons-material/ClearAll';
+import getRandomInt from 'utils/getRandomInt';
+import useChannelLogin from 'hooks/useChannelLogin';
+import TwitchNickName from 'components/TwitchNickName';
+import TwitchChatMessage from 'components/TwitchChatMessage';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import { ChatVote } from 'features/api/apiTypes';
+import apiSchema from 'features/api/apiSchema.json';
 import {
   useClearChatVotingMutation,
   useCreateChatVotingMutation,
@@ -34,14 +34,14 @@ import {
   useUpdateChatVotingMutation,
   useUserQuery,
   chatVotesSelectors,
-} from "features/api/apiSlice";
-import Permissions from "./Permissions";
-import { OnChatVotingChange } from "../types";
+} from 'features/api/apiSlice';
+import Permissions from './Permissions';
+import { OnChatVotingChange } from '../types';
 
 /** Replaces `voteCommand` at the start of the message with spaces */
-const normalizeTwitchChatMessage = (message: string, voteCommand = "") => {
+const normalizeTwitchChatMessage = (message: string, voteCommand = '') => {
   return message
-    .replace(voteCommand, Array(voteCommand).fill(" ").join(""))
+    .replace(voteCommand, Array(voteCommand).fill(' ').join(''))
     .trim();
 };
 
@@ -96,10 +96,10 @@ const ChatVotingComponent = () => {
     const voteCommandLength = chatVoting.data?.commands.vote.length || 0;
     const movies = winners
       .map((v) => v.content.slice(voteCommandLength))
-      .join(";");
+      .join(';');
 
     router.push({
-      pathname: "/tournament",
+      pathname: '/tournament',
       query: { movies },
     });
   };
@@ -137,7 +137,7 @@ const ChatVotingComponent = () => {
         {canManage && (
           <Button
             variant="contained"
-            color={chatVoting.data?.listening ? "success" : "error"}
+            color={chatVoting.data?.listening ? 'success' : 'error'}
             startIcon={
               chatVoting.data?.listening ? <LockOpenIcon /> : <LockIcon />
             }
@@ -145,12 +145,12 @@ const ChatVotingComponent = () => {
             onClick={toggleListening}
           >
             {chatVoting.data?.listening
-              ? "Закрыть голосование"
-              : "Открыть голосование"}
+              ? 'Закрыть голосование'
+              : 'Открыть голосование'}
           </Button>
         )}
 
-        <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Box sx={{ mr: 1 }}>Голосовать могут:</Box>
           <Permissions
             permissions={
@@ -164,13 +164,13 @@ const ChatVotingComponent = () => {
         </Box>
 
         <Typography variant="inherit" color="text.secondary">
-          <code>{chatVoting.data?.commands.vote || "%"}текст</code> –
+          <code>{chatVoting.data?.commands.vote || '%'}текст</code> –
           проголосовать
           <br />
-          <code>{chatVoting.data?.commands.clearVotes || "!clearvotes"}</code> –
-          очистить все голоса{" "}
+          <code>{chatVoting.data?.commands.clearVotes || '!clearvotes'}</code> –
+          очистить все голоса{' '}
           <Tooltip title="Только владелец канала и редакторы">
-            <InfoIcon sx={{ verticalAlign: "middle", fontSize: "1rem" }} />
+            <InfoIcon sx={{ verticalAlign: 'middle', fontSize: '1rem' }} />
           </Tooltip>
         </Typography>
       </Typography>
@@ -212,7 +212,7 @@ const ChatVotingComponent = () => {
                   <TwitchChatMessage
                     message={normalizeTwitchChatMessage(
                       content,
-                      chatVoting.data?.commands.vote
+                      chatVoting.data?.commands.vote,
                     )}
                     tags={tags}
                   />
@@ -236,19 +236,19 @@ const ChatVotingComponent = () => {
       </TableContainer>
 
       <Typography
-        sx={{ my: 2, display: "flex", alignItems: "center" }}
+        sx={{ my: 2, display: 'flex', alignItems: 'center' }}
         component="div"
         variant="h5"
       >
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography variant="inherit" sx={{ mr: 1 }}>
-            Все голоса ({chatVotes.data?.ids.length || 0}){" "}
+            Все голоса ({chatVotes.data?.ids.length || 0}){' '}
           </Typography>
           <Tooltip
             title={
               chatVoting.data?.listening
-                ? "Голосование открыто"
-                : "Голосование закрыто"
+                ? 'Голосование открыто'
+                : 'Голосование закрыто'
             }
           >
             {chatVoting.data?.listening ? (
@@ -259,7 +259,7 @@ const ChatVotingComponent = () => {
           </Tooltip>
         </Box>
         {canManage && (
-          <Box sx={{ marginLeft: "auto" }}>
+          <Box sx={{ marginLeft: 'auto' }}>
             <Button
               variant="text"
               size="small"
@@ -274,10 +274,10 @@ const ChatVotingComponent = () => {
       </Typography>
 
       <TableContainer sx={{ mb: 2 }} component={Paper}>
-        <Table sx={{ tableLayout: "fixed" }}>
+        <Table sx={{ tableLayout: 'fixed' }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: "50%" }}></TableCell>
+              <TableCell sx={{ width: '50%' }}></TableCell>
               <TableCell>Ник</TableCell>
               <TableCell>Дата</TableCell>
             </TableRow>
@@ -289,7 +289,7 @@ const ChatVotingComponent = () => {
                   <TwitchChatMessage
                     message={normalizeTwitchChatMessage(
                       content,
-                      chatVoting.data?.commands.vote
+                      chatVoting.data?.commands.vote,
                     )}
                     tags={tags}
                   />

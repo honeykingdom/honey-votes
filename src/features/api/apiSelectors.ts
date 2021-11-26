@@ -1,7 +1,7 @@
-import { createSelector, EntityState } from "@reduxjs/toolkit";
-import { AppState } from "app/store";
-import { api } from "./apiSlice";
-import { Vote, Voting, VotingOption } from "./apiTypes";
+import { createSelector, EntityState } from '@reduxjs/toolkit';
+import { AppState } from 'app/store';
+import { api } from './apiSlice';
+import { Vote, Voting, VotingOption } from './apiTypes';
 
 // TODO: fix types
 const votingSelector = (state: AppState, votingId: number) =>
@@ -58,7 +58,7 @@ export const renderedVotingOptionsSelector = createSelector(
         votes.data?.entities[me.data?.id]?.votingOptionId === votingOption.id;
       const fullVotesValue = voting.data?.showValues
         ? fullVoteValues[votingOption.id]
-        : "-";
+        : '-';
 
       return {
         votingOption,
@@ -71,10 +71,10 @@ export const renderedVotingOptionsSelector = createSelector(
       result.sort(
         (a, b) =>
           (fullVoteValues[b.votingOption.id] || 0) -
-          (fullVoteValues[a.votingOption.id] || 0)
+          (fullVoteValues[a.votingOption.id] || 0),
       );
     }
 
     return result;
-  }
+  },
 );

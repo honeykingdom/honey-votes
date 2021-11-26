@@ -1,5 +1,5 @@
-import NextLink from "next/link";
-import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from "@mui/material";
+import NextLink from 'next/link';
+import { Breadcrumbs as MuiBreadcrumbs, Link, Typography } from '@mui/material';
 
 type Breadcrumb = {
   title: string | React.ReactNode;
@@ -24,7 +24,7 @@ const Breadcrumbs = ({ items }: Props) => {
           <Typography color="text.primary" key={key}>
             {title}
           </Typography>
-        )
+        ),
       )}
     </MuiBreadcrumbs>
   );

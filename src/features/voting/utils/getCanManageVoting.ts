@@ -1,10 +1,10 @@
-import { User, UserRoles, Voting } from "features/api/apiTypes";
-import getIsVotingOwner from "./getIsVotingOwner";
+import { User, UserRoles, Voting } from 'features/api/apiTypes';
+import getIsVotingOwner from './getIsVotingOwner';
 
 const getCanManageVoting = (
   voting?: Voting,
   me?: User,
-  meRoles?: UserRoles
+  meRoles?: UserRoles,
 ) => {
   if (!voting || !me) return false;
 

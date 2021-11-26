@@ -1,5 +1,5 @@
-import { TwitchUserType } from "features/api/apiConstants";
-import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
+import { TwitchUserType } from 'features/api/apiConstants';
+import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
 
 export type Movie = {
   id: string;
@@ -49,7 +49,7 @@ export type Step =
   | StepRandomChoice
   | StepShowWinner;
 
-export type CardSize = "small" | "medium" | "large";
+export type CardSize = 'small' | 'medium' | 'large';
 
 export type Permissions = Record<
   | TwitchUserType.Mod

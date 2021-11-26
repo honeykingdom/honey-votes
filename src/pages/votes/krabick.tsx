@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/krabick/chat-voting");
+    router.push('/krabick/chat-voting');
   }, []);
 
   return null;

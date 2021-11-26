@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogTitle,
@@ -7,13 +7,13 @@ import {
   DialogActions,
   Button,
   CircularProgress,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import { CreateVotingOptionDto } from "features/api/apiTypes";
-import { VotingOptionType } from "features/api/apiConstants";
-import VotingOptionForm from "./VotingOptionForm";
+} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import { CreateVotingOptionDto } from 'features/api/apiTypes';
+import { VotingOptionType } from 'features/api/apiConstants';
+import VotingOptionForm from './VotingOptionForm';
 
-export type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, "votingId">;
+export type VotingOptionDefaultValues = Omit<CreateVotingOptionDto, 'votingId'>;
 
 type Props = {
   open: boolean;
@@ -41,7 +41,7 @@ const VotingOptionFormModal = ({
   const { setValue, getValues, resetField } = useFormReturn;
 
   useEffect(() => {
-    setValue("type", allowedVotingOptionTypes[0]);
+    setValue('type', allowedVotingOptionTypes[0]);
   }, [allowedVotingOptionTypes]);
 
   useEffect(() => {

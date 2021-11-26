@@ -1,11 +1,11 @@
-import Layout from "components/Layout";
-import PageHeader from "components/PageHeader";
-import TwitchUsername from "components/TwitchUsername";
-import useUsername from "hooks/useUsername";
-import useChannelLogin from "hooks/useChannelLogin";
-import ChatVotingComponent from "features/chat-voting/components/ChatVotingComponent";
-import SignInWarning from "features/chat-voting/components/SignInWarning";
-import { useUserQuery } from "features/api/apiSlice";
+import Layout from 'components/Layout';
+import PageHeader from 'components/PageHeader';
+import TwitchUsername from 'components/TwitchUsername';
+import useUsername from 'hooks/useUsername';
+import useChannelLogin from 'hooks/useChannelLogin';
+import ChatVotingComponent from 'features/chat-voting/components/ChatVotingComponent';
+import SignInWarning from 'features/chat-voting/components/SignInWarning';
+import { useUserQuery } from 'features/api/apiSlice';
 
 const ChatVotesPage = () => {
   const login = useChannelLogin();
@@ -17,7 +17,7 @@ const ChatVotesPage = () => {
     <Layout>
       <PageHeader
         title={
-          username ? `${username} - Голосование в чате` : "Голосование в чате"
+          username ? `${username} - Голосование в чате` : 'Голосование в чате'
         }
         pageTitle="Голосование в чате"
         breadcrumbs={[
@@ -30,7 +30,7 @@ const ChatVotesPage = () => {
             ),
             href: `/${login}`,
           },
-          { title: "Голосование в чате" },
+          { title: 'Голосование в чате' },
         ]}
       />
 

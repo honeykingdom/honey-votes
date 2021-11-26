@@ -1,9 +1,9 @@
-import { Film } from "features/kinopoisk-api/kinopoiskApiTypes";
-import { Movie } from "../tournamentTypes";
+import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
+import { Movie } from '../tournamentTypes';
 
 const transformKinopoiskMovie = (movie: Film): Movie => ({
   id: `${movie.filmId}`,
-  title: movie.nameRu || movie.nameEn || " ",
+  title: movie.nameRu || movie.nameEn || ' ',
   info: movie,
 });
 

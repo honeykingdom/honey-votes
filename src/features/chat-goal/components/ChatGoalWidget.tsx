@@ -1,4 +1,4 @@
-import getWidgetLink from "../utils/getWidgetLink";
+import getWidgetLink from '../utils/getWidgetLink';
 
 type Props = {
   id?: string;
@@ -9,7 +9,7 @@ const ChatGoalWidget = ({ id }: Props) => {
 
   return (
     <iframe
-      style={{ border: "1px solid #ccc", width: "100%", height: 320 }}
+      style={{ border: '1px solid #ccc', width: '100%', height: 320 }}
       src={getWidgetLink(id)}
     />
   );

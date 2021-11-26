@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Box, Slider } from "@mui/material";
-import VolumeDown from "@mui/icons-material/VolumeDown";
-import VolumeUp from "@mui/icons-material/VolumeUp";
-import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import { useState } from 'react';
+import { Box, Slider } from '@mui/material';
+import VolumeDown from '@mui/icons-material/VolumeDown';
+import VolumeUp from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 type Props = {
   initialVolume?: number;
@@ -34,7 +34,7 @@ const VolumeControl = ({
       <Box
         display="flex"
         alignItems="center"
-        sx={{ mr: 2, cursor: "pointer" }}
+        sx={{ mr: 2, cursor: 'pointer' }}
         onClick={handleToggleMute}
       >
         {renderIcon(volume, muted)}

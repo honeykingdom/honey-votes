@@ -1,8 +1,8 @@
-import { createEntityAdapter, EntityState } from "@reduxjs/toolkit";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { RealtimeSubscription } from "@supabase/realtime-js";
-import supabase from "utils/supabase";
-import apiQuery from "./apiQuery";
+import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { RealtimeSubscription } from '@supabase/realtime-js';
+import supabase from 'utils/supabase';
+import apiQuery from './apiQuery';
 import {
   API_BASE,
   API_BASE_POSTGREST,
@@ -13,7 +13,7 @@ import {
   VOTE_TABLE_NAME,
   VOTING_OPTION_TABLE_NAME,
   VOTING_TABLE_NAME,
-} from "./apiConstants";
+} from './apiConstants';
 import {
   CreateChatVotingDto,
   CreateVoteDto,
@@ -32,8 +32,8 @@ import {
   ChatGoal,
   CreateChatGoalDto,
   UpdateChatGoalDto,
-} from "./apiTypes";
-import transformVotingOption from "./utils/transformVotingOption";
+} from './apiTypes';
+import transformVotingOption from './utils/transformVotingOption';
 
 type LoginOrId = { login: string; id?: never } | { login?: never; id: string };
 
@@ -57,9 +57,9 @@ const chatVotesAdapter = createEntityAdapter<ChatVote>({
 export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 
 export const api = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: apiQuery,
-  tagTypes: ["Voting", "ChatVote"],
+  tagTypes: ['Voting', 'ChatVote'],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -86,9 +86,9 @@ export const api = createApi({
     votingList: builder.query<Voting[], string>({
       query: (channelId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
-        params: { broadcasterId: `eq.${channelId}`, order: "createdAt.desc" },
+        params: { broadcasterId: `eq.${channelId}`, order: 'createdAt.desc' },
       }),
-      providesTags: [{ type: "Voting", id: "LIST" }],
+      providesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
     voting: builder.query<Voting, number>({
       query: (votingId) => ({
@@ -98,7 +98,7 @@ export const api = createApi({
       transformResponse: (response) => response[0],
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -107,19 +107,19 @@ export const api = createApi({
 
           subscription = supabase
             .from<Voting>(`${VOTING_TABLE_NAME}:id=eq.${arg}`)
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData(() => {
                 if (
-                  payload.eventType === "INSERT" ||
-                  payload.eventType === "UPDATE"
+                  payload.eventType === 'INSERT' ||
+                  payload.eventType === 'UPDATE'
                 ) {
                   return payload.new;
                 }
 
-                if (payload.eventType === "DELETE") {
+                if (payload.eventType === 'DELETE') {
                   return null;
                 }
-              })
+              }),
             )
             .subscribe();
         } catch {}
@@ -132,10 +132,10 @@ export const api = createApi({
     createVoting: builder.mutation<Voting, CreateVotingDto>({
       query: (body) => ({
         url: `${API_BASE}/voting`,
-        method: "POST",
+        method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: "Voting", id: "LIST" }],
+      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
     updateVoting: builder.mutation<
       Voting,
@@ -143,17 +143,17 @@ export const api = createApi({
     >({
       query: ({ votingId, body }) => ({
         url: `${API_BASE}/voting/${votingId}`,
-        method: "PUT",
+        method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: "Voting", id: "LIST" }],
+      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
     deleteVoting: builder.mutation<void, number>({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
-      invalidatesTags: [{ type: "Voting", id: "LIST" }],
+      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
 
     votingOptions: builder.query<EntityState<VotingOption>, number>({
@@ -163,11 +163,11 @@ export const api = createApi({
       transformResponse: (response: VotingOption[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
-          response.map(transformVotingOption)
+          response.map(transformVotingOption),
         ),
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -176,25 +176,25 @@ export const api = createApi({
 
           subscription = supabase
             .from<VotingOption>(
-              `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`
+              `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`,
             )
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData((draft) => {
-                if (payload.eventType === "INSERT") {
+                if (payload.eventType === 'INSERT') {
                   votingOptionsAdapter.addOne(draft, payload.new);
                 }
 
-                if (payload.eventType === "UPDATE") {
+                if (payload.eventType === 'UPDATE') {
                   votingOptionsAdapter.updateOne(draft, {
                     id: payload.new.id,
                     changes: payload.new,
                   });
                 }
 
-                if (payload.eventType === "DELETE") {
+                if (payload.eventType === 'DELETE') {
                   votingOptionsAdapter.removeOne(draft, payload.old.id);
                 }
-              })
+              }),
             )
             .subscribe();
         } catch {}
@@ -207,14 +207,14 @@ export const api = createApi({
     createVotingOption: builder.mutation<VotingOption, CreateVotingOptionDto>({
       query: (body) => ({
         url: `${API_BASE}/voting-options`,
-        method: "POST",
+        method: 'POST',
         body,
       }),
     }),
     deleteVotingOption: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
 
@@ -226,7 +226,7 @@ export const api = createApi({
         votesAdapter.addMany(votesAdapter.getInitialState(), response),
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -235,19 +235,19 @@ export const api = createApi({
 
           subscription = supabase
             .from<Vote>(`${VOTE_TABLE_NAME}:votingId=eq.${arg}`)
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData((draft) => {
                 if (
-                  payload.eventType === "INSERT" ||
-                  payload.eventType === "UPDATE"
+                  payload.eventType === 'INSERT' ||
+                  payload.eventType === 'UPDATE'
                 ) {
                   votesAdapter.upsertOne(draft, payload.new);
                 }
 
-                if (payload.eventType === "DELETE") {
+                if (payload.eventType === 'DELETE') {
                   votesAdapter.removeOne(draft, payload.old.authorId);
                 }
-              })
+              }),
             )
             .subscribe();
         } catch {}
@@ -260,14 +260,14 @@ export const api = createApi({
     createVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
-        method: "POST",
+        method: 'POST',
         body: { votingOptionId } as CreateVoteDto,
       }),
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/votes`,
-        method: "DELETE",
+        method: 'DELETE',
         body: { votingOptionId } as DeleteVoteDto,
       }),
     }),
@@ -280,7 +280,7 @@ export const api = createApi({
       transformResponse: (response) => response[0],
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -289,21 +289,21 @@ export const api = createApi({
 
           subscription = supabase
             .from<ChatVoting>(
-              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`
+              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`,
             )
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData(() => {
                 if (
-                  payload.eventType === "INSERT" ||
-                  payload.eventType === "UPDATE"
+                  payload.eventType === 'INSERT' ||
+                  payload.eventType === 'UPDATE'
                 ) {
                   return payload.new;
                 }
 
-                if (payload.eventType === "DELETE") {
+                if (payload.eventType === 'DELETE') {
                   return null;
                 }
-              })
+              }),
             )
             .subscribe();
         } catch {}
@@ -316,7 +316,7 @@ export const api = createApi({
     createChatVoting: builder.mutation<ChatVoting, CreateChatVotingDto>({
       query: (body) => ({
         url: `${API_BASE}/chat-votes`,
-        method: "POST",
+        method: 'POST',
         body,
       }),
     }),
@@ -326,22 +326,22 @@ export const api = createApi({
     >({
       query: ({ chatVotingId, body }) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}`,
-        method: "PUT",
+        method: 'PUT',
         body,
       }),
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
     clearChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
         url: `${API_BASE}/chat-votes/${chatVotingId}/clear`,
-        method: "POST",
+        method: 'POST',
       }),
-      invalidatesTags: [{ type: "ChatVote", id: "LIST" }],
+      invalidatesTags: [{ type: 'ChatVote', id: 'LIST' }],
     }),
 
     chatVotes: builder.query<EntityState<ChatVote>, string>({
@@ -349,13 +349,13 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTE_TABLE_NAME}`,
         params: { chatVotingId: `eq.${chatVotingId}` },
       }),
-      providesTags: [{ type: "ChatVote", id: "LIST" }],
+      providesTags: [{ type: 'ChatVote', id: 'LIST' }],
       transformResponse: (response: ChatVote[]) =>
         chatVotesAdapter.addMany(chatVotesAdapter.getInitialState(), response),
       // https://redux-toolkit.js.org/rtk-query/usage/streaming-updates
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -364,23 +364,23 @@ export const api = createApi({
 
           subscription = supabase
             .from<ChatVote>(`${CHAT_VOTE_TABLE_NAME}:chatVotingId=eq.${arg}`)
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData((draft) => {
-                if (payload.eventType === "INSERT") {
+                if (payload.eventType === 'INSERT') {
                   chatVotesAdapter.addOne(draft, payload.new);
                 }
 
-                if (payload.eventType === "UPDATE") {
+                if (payload.eventType === 'UPDATE') {
                   chatVotesAdapter.updateOne(draft, {
                     id: payload.new.userId,
                     changes: payload.new,
                   });
                 }
 
-                if (payload.eventType === "DELETE") {
+                if (payload.eventType === 'DELETE') {
                   chatVotesAdapter.removeOne(draft, payload.old.userId);
                 }
-              })
+              }),
             )
             .subscribe();
         } catch {}
@@ -399,7 +399,7 @@ export const api = createApi({
       transformResponse: (response) => response[0],
       onCacheEntryAdded: async (
         arg,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
       ) => {
         let subscription: RealtimeSubscription | null = null;
 
@@ -408,12 +408,12 @@ export const api = createApi({
 
           subscription = supabase
             .from<ChatGoal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${arg}`)
-            .on("*", (payload) =>
+            .on('*', (payload) =>
               updateCachedData((draft) => {
-                if (payload.eventType === "INSERT") return payload.new;
-                if (payload.eventType === "UPDATE") return payload.new;
-                if (payload.eventType === "DELETE") return null;
-              })
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
+              }),
             )
             .subscribe();
         } catch {}
@@ -426,7 +426,7 @@ export const api = createApi({
     createChatGoal: builder.mutation<ChatGoal, CreateChatGoalDto>({
       query: (body) => ({
         url: `${API_BASE}/chat-goal`,
-        method: "POST",
+        method: 'POST',
         body,
       }),
     }),
@@ -436,39 +436,39 @@ export const api = createApi({
     >({
       query: ({ chatGoalId, body }) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}`,
-        method: "PUT",
+        method: 'PUT',
         body,
       }),
     }),
     deleteChatGoal: builder.mutation<void, string>({
       query: (chatGoalId) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}`,
-        method: "DELETE",
+        method: 'DELETE',
       }),
     }),
 
     startChatGoal: builder.mutation<void, string>({
       query: (chatGoalId) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}/start`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
     pauseChatGoal: builder.mutation<void, string>({
       query: (chatGoalId) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}/pause`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
     resetChatGoal: builder.mutation<void, string>({
       query: (chatGoalId) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}/reset`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
     resetChatGoalVotes: builder.mutation<void, string>({
       query: (chatGoalId) => ({
         url: `${API_BASE}/chat-goal/${chatGoalId}/reset-votes`,
-        method: "POST",
+        method: 'POST',
       }),
     }),
   }),

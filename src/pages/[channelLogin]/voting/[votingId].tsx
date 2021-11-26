@@ -1,12 +1,12 @@
-import React from "react";
-import Layout from "components/Layout";
-import PageHeader from "components/PageHeader";
-import TwitchUsername from "components/TwitchUsername";
-import useUsername from "hooks/useUsername";
-import useChannelLogin from "hooks/useChannelLogin";
-import { useUserQuery, useVotingQuery } from "features/api/apiSlice";
-import useVotingId from "features/voting/hooks/useVotingId";
-import VotingComponent from "features/voting/components/VotingComponent";
+import React from 'react';
+import Layout from 'components/Layout';
+import PageHeader from 'components/PageHeader';
+import TwitchUsername from 'components/TwitchUsername';
+import useUsername from 'hooks/useUsername';
+import useChannelLogin from 'hooks/useChannelLogin';
+import { useUserQuery, useVotingQuery } from 'features/api/apiSlice';
+import useVotingId from 'features/voting/hooks/useVotingId';
+import VotingComponent from 'features/voting/components/VotingComponent';
 
 const NO_TITLE = <em style={{ fontWeight: 300 }}>Без названия</em>;
 
@@ -32,17 +32,17 @@ const VotingPage = () => {
   const isVotingVisible = isVotingExists && isVotingBelongsToChannel;
 
   const getTitle = () => {
-    if (!voting.data || !isVotingVisible) return "Голосование";
+    if (!voting.data || !isVotingVisible) return 'Голосование';
 
     return voting.data?.title || NO_TITLE;
   };
 
   const title =
     isVotingVisible && username
-      ? `${username} - ${voting.data?.title || "Без названия"}`
-      : "Голосование";
+      ? `${username} - ${voting.data?.title || 'Без названия'}`
+      : 'Голосование';
 
-  const breadcrumbs: Parameters<typeof PageHeader>[0]["breadcrumbs"] = [
+  const breadcrumbs: Parameters<typeof PageHeader>[0]['breadcrumbs'] = [
     {
       title: (
         <TwitchUsername
@@ -53,7 +53,7 @@ const VotingPage = () => {
       href: `/${login}`,
     },
     {
-      title: "Голосование",
+      title: 'Голосование',
       href: `/${login}/voting`,
     },
   ];

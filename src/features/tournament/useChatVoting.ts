@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { Chat, PrivateMessage } from "twitch-js";
-import { Permissions } from "./tournamentTypes";
-import { useSnackbar } from "notistack";
+import { useEffect, useRef, useState } from 'react';
+import { Chat, PrivateMessage } from 'twitch-js';
+import { Permissions } from './tournamentTypes';
+import { useSnackbar } from 'notistack';
 
 let chat: Chat | null = null;
 
@@ -9,7 +9,7 @@ const VOTE_NUMBERS = Array.from({ length: 10 }, (_, i) => `${i + 1}`);
 
 const getVoteNumber = (
   message: PrivateMessage,
-  moviesCount: number
+  moviesCount: number,
 ): number | null => {
   if (!VOTE_NUMBERS.includes(message.message)) return null;
 
@@ -22,9 +22,9 @@ const getVoteNumber = (
 
 const canVote = (message: PrivateMessage, permissions: Permissions) => {
   if (permissions.viewer) return true;
-  if (permissions.vip && "vip" in message.tags.badges) return true;
-  if (permissions.mod && "moderator" in message.tags.badges) return true;
-  if (permissions.sub && "subscriber" in message.tags.badges) return true;
+  if (permissions.vip && 'vip' in message.tags.badges) return true;
+  if (permissions.mod && 'moderator' in message.tags.badges) return true;
+  if (permissions.sub && 'subscriber' in message.tags.badges) return true;
 
   return false;
 };
@@ -32,7 +32,7 @@ const canVote = (message: PrivateMessage, permissions: Permissions) => {
 const useChatVoting = (
   channel: string,
   moviesCount: number,
-  permissions: Permissions
+  permissions: Permissions,
 ) => {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -48,7 +48,7 @@ const useChatVoting = (
 
   useEffect(() => {
     if (isActive && !chat && channel) {
-      chat = new Chat({ log: { level: "silent" } });
+      chat = new Chat({ log: { level: 'silent' } });
 
       return () => {
         if (chat) {
@@ -67,7 +67,7 @@ const useChatVoting = (
 
         chat.join(channel);
       } catch (e) {
-        enqueueSnackbar("Не удалось подключиться к чату", { variant: "error" });
+        enqueueSnackbar('Не удалось подключиться к чату', { variant: 'error' });
         setIsActive(false);
       }
     })();
@@ -90,15 +90,15 @@ const useChatVoting = (
           acc[value - 1] += 1;
 
           return acc;
-        }, initialArray)
+        }, initialArray),
       );
     };
 
-    chat.on("PRIVMSG", handleMessage);
+    chat.on('PRIVMSG', handleMessage);
 
     return () => {
       if (chat) {
-        chat.off("PRIVMSG", handleMessage);
+        chat.off('PRIVMSG', handleMessage);
       }
     };
   }, [isActive, channel, permissionsRef, moviesCountRef, userVotesRef]);

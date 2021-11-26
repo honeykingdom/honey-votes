@@ -1,7 +1,7 @@
-import { VotingOption } from "../apiTypes";
+import { VotingOption } from '../apiTypes';
 
-type VotingOptionResponse = Omit<VotingOption, "authorId"> & {
-  authorId: VotingOption["authorData"] & { id: VotingOption["authorId"] };
+type VotingOptionResponse = Omit<VotingOption, 'authorId'> & {
+  authorId: VotingOption['authorData'] & { id: VotingOption['authorId'] };
 };
 
 const transformVotingOption = (votingOption: VotingOption): VotingOption => {

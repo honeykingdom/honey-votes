@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo } from 'react';
 import {
   Box,
   Card,
@@ -9,23 +9,23 @@ import {
   Typography,
   TextField,
   CardActionArea,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 // import { KinopoiskMovie } from "api/kinopoisk";
-import { getMovieDescription } from "./utils/getMovieDescription";
-import { CardSize, Movie } from "./tournamentTypes";
+import { getMovieDescription } from './utils/getMovieDescription';
+import { CardSize, Movie } from './tournamentTypes';
 import {
   CARD_HEIGHT_MAP,
   CARD_IMAGE_WIDTH_MAP,
   NO_POSTER_URL,
-} from "./tournamentConstants";
+} from './tournamentConstants';
 // import MoviePicker from "./MoviePicker";
 
 type Props = {
   movie: Movie;
   size?: CardSize;
-  mode?: "view" | "edit";
+  mode?: 'view' | 'edit';
   active?: boolean;
   value?: string;
   // value?: KinopoiskMovie;
@@ -41,8 +41,8 @@ type Props = {
 
 const MovieCard = ({
   movie,
-  size = "medium",
-  mode = "view",
+  size = 'medium',
+  mode = 'view',
   active = false,
   value,
   // inputValue = "",
@@ -54,7 +54,7 @@ const MovieCard = ({
   onChange = () => {},
 }: Props) => {
   const { filmId, year } = movie.info || {};
-  const cardHeight = CARD_HEIGHT_MAP[size] || "auto";
+  const cardHeight = CARD_HEIGHT_MAP[size] || 'auto';
 
   // const [movieTitle, setMovieTitle] = useState("");
   // const [suggestions, setSuggestions] = useState<KinopoiskMovie[]>([]);
@@ -63,15 +63,15 @@ const MovieCard = ({
     <>
       <Box
         sx={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
         <Typography component="span" variant="body1" title={movie.title}>
           {movie.title}
-        </Typography>{" "}
-        {year && size === "small" && (
+        </Typography>{' '}
+        {year && size === 'small' && (
           <Typography
             component="span"
             variant="subtitle1"
@@ -81,7 +81,7 @@ const MovieCard = ({
           </Typography>
         )}
       </Box>
-      {size !== "small" && (
+      {size !== 'small' && (
         <Typography
           variant="body2"
           color="text.secondary"
@@ -106,7 +106,7 @@ const MovieCard = ({
 
   const renderEditField = () => (
     <TextField
-      size={size === "small" ? "small" : "medium"}
+      size={size === 'small' ? 'small' : 'medium'}
       value={value}
       onChange={onChange}
     />
@@ -117,11 +117,11 @@ const MovieCard = ({
       display="flex"
       sx={{
         p: 1,
-        position: "absolute",
+        position: 'absolute',
         right: 0,
-        top: "50%",
-        transform: "translateY(-50%)",
-        visibility: "hidden",
+        top: '50%',
+        transform: 'translateY(-50%)',
+        visibility: 'hidden',
       }}
     >
       <Tooltip title="Редактировать">
@@ -166,34 +166,34 @@ const MovieCard = ({
   return (
     <Card
       sx={{
-        display: "flex",
-        position: "relative",
+        display: 'flex',
+        position: 'relative',
         height: cardHeight,
-        "&:hover :last-child": {
-          visibility: "visible",
+        '&:hover :last-child': {
+          visibility: 'visible',
         },
-        bgcolor: active ? "rgba(102, 187, 106, 0.53)" : undefined,
+        bgcolor: active ? 'rgba(102, 187, 106, 0.53)' : undefined,
       }}
     >
       <a
         href={filmId ? `//kinopoisk.ru/film/${filmId}/` : null}
         target="_blank"
         style={{
-          display: "block",
+          display: 'block',
           width: CARD_IMAGE_WIDTH_MAP[size],
           flexShrink: 0,
         }}
       >
         <CardMedia
-          sx={{ height: "100%" }}
+          sx={{ height: '100%' }}
           image={movie.info?.posterUrlPreview || NO_POSTER_URL}
           title={movie.title}
         />
       </a>
       <CardActionArea
-        disableRipple={mode === "edit"}
+        disableRipple={mode === 'edit'}
         onClick={() => {
-          if (mode === "edit") return;
+          if (mode === 'edit') return;
 
           onClick();
         }}
@@ -208,16 +208,16 @@ const MovieCard = ({
         >
           <CardContent
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              flex: "1 0 auto",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              flex: '1 0 auto',
               py: 0,
             }}
           >
-            {mode === "view" && renderMovieInfo()}
+            {mode === 'view' && renderMovieInfo()}
             {/* {mode === "edit" && renderMoviePicker()} */}
-            {mode === "edit" && renderEditField()}
+            {mode === 'edit' && renderEditField()}
           </CardContent>
           <span />
         </Box>

@@ -7,29 +7,29 @@ export const SUPABASE_HEADERS = {
   Authorization: `Bearer ${SUPABASE_KEY}`,
 };
 
-export const USER_TABLE_NAME = "hv_user";
+export const USER_TABLE_NAME = 'hv_user';
 
-export const CHAT_VOTING_TABLE_NAME = "hv_chat_voting";
-export const CHAT_VOTE_TABLE_NAME = "hv_chat_vote";
+export const CHAT_VOTING_TABLE_NAME = 'hv_chat_voting';
+export const CHAT_VOTE_TABLE_NAME = 'hv_chat_vote';
 
-export const VOTE_TABLE_NAME = "hv_vote";
-export const VOTING_TABLE_NAME = "hv_voting";
-export const VOTING_OPTION_TABLE_NAME = "hv_voting_option";
+export const VOTE_TABLE_NAME = 'hv_vote';
+export const VOTING_TABLE_NAME = 'hv_voting';
+export const VOTING_OPTION_TABLE_NAME = 'hv_voting_option';
 
-export const CHAT_GOAL_TABLE_NAME = "hv_chat_goal";
-export const CHAT_GOAL_EVENT_TABLE_NAME = "hv_chat_goal_event";
+export const CHAT_GOAL_TABLE_NAME = 'hv_chat_goal';
+export const CHAT_GOAL_EVENT_TABLE_NAME = 'hv_chat_goal_event';
 
 export enum TwitchUserType {
-  Broadcaster = "broadcaster",
-  Editor = "editor",
-  Mod = "mod",
-  Vip = "vip",
-  Sub = "sub",
-  SubTier1 = "subTier1",
-  SubTier2 = "subTier2",
-  SubTier3 = "subTier3",
-  Follower = "follower",
-  Viewer = "viewer",
+  Broadcaster = 'broadcaster',
+  Editor = 'editor',
+  Mod = 'mod',
+  Vip = 'vip',
+  Sub = 'sub',
+  SubTier1 = 'subTier1',
+  SubTier2 = 'subTier2',
+  SubTier3 = 'subTier3',
+  Follower = 'follower',
+  Viewer = 'viewer',
 }
 
 export enum SubTier {
@@ -39,9 +39,9 @@ export enum SubTier {
 }
 
 export enum VotingOptionType {
-  KinopoiskMovie = "kinopoiskMovie",
-  IgdbGame = "igdbGame",
-  Custom = "custom",
+  KinopoiskMovie = 'kinopoiskMovie',
+  IgdbGame = 'igdbGame',
+  Custom = 'custom',
 }
 
 export enum ChatGoalStatus {
@@ -58,40 +58,40 @@ export enum ChatGoalStatus {
 }
 
 export enum ChatGoalEventType {
-  Upvote = "upvote",
-  Downvote = "downvote",
+  Upvote = 'upvote',
+  Downvote = 'downvote',
 }
 
 export enum BroadcasterType {
-  None = "",
-  Partner = "partner",
-  Affiliate = "affiliate",
+  None = '',
+  Partner = 'partner',
+  Affiliate = 'affiliate',
 }
 
 export enum HoneyError {
-  VotingNoPermission = "VotingNoPermission",
+  VotingNoPermission = 'VotingNoPermission',
   // TODO:
-  VotingCreateLimitReached = "VotingCreateLimitReached",
+  VotingCreateLimitReached = 'VotingCreateLimitReached',
 
-  VotingOptionCreateDisabled = "VotingOptionCreateDisabled",
-  VotingOptionCreateLimitReached = "VotingOptionCreateLimitReached",
-  VotingOptionCreateAlreadyCreatedByUser = "VotingOptionCreateAlreadyCreatedByUser",
-  VotingOptionCreateNoPermission = "VotingOptionCreateNoPermission",
-  VotingOptionCreateAlreadyExists = "VotingOptionCreateAlreadyExists",
-  VotingOptionCreateKinopoiskMovieNotFound = "VotingOptionCreateKinopoiskMovieNotFound",
-  VotingOptionCantIgdbGameNotFound = "VotingOptionCantIgdbGameNotFound",
+  VotingOptionCreateDisabled = 'VotingOptionCreateDisabled',
+  VotingOptionCreateLimitReached = 'VotingOptionCreateLimitReached',
+  VotingOptionCreateAlreadyCreatedByUser = 'VotingOptionCreateAlreadyCreatedByUser',
+  VotingOptionCreateNoPermission = 'VotingOptionCreateNoPermission',
+  VotingOptionCreateAlreadyExists = 'VotingOptionCreateAlreadyExists',
+  VotingOptionCreateKinopoiskMovieNotFound = 'VotingOptionCreateKinopoiskMovieNotFound',
+  VotingOptionCantIgdbGameNotFound = 'VotingOptionCantIgdbGameNotFound',
 
-  VotingOptionDeleteDisabled = "VotingOptionDeleteDisabled",
-  VotingOptionDeleteNotOwner = "VotingOptionDeleteNotOwner",
-  VotingOptionDeleteHasVotes = "VotingOptionDeleteHasVotes",
+  VotingOptionDeleteDisabled = 'VotingOptionDeleteDisabled',
+  VotingOptionDeleteNotOwner = 'VotingOptionDeleteNotOwner',
+  VotingOptionDeleteHasVotes = 'VotingOptionDeleteHasVotes',
 
-  VoteCreateDisabled = "VoteCreateDisabled",
-  VoteCreateTooQuickly = "VoteCreateTooQuickly",
-  VoteCreateNoPermission = "VoteCreateNoPermission",
+  VoteCreateDisabled = 'VoteCreateDisabled',
+  VoteCreateTooQuickly = 'VoteCreateTooQuickly',
+  VoteCreateNoPermission = 'VoteCreateNoPermission',
 
-  VoteDeleteDisabled = "VoteDeleteDisabled",
-  VoteDeleteNotOwner = "VoteDeleteNotOwner",
-  VoteDeleteTooQuickly = "VoteDeleteTooQuickly",
+  VoteDeleteDisabled = 'VoteDeleteDisabled',
+  VoteDeleteNotOwner = 'VoteDeleteNotOwner',
+  VoteDeleteTooQuickly = 'VoteDeleteTooQuickly',
 }
 
 // prettier-ignore

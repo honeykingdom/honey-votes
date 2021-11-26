@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { useDebounce } from "react-use";
+import { useState, useEffect } from 'react';
+import { useDebounce } from 'react-use';
 import {
   Autocomplete,
   Box,
   CircularProgress,
   TextField,
   Typography,
-} from "@mui/material";
-import { getMovieDescription } from "./utils/getMovieDescription";
-import { Movie } from "./tournamentTypes";
-import transformKinopoiskMovie from "./utils/transformKinopoiskMovie";
+} from '@mui/material';
+import { getMovieDescription } from './utils/getMovieDescription';
+import { Movie } from './tournamentTypes';
+import transformKinopoiskMovie from './utils/transformKinopoiskMovie';
 
 type Props = {
   value?: Movie;
   inputValue?: string;
-  size?: "small" | "medium";
+  size?: 'small' | 'medium';
   autoFocus?: boolean;
   onChange?: (movie: Movie) => void;
   onInputChange?: (movie: string) => void;
@@ -22,8 +22,8 @@ type Props = {
 
 const MoviePicker = ({
   value,
-  inputValue = "",
-  size = "small",
+  inputValue = '',
+  size = 'small',
   autoFocus = false,
   onChange = () => {},
   onInputChange = () => {},
@@ -67,7 +67,7 @@ const MoviePicker = ({
       };
     },
     500,
-    [inputValue]
+    [inputValue],
   );
 
   useEffect(() => {
@@ -118,9 +118,9 @@ const MoviePicker = ({
                 component="div"
                 variant="body1"
                 sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {option.title}

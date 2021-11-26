@@ -1,26 +1,26 @@
-import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
-import PollIcon from "@mui/icons-material/Poll";
-import ThumbsUpDownIcon from "@mui/icons-material/ThumbsUpDown";
-import Layout from "components/Layout";
-import SEO from "../../next-seo.config";
+import { Box, Typography, Grid, Card, CardContent } from '@mui/material';
+import PollIcon from '@mui/icons-material/Poll';
+import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
+import Layout from 'components/Layout';
+import SEO from '../../next-seo.config';
 
 const FEATURES = [
   {
-    title: "Голосование на сайте",
+    title: 'Голосование на сайте',
     description:
-      "Зрители добавляют фильмы, игры или свой текст в качестве вариантов. Можно ограничить только для сабов/фолловеров.",
+      'Зрители добавляют фильмы, игры или свой текст в качестве вариантов. Можно ограничить только для сабов/фолловеров.',
     IconComponent: PollIcon,
   },
   {
-    title: "Голосование в чате",
+    title: 'Голосование в чате',
     description:
-      "Зрители вводят свои варианты прямо в чате твича. Стример видит их на сайте и может выбрать победителя.",
+      'Зрители вводят свои варианты прямо в чате твича. Стример видит их на сайте и может выбрать победителя.',
     IconComponent: PollIcon,
   },
   {
-    title: "Чатгол",
+    title: 'Чатгол',
     description:
-      "Голосование за или против пока не наберётся нужное количество голосов. <br /> Есть виджет для OBS.",
+      'Голосование за или против пока не наберётся нужное количество голосов. <br /> Есть виджет для OBS.',
     IconComponent: ThumbsUpDownIcon,
   },
 ];
@@ -34,7 +34,7 @@ const Home = () => {
           component="h1"
           gutterBottom
           align="center"
-          sx={{ fontSize: { xs: "3rem", sm: "6rem" } }}
+          sx={{ fontSize: { xs: '3rem', sm: '6rem' } }}
         >
           {SEO.title}
         </Typography>
@@ -46,8 +46,8 @@ const Home = () => {
           color="textSecondary"
           sx={{
             maxWidth: 820,
-            margin: "0 auto",
-            fontSize: { xs: "2rem", sm: "3.75rem" },
+            margin: '0 auto',
+            fontSize: { xs: '2rem', sm: '3.75rem' },
           }}
         >
           {SEO.description}
@@ -56,14 +56,14 @@ const Home = () => {
 
       <Grid container spacing={2}>
         {FEATURES.map(({ title, description, IconComponent }, i) => (
-          <Grid key={i} item lg={4} sx={{ width: "100%" }}>
+          <Grid key={i} item lg={4} sx={{ width: '100%' }}>
             <Card>
               <CardContent>
                 <Typography
                   variant="h5"
                   component="div"
                   gutterBottom
-                  sx={{ display: "flex", alignItems: "center" }}
+                  sx={{ display: 'flex', alignItems: 'center' }}
                 >
                   <IconComponent sx={{ mr: 2, fontSize: 40 }} /> {title}
                 </Typography>

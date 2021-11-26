@@ -1,11 +1,11 @@
-import { User, UserRoles, Voting, VotingOption } from "features/api/apiTypes";
-import getIsVotingOwner from "./getIsVotingOwner";
+import { User, UserRoles, Voting, VotingOption } from 'features/api/apiTypes';
+import getIsVotingOwner from './getIsVotingOwner';
 
 const getCanCreateVotingOptions = (
   voting?: Voting,
   votingOptions?: { votingOption: VotingOption }[],
   me?: User,
-  meRoles?: UserRoles
+  meRoles?: UserRoles,
 ): [boolean] | [boolean, string] => {
   if (!voting || !me) return [false];
 
@@ -19,15 +19,15 @@ const getCanCreateVotingOptions = (
 
   if (!votingOptions) return [false];
   if (votingOptions.length >= voting.votingOptionsLimit) {
-    return [false, "Достигнут лимит количества вариантов для голосования."];
+    return [false, 'Достигнут лимит количества вариантов для голосования.'];
   }
 
   const votingOptionsByUser = votingOptions.filter(
-    (votingOption) => votingOption.votingOption.authorId === me.id
+    (votingOption) => votingOption.votingOption.authorId === me.id,
   );
 
   if (votingOptionsByUser.length >= 1) {
-    return [false, "Вы уже добавили вариант для голосования."];
+    return [false, 'Вы уже добавили вариант для голосования.'];
   }
 
   if (voting.permissions.viewer.canAddOptions) return [true];

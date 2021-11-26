@@ -1,12 +1,12 @@
-import React from "react";
-import Head from "next/head";
-import { Box, Divider, Typography } from "@mui/material";
-import Breadcrumbs from "./Breadcrumbs";
+import React from 'react';
+import Head from 'next/head';
+import { Box, Divider, Typography } from '@mui/material';
+import Breadcrumbs from './Breadcrumbs';
 
 type Props = {
   title: string;
   pageTitle: string | React.ReactNode;
-  breadcrumbs: Parameters<typeof Breadcrumbs>[0]["items"];
+  breadcrumbs: Parameters<typeof Breadcrumbs>[0]['items'];
 };
 
 const PageHeader = ({ title, pageTitle, breadcrumbs }: Props) => {
@@ -16,7 +16,7 @@ const PageHeader = ({ title, pageTitle, breadcrumbs }: Props) => {
         <title>{`${title} | HoneyVotes`}</title>
       </Head>
 
-      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         <Typography component="div" variant="h4">
           {pageTitle}
         </Typography>

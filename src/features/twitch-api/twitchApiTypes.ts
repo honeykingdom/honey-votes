@@ -14,7 +14,7 @@ export type BadgeVersion = {
   image_url_4x: string;
   description: string;
   title: string;
-  click_action: "none" | "subscribe_to_channel" | "turbo" | "visit_url";
+  click_action: 'none' | 'subscribe_to_channel' | 'turbo' | 'visit_url';
   click_url: string;
   last_updated: null;
 };

@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import TwitchBadge from "./TwitchBadge";
+import { Box } from '@mui/material';
+import TwitchBadge from './TwitchBadge';
 
 type Props = {
   channelId: string;
@@ -17,13 +17,13 @@ const TwitchNickName = ({ channelId, userName, tags }: Props) => {
         key={name}
         channelId={channelId}
         name={name}
-        version={version === true ? "1" : version}
+        version={version === true ? '1' : version}
       />
-    )
+    ),
   );
 
   return (
-    <Box component="span" sx={{ fontWeight: "bold", color: tags.color }}>
+    <Box component="span" sx={{ fontWeight: 'bold', color: tags.color }}>
       {badges}
       {nickName}
     </Box>

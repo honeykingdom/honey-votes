@@ -1,4 +1,4 @@
-import { easeExpOut, easeExpInOut, easeCircleInOut } from "d3-ease";
+import { easeExpOut, easeExpInOut, easeCircleInOut } from 'd3-ease';
 
 const f1 = easeExpOut;
 const f2 = easeExpInOut;

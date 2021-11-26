@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useSnackbar } from "notistack";
+import React, { useState } from 'react';
+import { useSnackbar } from 'notistack';
 import {
   Avatar,
   Box,
@@ -9,9 +9,9 @@ import {
   CardMedia,
   IconButton,
   Typography,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import {
   useCreateVoteMutation,
   useDeleteVoteMutation,
@@ -19,18 +19,18 @@ import {
   useMeQuery,
   useMeRolesQuery,
   useVotingQuery,
-} from "features/api/apiSlice";
-import { VotingOption } from "features/api/apiTypes";
-import { API_ERRORS } from "features/api/apiConstants";
-import ConfirmationDialog from "components/ConfirmationDialog";
-import useChannelLogin from "hooks/useChannelLogin";
-import getCanDeleteVotingOption from "../utils/getCanDeleteVotingOption";
-import getCanVote from "../utils/getCanVote";
+} from 'features/api/apiSlice';
+import { VotingOption } from 'features/api/apiTypes';
+import { API_ERRORS } from 'features/api/apiConstants';
+import ConfirmationDialog from 'components/ConfirmationDialog';
+import useChannelLogin from 'hooks/useChannelLogin';
+import getCanDeleteVotingOption from '../utils/getCanDeleteVotingOption';
+import getCanVote from '../utils/getCanVote';
 
-const IGDB_IMAGES_BASE_URL = "https://images.igdb.com/igdb/image/upload";
+const IGDB_IMAGES_BASE_URL = 'https://images.igdb.com/igdb/image/upload';
 
 const getAuthorName = (votingOption?: VotingOption): string =>
-  votingOption.authorData?.displayName || votingOption.authorData?.login || "";
+  votingOption.authorData?.displayName || votingOption.authorData?.login || '';
 
 const getIgdbImageSrc = (id: string) =>
   `${IGDB_IMAGES_BASE_URL}/t_cover_small/${id}.jpg`;
@@ -84,7 +84,7 @@ const VotingOptionCard = ({
     votingOption,
     fullVotesValue,
     me.data,
-    meRoles.data
+    meRoles.data,
   );
 
   let imageUrl = cardImageUrl;
@@ -97,7 +97,7 @@ const VotingOptionCard = ({
 
   const handleCardClick = async () => {
     if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
-      enqueueSnackbar("Вы голосуете слишком быстро", { variant: "error" });
+      enqueueSnackbar('Вы голосуете слишком быстро', { variant: 'error' });
 
       return;
     }
@@ -108,11 +108,11 @@ const VotingOptionCard = ({
       try {
         await deleteVote(id).unwrap();
 
-        enqueueSnackbar("Голос удалён", { variant: "success" });
+        enqueueSnackbar('Голос удалён', { variant: 'success' });
       } catch (e) {
         enqueueSnackbar(
-          API_ERRORS[e.data?.message] || "Не удалось удалить голос",
-          { variant: "error" }
+          API_ERRORS[e.data?.message] || 'Не удалось удалить голос',
+          { variant: 'error' },
         );
       }
     } else {
@@ -121,11 +121,11 @@ const VotingOptionCard = ({
 
         lastVoteTimestampRef.current = Date.now();
 
-        enqueueSnackbar("Ваш голос защитан", { variant: "success" });
+        enqueueSnackbar('Ваш голос защитан', { variant: 'success' });
       } catch (e) {
         enqueueSnackbar(
-          API_ERRORS[e.data?.message] || "Не удалось проголосовать",
-          { variant: "error" }
+          API_ERRORS[e.data?.message] || 'Не удалось проголосовать',
+          { variant: 'error' },
         );
       }
     }
@@ -135,11 +135,11 @@ const VotingOptionCard = ({
     try {
       await deleteVotingOption(id).unwrap();
 
-      enqueueSnackbar("Вариант удалён", { variant: "success" });
+      enqueueSnackbar('Вариант удалён', { variant: 'success' });
     } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || "Не удалось удалить вариант",
-        { variant: "error" }
+        API_ERRORS[e.data?.message] || 'Не удалось удалить вариант',
+        { variant: 'error' },
       );
     }
   };
@@ -150,16 +150,16 @@ const VotingOptionCard = ({
         component="a"
         target="_blank"
         href={cardUrl}
-        sx={{ width: "auto" }}
+        sx={{ width: 'auto' }}
       >
         <CardMedia
           component="img"
           sx={{
             width: 72,
             height: 96,
-            objectFit: "cover",
+            objectFit: 'cover',
             flexShrink: 0,
-            bgcolor: "background.paper",
+            bgcolor: 'background.paper',
           }}
           src={imageUrl}
           srcSet={imageSrcSet}
@@ -169,13 +169,13 @@ const VotingOptionCard = ({
     ) : (
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           width: 72,
           height: 96,
           flexShrink: 0,
-          bgcolor: "background.paper",
+          bgcolor: 'background.paper',
         }}
       >
         <InsertDriveFileIcon sx={{ fontSize: 32 }} />
@@ -185,11 +185,11 @@ const VotingOptionCard = ({
   const renderCardContent = () => (
     <CardContent
       sx={{
-        display: "flex",
+        display: 'flex',
         px: { xs: 1, sm: 2 },
         py: { xs: 0.5, sm: 1 },
-        height: "100%",
-        "&:last-child": { pb: { xs: 0.5, sm: 1 } },
+        height: '100%',
+        '&:last-child': { pb: { xs: 0.5, sm: 1 } },
       }}
     >
       <Box sx={{ flexGrow: 1 }}>
@@ -198,7 +198,7 @@ const VotingOptionCard = ({
           component="h2"
           display="flex"
           alignItems="center"
-          sx={{ flexGrow: 1, fontSize: { xs: "1rem", sm: "1.5rem" } }}
+          sx={{ flexGrow: 1, fontSize: { xs: '1rem', sm: '1.5rem' } }}
         >
           {cardTitle}
         </Typography>
@@ -216,13 +216,13 @@ const VotingOptionCard = ({
         component="div"
         color="text.secondary"
         sx={{
-          display: { xs: "none", md: "inline-flex" },
-          alignItems: "center",
-          mt: "auto",
+          display: { xs: 'none', md: 'inline-flex' },
+          alignItems: 'center',
+          mt: 'auto',
         }}
       >
         Предложил:
-        <Box sx={{ ml: 0.5, display: "inline-flex", alignItems: "center" }}>
+        <Box sx={{ ml: 0.5, display: 'inline-flex', alignItems: 'center' }}>
           <Avatar
             src={votingOption.authorData?.avatarUrl}
             sx={{ width: 24, height: 24 }}
@@ -240,9 +240,9 @@ const VotingOptionCard = ({
     <>
       <Card
         sx={{
-          display: "flex",
+          display: 'flex',
           flexGrow: 1,
-          bgcolor: isActive ? "rgba(102, 187, 106, 0.53)" : undefined,
+          bgcolor: isActive ? 'rgba(102, 187, 106, 0.53)' : undefined,
         }}
         variant="elevation"
       >
@@ -260,10 +260,10 @@ const VotingOptionCard = ({
         )}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
             flexShrink: 0,
             order: -1,
             px: 1,
@@ -282,12 +282,12 @@ const VotingOptionCard = ({
         {canDeleteVotingOption && (
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               flexShrink: 0,
               width: { xs: 32, sm: 48 },
-              ml: "auto",
+              ml: 'auto',
             }}
           >
             <IconButton
