@@ -17,12 +17,13 @@ import SaveIcon from '@mui/icons-material/Save';
 import TwitchBadge from 'components/TwitchBadge';
 import useChannelLogin from 'hooks/useChannelLogin';
 import { UpdateChatGoalDto } from 'features/api/apiTypes';
-import { API_ERRORS, TwitchUserType } from 'features/api/apiConstants';
+import { TwitchUserType } from 'features/api/apiConstants';
 import {
   useChatGoalQuery,
   useUpdateChatGoalMutation,
   useUserQuery,
 } from 'features/api/apiSlice';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 
 const USER_TYPES_ITEMS = [
   { label: 'Модеры', type: TwitchUserType.Mod, badge: ['moderator'] },
@@ -114,11 +115,10 @@ const ChatGoalOptions = () => {
       }).unwrap();
 
       enqueueSnackbar('Настройки успешно сохранены', { variant: 'success' });
-    } catch (err: any) {
-      enqueueSnackbar(
-        API_ERRORS[err.data?.message] || 'Не удалось обновить настройки',
-        { variant: 'error' },
-      );
+    } catch (err) {
+      enqueueSnackbar(getErrorMessage(err) || 'Не удалось обновить настройки', {
+        variant: 'error',
+      });
     }
   });
 

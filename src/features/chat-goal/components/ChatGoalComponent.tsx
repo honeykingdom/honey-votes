@@ -18,7 +18,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import useChannelLogin from 'hooks/useChannelLogin';
 import ConfirmationDialog from 'components/ConfirmationDialog';
-import { API_ERRORS, ChatGoalStatus } from 'features/api/apiConstants';
+import { ChatGoalStatus } from 'features/api/apiConstants';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 import {
   useMeQuery,
   useMeRolesQuery,
@@ -91,8 +92,8 @@ const ChatGoalComponent = () => {
           chatGoalId: goal.data.broadcasterId,
           body: { listening },
         }).unwrap();
-      } catch (e: any) {
-        error = e.data?.message;
+      } catch (e) {
+        error = getErrorMessage(e);
       }
     } else {
       listening = true;
@@ -102,13 +103,13 @@ const ChatGoalComponent = () => {
           broadcasterId: channel.data!.id,
           listening,
         }).unwrap();
-      } catch (e: any) {
-        error = e.data?.message;
+      } catch (e) {
+        error = getErrorMessage(e);
       }
     }
 
     if (error) {
-      enqueueSnackbar(API_ERRORS[error] || 'Не удалось включить чатгол', {
+      enqueueSnackbar(error || 'Не удалось включить чатгол', {
         variant: 'error',
       });
     } else {
@@ -126,9 +127,9 @@ const ChatGoalComponent = () => {
         'Количество потраченных пользователями голосов обнулено',
         { variant: 'success' },
       );
-    } catch (e: any) {
+    } catch (e) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] ||
+        getErrorMessage(e) ||
           'Не удалось обнулить количество потраченных пользователями голосов',
         { variant: 'error' },
       );

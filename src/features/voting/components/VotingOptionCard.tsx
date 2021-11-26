@@ -21,7 +21,7 @@ import {
   useVotingQuery,
 } from 'features/api/apiSlice';
 import { VotingOption } from 'features/api/apiTypes';
-import { API_ERRORS } from 'features/api/apiConstants';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import useChannelLogin from 'hooks/useChannelLogin';
 import getCanDeleteVotingOption from '../utils/getCanDeleteVotingOption';
@@ -111,11 +111,10 @@ const VotingOptionCard = ({
         await deleteVote(id).unwrap();
 
         enqueueSnackbar('Голос удалён', { variant: 'success' });
-      } catch (e: any) {
-        enqueueSnackbar(
-          API_ERRORS[e.data?.message] || 'Не удалось удалить голос',
-          { variant: 'error' },
-        );
+      } catch (e) {
+        enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить голос', {
+          variant: 'error',
+        });
       }
     } else {
       try {
@@ -125,11 +124,10 @@ const VotingOptionCard = ({
         lastVoteTimestampRef.current = Date.now();
 
         enqueueSnackbar('Ваш голос защитан', { variant: 'success' });
-      } catch (e: any) {
-        enqueueSnackbar(
-          API_ERRORS[e.data?.message] || 'Не удалось проголосовать',
-          { variant: 'error' },
-        );
+      } catch (e) {
+        enqueueSnackbar(getErrorMessage(e) || 'Не удалось проголосовать', {
+          variant: 'error',
+        });
       }
     }
   };
@@ -139,11 +137,10 @@ const VotingOptionCard = ({
       await deleteVotingOption(id).unwrap();
 
       enqueueSnackbar('Вариант удалён', { variant: 'success' });
-    } catch (e: any) {
-      enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось удалить вариант',
-        { variant: 'error' },
-      );
+    } catch (e) {
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить вариант', {
+        variant: 'error',
+      });
     }
   };
 

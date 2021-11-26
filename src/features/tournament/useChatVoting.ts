@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chat, PrivateMessage } from 'twitch-js';
 import { useSnackbar } from 'notistack';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 import { Permissions } from './tournamentTypes';
 
 let chat: Chat | null = null;
@@ -67,7 +68,10 @@ const useChatVoting = (
 
         chat.join(channel);
       } catch (e) {
-        enqueueSnackbar('Не удалось подключиться к чату', { variant: 'error' });
+        enqueueSnackbar(
+          getErrorMessage(e) || 'Не удалось подключиться к чату',
+          { variant: 'error' },
+        );
         setIsActive(false);
       }
     })();

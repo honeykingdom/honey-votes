@@ -12,7 +12,7 @@ import {
   useUpdateVotingMutation,
 } from 'features/api/apiSlice';
 import { Voting } from 'features/api/apiTypes';
-import { API_ERRORS } from 'features/api/apiConstants';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import useChannelLogin from 'hooks/useChannelLogin';
 import VotingFormModal from './VotingFormModal/VotingFormModal';
@@ -59,11 +59,10 @@ const VotingActions = ({
       await updateVoting(data).unwrap();
 
       enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e: any) {
-      enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
-        { variant: 'error' },
-      );
+    } catch (e) {
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось обновить голосование', {
+        variant: 'error',
+      });
     }
   };
 
@@ -86,11 +85,10 @@ const VotingActions = ({
       enqueueSnackbar('Голосование успешно удалено', { variant: 'success' });
 
       router.push(`/${login}/voting`);
-    } catch (e: any) {
-      enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось удалить голосование',
-        { variant: 'error' },
-      );
+    } catch (e) {
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить голосование', {
+        variant: 'error',
+      });
     }
   };
 

@@ -17,6 +17,7 @@ import {
   useVotingListQuery,
 } from 'features/api/apiSlice';
 import { UpdateVotingDto } from 'features/api/apiTypes';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 
 const VotingListPage = () => {
   const router = useRouter();
@@ -52,8 +53,9 @@ const VotingListPage = () => {
 
       router.push(`/${login}/voting/${newVoting.id}`);
     } catch (e) {
-      // TODO: show error
-      enqueueSnackbar('Не удалось создать голосование', { variant: 'error' });
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось создать голосование', {
+        variant: 'error',
+      });
     }
   };
 

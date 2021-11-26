@@ -34,7 +34,7 @@ import {
 } from 'features/api/apiSlice';
 import { renderedVotingOptionsSelector } from 'features/api/apiSelectors';
 import apiSchema from 'features/api/apiSchema.json';
-import { API_ERRORS } from 'features/api/apiConstants';
+import getErrorMessage from 'features/api/utils/getErrorMessage';
 import UserBadges from 'features/voting/components/UserBadges';
 import useVotingId from 'features/voting/hooks/useVotingId';
 import getCanManageVoting from 'features/voting/utils/getCanManageVoting';
@@ -91,11 +91,10 @@ const VotingComponent = () => {
       await updateVoting(arg).unwrap();
 
       enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e: any) {
-      enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
-        { variant: 'error' },
-      );
+    } catch (e) {
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось обновить голосование', {
+        variant: 'error',
+      });
     }
   };
 
@@ -124,11 +123,10 @@ const VotingComponent = () => {
       enqueueSnackbar('Вариант добавлен', { variant: 'success' });
 
       setIsVotingOptionModalOpened(false);
-    } catch (e: any) {
-      enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось добавить вариант',
-        { variant: 'error' },
-      );
+    } catch (e) {
+      enqueueSnackbar(getErrorMessage(e) || 'Не удалось добавить вариант', {
+        variant: 'error',
+      });
     }
   };
 
