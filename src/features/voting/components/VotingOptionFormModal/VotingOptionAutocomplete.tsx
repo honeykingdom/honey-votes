@@ -42,7 +42,7 @@ const VotingOptionAutocomplete = ({
   const [searchMovies, searchMoviesResult] = useLazySearchMoviesQuery();
   const [searchGames, searchGamesResult] = useLazySearchGamesQuery();
 
-  const options =
+  const options: any[] =
     type === VotingOptionType.KinopoiskMovie
       ? searchMoviesResult.data || []
       : searchGamesResult.data || [];

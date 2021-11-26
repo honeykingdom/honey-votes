@@ -176,8 +176,9 @@ const MovieCard = ({
       }}
     >
       <a
-        href={filmId ? `//kinopoisk.ru/film/${filmId}/` : null}
+        href={filmId ? `//kinopoisk.ru/film/${filmId}/` : ''}
         target="_blank"
+        rel="noopener noreferrer"
         style={{
           display: 'block',
           width: CARD_IMAGE_WIDTH_MAP[size],

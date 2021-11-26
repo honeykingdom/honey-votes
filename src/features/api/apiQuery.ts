@@ -9,9 +9,9 @@ import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import jwtDecode from 'jwt-decode';
 import { AppState } from 'app/store';
 import storeTokens from 'features/auth/storeTokens';
+import { updateTokens } from 'features/auth/authSlice';
 import { API_BASE, API_BASE_POSTGREST, SUPABASE_HEADERS } from './apiConstants';
 import { Jwt, RefreshTokenResponse } from './apiTypes';
-import { updateTokens } from 'features/auth/authSlice';
 
 const baseQuery = fetchBaseQuery({ baseUrl: '' });
 
@@ -52,15 +52,14 @@ const apiQuery: BaseQueryFn<
   if (isApiUrl) {
     const state = api.getState() as AppState;
 
-    let accessToken = state.auth.accessToken;
-    let refreshToken = state.auth.refreshToken;
+    let { accessToken, refreshToken } = state.auth;
 
     if (accessToken) {
       const accessTokenJwt = jwtDecode<Jwt>(accessToken);
 
       const isAccessTokenExpired = accessTokenJwt.exp * 1000 < Date.now();
 
-      if (isAccessTokenExpired) {
+      if (isAccessTokenExpired && refreshToken) {
         const refreshTokenResponse = (await baseQuery(
           getRefreshTokenQuery(refreshToken),
           api,
@@ -77,10 +76,12 @@ const apiQuery: BaseQueryFn<
       }
     }
 
+    if (!accessToken) throw new Error('No access token');
+
     const newArgs = addHeadersToFetchArgs(args, getApiHeaders(accessToken));
     let result = await baseQuery(newArgs, api, extraOptions);
 
-    if (accessToken && result.error?.status === 401) {
+    if (accessToken && refreshToken && result.error?.status === 401) {
       const refreshTokenResponse = (await baseQuery(
         getRefreshTokenQuery(refreshToken),
         api,
@@ -94,9 +95,12 @@ const apiQuery: BaseQueryFn<
         api.dispatch(updateTokens({ accessToken, refreshToken }));
         storeTokens(accessToken, refreshToken);
 
-        const newArgs = addHeadersToFetchArgs(args, getApiHeaders(accessToken));
+        const newArgs2 = addHeadersToFetchArgs(
+          args,
+          getApiHeaders(accessToken),
+        );
 
-        result = await baseQuery(newArgs, api, extraOptions);
+        result = await baseQuery(newArgs2, api, extraOptions);
       }
     }
 

@@ -36,13 +36,14 @@ export type VotingFormParams = Omit<
 const transformToFormValues = (values: UpdateVotingDto): VotingFormParams => ({
   ...values,
   allowedVotingOptionTypes: {
-    [VotingOptionType.Custom]: values.allowedVotingOptionTypes.includes(
+    [VotingOptionType.Custom]: values.allowedVotingOptionTypes!.includes(
       VotingOptionType.Custom,
     ),
-    [VotingOptionType.KinopoiskMovie]: values.allowedVotingOptionTypes.includes(
-      VotingOptionType.KinopoiskMovie,
-    ),
-    [VotingOptionType.IgdbGame]: values.allowedVotingOptionTypes.includes(
+    [VotingOptionType.KinopoiskMovie]:
+      values.allowedVotingOptionTypes!.includes(
+        VotingOptionType.KinopoiskMovie,
+      ),
+    [VotingOptionType.IgdbGame]: values.allowedVotingOptionTypes!.includes(
       VotingOptionType.IgdbGame,
     ),
   },
@@ -119,7 +120,7 @@ const VotingFormModal = ({
       aria-describedby="scroll-dialog-description"
     >
       <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>
-      <DialogContent dividers={true}>
+      <DialogContent dividers>
         <VotingForm
           useFormReturn={useFormReturn}
           defaultValues={defaultValues}

@@ -56,6 +56,7 @@ const MoviePicker = ({
 
         // const response = await searchByKeyword(inputValue.trim());
 
+        // eslint-disable-next-line no-useless-return
         if (!active) return;
 
         // setOptions(response?.films.map(transformKinopoiskMovie) || []);
@@ -109,7 +110,7 @@ const MoviePicker = ({
         <li {...props}>
           <Box display="flex">
             <img
-              src={option.info.posterUrlPreview}
+              src={option.info?.posterUrlPreview}
               alt={option.title}
               style={{ width: 32, marginRight: 8 }}
             />
@@ -137,6 +138,7 @@ const MoviePicker = ({
           </Box>
         </li>
       )}
+      // @ts-expect-error
       onChange={(_, movie: Movie) => {
         // setValue(movie);
         onChange(movie);

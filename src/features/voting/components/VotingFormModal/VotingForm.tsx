@@ -56,7 +56,7 @@ const SWITCHES: { label: string; name: keyof UpdateVotingDto }[] = [
 ];
 
 const getInitialIsExtended = (values?: UpdateVotingDto) => {
-  if (!values) return false;
+  if (!values || !values.permissions) return false;
 
   return (
     values.permissions.follower.minutesToFollowRequiredToVote ||
@@ -267,7 +267,6 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             render={({ field }) => (
               <Slider
                 aria-label="Максимальное количество вариантов для голосования"
-                name=""
                 valueLabelDisplay="auto"
                 step={2}
                 min={apiSchema.Voting.votingOptionsLimit.minimum}

@@ -39,11 +39,8 @@ import Permissions from './Permissions';
 import { OnChatVotingChange } from '../types';
 
 /** Replaces `voteCommand` at the start of the message with spaces */
-const normalizeTwitchChatMessage = (message: string, voteCommand = '') => {
-  return message
-    .replace(voteCommand, Array(voteCommand).fill(' ').join(''))
-    .trim();
-};
+const normalizeTwitchChatMessage = (message: string, voteCommand = '') =>
+  message.replace(voteCommand, Array(voteCommand).fill(' ').join('')).trim();
 
 const ChatVotingComponent = () => {
   const router = useRouter();
@@ -51,13 +48,13 @@ const ChatVotingComponent = () => {
   const [isClearVotesDialogOpen, setIsClearVotesDialogOpen] = useState(false);
 
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
   const me = useMeQuery();
-  const meRoles = useMeRolesQuery({ login }, { skip: !login });
-  const chatVoting = useChatVotingQuery(channel.data?.id, {
+  const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
+  const chatVoting = useChatVotingQuery(channel.data?.id as string, {
     skip: !channel.data,
   });
-  const chatVotes = useChatVotesQuery(channel.data?.id, {
+  const chatVotes = useChatVotesQuery(channel.data?.id as string, {
     skip: !channel.data,
   });
 
@@ -70,6 +67,8 @@ const ChatVotingComponent = () => {
   if (chatVoting.isUninitialized || chatVoting.isLoading) return null;
 
   const getWinner = () => {
+    if (!chatVotes.data) return;
+
     if (winners.length === chatVotes.data.ids.length) return;
 
     let randomIndex: number;
@@ -78,10 +77,10 @@ const ChatVotingComponent = () => {
       randomIndex = getRandomInt(0, chatVotes.data.ids.length);
 
       const randomId = chatVotes.data.ids[randomIndex];
-      const userVote = chatVotes.data.entities[randomId];
+      const userVote = chatVotes.data.entities[randomId]!;
 
       if (!winners.some((w) => w.userName === userVote.userName)) {
-        setWinners((prev) => [...prev, { ...userVote }]);
+        setWinners((prev) => [...prev, { ...userVote } as ChatVote]);
 
         break;
       }
@@ -105,11 +104,19 @@ const ChatVotingComponent = () => {
   };
 
   const handleChatVotingChange: OnChatVotingChange = (body) => {
+    if (!channel.data) return;
+
     if (chatVoting.data) {
       updateChatVoting({ chatVotingId: channel.data.id, body });
     } else {
       createChatVoting({ ...body, broadcasterId: channel.data.id });
     }
+  };
+
+  const handleClearChatVoting = () => {
+    if (!channel.data) return;
+
+    clearChatVoting(channel.data.id);
   };
 
   const toggleListening = () => {
@@ -122,10 +129,11 @@ const ChatVotingComponent = () => {
     clearChatVotingResult.isLoading ||
     chatVoting.isFetching;
 
-  const canManage =
+  const canManage = !!(
     !me.isError &&
     !meRoles.isError &&
-    (me.data?.id === channel.data?.id || meRoles.data?.editor);
+    (me.data?.id === channel.data?.id || meRoles.data?.editor)
+  );
 
   const renderedChatVotes = chatVotes.data
     ? chatVotesSelectors.selectAll(chatVotes.data)
@@ -277,7 +285,7 @@ const ChatVotingComponent = () => {
         <Table sx={{ tableLayout: 'fixed' }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '50%' }}></TableCell>
+              <TableCell sx={{ width: '50%' }} />
               <TableCell>Ник</TableCell>
               <TableCell>Дата</TableCell>
             </TableRow>
@@ -313,7 +321,7 @@ const ChatVotingComponent = () => {
         title="Очистить голоса"
         description="Вы действительно хотите удалить все голоса?"
         handleClose={() => setIsClearVotesDialogOpen(false)}
-        handleYes={() => clearChatVoting(channel.data.id)}
+        handleYes={handleClearChatVoting}
       />
     </Box>
   );

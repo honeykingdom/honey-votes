@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Chat, PrivateMessage } from 'twitch-js';
-import { Permissions } from './tournamentTypes';
 import { useSnackbar } from 'notistack';
+import { Permissions } from './tournamentTypes';
 
 let chat: Chat | null = null;
 
@@ -13,7 +13,7 @@ const getVoteNumber = (
 ): number | null => {
   if (!VOTE_NUMBERS.includes(message.message)) return null;
 
-  const number = Number.parseInt(message.message);
+  const number = Number.parseInt(message.message, 10);
 
   if (number > moviesCount) return null;
 
@@ -94,10 +94,12 @@ const useChatVoting = (
       );
     };
 
+    // @ts-expect-error
     chat.on('PRIVMSG', handleMessage);
 
     return () => {
       if (chat) {
+        // @ts-expect-error
         chat.off('PRIVMSG', handleMessage);
       }
     };

@@ -1,7 +1,7 @@
 export const API_BASE = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/honey-votes`;
 export const API_BASE_POSTGREST = `${process.env.NEXT_PUBLIC_SUPABASE_HOST}/rest/v1`;
 
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY!;
 export const SUPABASE_HEADERS = {
   apikey: SUPABASE_KEY,
   Authorization: `Bearer ${SUPABASE_KEY}`,
@@ -95,7 +95,7 @@ export enum HoneyError {
 }
 
 // prettier-ignore
-export const API_ERRORS: Record<HoneyError, string> = {
+export const API_ERRORS: Record<HoneyError | string, string> = {
   [HoneyError.VotingNoPermission]: 'У вас недостаточно прав чтобы создать голосование.',
   // TODO:
   [HoneyError.VotingCreateLimitReached]: '',

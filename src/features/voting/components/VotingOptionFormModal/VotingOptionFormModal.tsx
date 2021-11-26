@@ -80,7 +80,7 @@ const VotingOptionFormModal = ({
 
     setIsLoading(true);
 
-    await onSubmit(body);
+    await onSubmit(body!);
 
     setIsLoading(false);
   };
@@ -96,7 +96,7 @@ const VotingOptionFormModal = ({
       aria-describedby="scroll-dialog-description"
     >
       <DialogTitle id="scroll-dialog-title">{title}</DialogTitle>
-      <DialogContent dividers={true} sx={{ minHeight: 320 }}>
+      <DialogContent dividers sx={{ minHeight: 320 }}>
         <VotingOptionForm
           useFormReturn={useFormReturn}
           allowedVotingOptionTypes={allowedVotingOptionTypes}

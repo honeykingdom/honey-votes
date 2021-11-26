@@ -59,7 +59,7 @@ const VotingActions = ({
       await updateVoting(data).unwrap();
 
       enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
         { variant: 'error' },
@@ -86,7 +86,7 @@ const VotingActions = ({
       enqueueSnackbar('Голосование успешно удалено', { variant: 'success' });
 
       router.push(`/${login}/voting`);
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] || 'Не удалось удалить голосование',
         { variant: 'error' },

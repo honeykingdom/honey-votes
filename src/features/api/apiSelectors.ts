@@ -28,13 +28,13 @@ const meSelector = api.endpoints.me.select();
 
 const getFullVoteValues = (votes: EntityState<Vote>) =>
   votes.ids.reduce((acc, id) => {
-    const vote = votes.entities[id];
+    const vote = votes.entities[id]!;
 
     return {
       ...acc,
       [vote.votingOptionId]: (acc[vote.votingOptionId] || 0) + 1,
     };
-  }, {});
+  }, {} as Record<number, number>);
 
 export const renderedVotingOptionsSelector = createSelector(
   votingSelector,
@@ -46,16 +46,17 @@ export const renderedVotingOptionsSelector = createSelector(
     if (!voting.data || !votingOptions.data) return [];
     if (voting.data.showValues && !votes.data) return [];
 
-    let fullVoteValues: Record<number, number> = {};
+    let fullVoteValues: ReturnType<typeof getFullVoteValues> = {};
 
-    if (voting.data.showValues) {
+    if (voting.data.showValues && votes.data) {
       fullVoteValues = getFullVoteValues(votes.data);
     }
 
     const result = votingOptions.data.ids.map((id) => {
-      const votingOption = votingOptions.data.entities[id];
+      const votingOption = votingOptions.data!.entities[id]!;
       const isActive =
-        votes.data?.entities[me.data?.id]?.votingOptionId === votingOption.id;
+        votes.data?.entities[me.data?.id || '']?.votingOptionId ===
+        votingOption.id;
       const fullVotesValue = voting.data?.showValues
         ? fullVoteValues[votingOption.id]
         : '-';

@@ -24,10 +24,8 @@ const PermissionsForm = ({
   ];
 
   const handleCheckboxChange =
-    (name: string) => (e: SyntheticEvent<HTMLInputElement, Event>) => {
-      const value = e.currentTarget.checked;
-
-      onChange({ permissions: { ...permissions, [name]: value } });
+    (name: string) => (e: SyntheticEvent<Element, Event>, checked: boolean) => {
+      onChange({ permissions: { ...permissions, [name]: checked } });
     };
 
   return (

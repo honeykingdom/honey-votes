@@ -39,10 +39,12 @@ const ChatGoalComponent = () => {
   const [isClearVotesDialogOpen, setIsClearVotesDialogOpen] = useState(false);
 
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
   const me = useMeQuery();
-  const meRoles = useMeRolesQuery({ login }, { skip: !login });
-  const goal = useChatGoalQuery(channel.data?.id, { skip: !channel.data });
+  const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
+  const goal = useChatGoalQuery(channel.data?.id as string, {
+    skip: !channel.data,
+  });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,7 +75,7 @@ const ChatGoalComponent = () => {
     goal.data?.status === ChatGoalStatus.TimerRunning ||
     goal.data?.status === ChatGoalStatus.VotingRunning;
 
-  const widgetLink = getWidgetLink(goal.data?.broadcasterId);
+  const widgetLink = getWidgetLink(goal.data?.broadcasterId || '');
 
   const handleToggleListening = async () => {
     if (!goal.isSuccess) return;
@@ -89,7 +91,7 @@ const ChatGoalComponent = () => {
           chatGoalId: goal.data.broadcasterId,
           body: { listening },
         }).unwrap();
-      } catch (e) {
+      } catch (e: any) {
         error = e.data?.message;
       }
     } else {
@@ -97,10 +99,10 @@ const ChatGoalComponent = () => {
 
       try {
         await createChatGoal({
-          broadcasterId: channel.data.id,
+          broadcasterId: channel.data!.id,
           listening,
         }).unwrap();
-      } catch (e) {
+      } catch (e: any) {
         error = e.data?.message;
       }
     }
@@ -118,13 +120,13 @@ const ChatGoalComponent = () => {
 
   const handleResetUserVotes = async () => {
     try {
-      await resetChatGoalVotes(channel.data.id).unwrap();
+      await resetChatGoalVotes(channel.data!.id).unwrap();
 
       enqueueSnackbar(
         'Количество потраченных пользователями голосов обнулено',
         { variant: 'success' },
       );
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] ||
           'Не удалось обнулить количество потраченных пользователями голосов',
@@ -145,8 +147,8 @@ const ChatGoalComponent = () => {
           }
           onClick={() =>
             isGoalRunning
-              ? pauseChatGoal(goal.data?.broadcasterId)
-              : startChatGoal(goal.data?.broadcasterId)
+              ? pauseChatGoal(goal.data?.broadcasterId as string)
+              : startChatGoal(goal.data?.broadcasterId as string)
           }
         >
           {isGoalRunning ? 'Пауза' : 'Старт'}
@@ -155,7 +157,7 @@ const ChatGoalComponent = () => {
           startIcon={<ClearIcon />}
           sx={{ mr: 1 }}
           disabled={isDisabled}
-          onClick={() => resetChatGoal(goal.data?.broadcasterId)}
+          onClick={() => resetChatGoal(goal.data?.broadcasterId as string)}
         >
           Сброс
         </Button>

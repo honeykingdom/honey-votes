@@ -30,7 +30,9 @@ import getCanVote from '../utils/getCanVote';
 const IGDB_IMAGES_BASE_URL = 'https://images.igdb.com/igdb/image/upload';
 
 const getAuthorName = (votingOption?: VotingOption): string =>
-  votingOption.authorData?.displayName || votingOption.authorData?.login || '';
+  votingOption?.authorData?.displayName ||
+  votingOption?.authorData?.login ||
+  '';
 
 const getIgdbImageSrc = (id: string) =>
   `${IGDB_IMAGES_BASE_URL}/t_cover_small/${id}.jpg`;
@@ -69,7 +71,7 @@ const VotingOptionCard = ({
 
   const login = useChannelLogin();
   const me = useMeQuery();
-  const meRoles = useMeRolesQuery({ login }, { skip: !login });
+  const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
   const voting = useVotingQuery(votingId, { skip: !votingId });
   const [createVote, createVoteResult] = useCreateVoteMutation();
   const [deleteVote, deleteVoteResult] = useDeleteVoteMutation();
@@ -87,8 +89,8 @@ const VotingOptionCard = ({
     meRoles.data,
   );
 
-  let imageUrl = cardImageUrl;
-  let imageSrcSet = null;
+  let imageUrl = cardImageUrl || '';
+  let imageSrcSet = '';
 
   if (cardImageId) {
     imageUrl = getIgdbImageSrc(cardImageId);
@@ -109,7 +111,7 @@ const VotingOptionCard = ({
         await deleteVote(id).unwrap();
 
         enqueueSnackbar('Голос удалён', { variant: 'success' });
-      } catch (e) {
+      } catch (e: any) {
         enqueueSnackbar(
           API_ERRORS[e.data?.message] || 'Не удалось удалить голос',
           { variant: 'error' },
@@ -119,10 +121,11 @@ const VotingOptionCard = ({
       try {
         await createVote(id).unwrap();
 
+        // eslint-disable-next-line no-param-reassign
         lastVoteTimestampRef.current = Date.now();
 
         enqueueSnackbar('Ваш голос защитан', { variant: 'success' });
-      } catch (e) {
+      } catch (e: any) {
         enqueueSnackbar(
           API_ERRORS[e.data?.message] || 'Не удалось проголосовать',
           { variant: 'error' },
@@ -136,7 +139,7 @@ const VotingOptionCard = ({
       await deleteVotingOption(id).unwrap();
 
       enqueueSnackbar('Вариант удалён', { variant: 'success' });
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] || 'Не удалось удалить вариант',
         { variant: 'error' },

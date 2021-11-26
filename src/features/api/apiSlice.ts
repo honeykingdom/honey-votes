@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { RealtimeSubscription } from '@supabase/realtime-js';
+import type { RealtimeSubscription } from '@supabase/realtime-js';
 import supabase from 'utils/supabase';
 import apiQuery from './apiQuery';
 import {
@@ -80,7 +80,7 @@ export const api = createApi({
           id: arg.id ? `eq.${arg.id}` : undefined,
         },
       }),
-      transformResponse: (response) => response[0],
+      transformResponse: (response: User[]) => response[0],
     }),
 
     votingList: builder.query<Voting[], string>({
@@ -95,7 +95,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${VOTING_TABLE_NAME}`,
         params: { id: `eq.${votingId}` },
       }),
-      transformResponse: (response) => response[0],
+      transformResponse: (response: Voting[]) => response[0],
       onCacheEntryAdded: async (
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -108,17 +108,10 @@ export const api = createApi({
           subscription = supabase
             .from<Voting>(`${VOTING_TABLE_NAME}:id=eq.${arg}`)
             .on('*', (payload) =>
-              updateCachedData(() => {
-                if (
-                  payload.eventType === 'INSERT' ||
-                  payload.eventType === 'UPDATE'
-                ) {
-                  return payload.new;
-                }
-
-                if (payload.eventType === 'DELETE') {
-                  return null;
-                }
+              updateCachedData((): any => {
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
               }),
             )
             .subscribe();
@@ -277,7 +270,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}`,
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
-      transformResponse: (response) => response[0],
+      transformResponse: (response: ChatVoting[]) => response[0],
       onCacheEntryAdded: async (
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -292,17 +285,10 @@ export const api = createApi({
               `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`,
             )
             .on('*', (payload) =>
-              updateCachedData(() => {
-                if (
-                  payload.eventType === 'INSERT' ||
-                  payload.eventType === 'UPDATE'
-                ) {
-                  return payload.new;
-                }
-
-                if (payload.eventType === 'DELETE') {
-                  return null;
-                }
+              updateCachedData((): any => {
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
               }),
             )
             .subscribe();
@@ -396,7 +382,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_GOAL_TABLE_NAME}`,
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
-      transformResponse: (response) => response[0],
+      transformResponse: (response: ChatGoal[]) => response[0],
       onCacheEntryAdded: async (
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -409,7 +395,7 @@ export const api = createApi({
           subscription = supabase
             .from<ChatGoal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${arg}`)
             .on('*', (payload) =>
-              updateCachedData((draft) => {
+              updateCachedData((): any => {
                 if (payload.eventType === 'INSERT') return payload.new;
                 if (payload.eventType === 'UPDATE') return payload.new;
                 if (payload.eventType === 'DELETE') return null;

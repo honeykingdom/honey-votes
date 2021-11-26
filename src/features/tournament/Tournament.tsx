@@ -91,9 +91,8 @@ const getCardSize = (itemsCount: number) => {
   return 'small';
 };
 
-const getPercent = (value: number, total: number) => {
-  return ((value / total) * 100 || 0).toFixed(2);
-};
+const getPercent = (value: number, total: number) =>
+  ((value / total) * 100 || 0).toFixed(2);
 
 type Segment = WheelSegment & { id: string };
 
@@ -115,11 +114,12 @@ const Tournament = ({ initialMovies }: Props) => {
   const currentStepType = useRef<Step['type']>(step.type);
   currentStepType.current = step.type;
 
-  const spinningWheelRef = useRef<SpinningWheelRef>();
+  const spinningWheelRef = useRef<SpinningWheelRef>(null);
   const isWheelStarted = useRef(false);
 
   const audioElemRef = useRef<HTMLAudioElement>();
   const audioRef = useCallback((audio: HTMLAudioElement) => {
+    // eslint-disable-next-line no-param-reassign
     audio.volume = volumeRef.current;
     audioElemRef.current = audio;
   }, []);
@@ -143,7 +143,7 @@ const Tournament = ({ initialMovies }: Props) => {
   const [permissions, setPermissions] =
     useState<Permissions>(DEFAULT_PERMISSIONS);
   const chatVoting = useChatVoting(
-    me.data?.login,
+    me.data?.login || '',
     step.movies.length,
     permissions,
   );
@@ -167,7 +167,7 @@ const Tournament = ({ initialMovies }: Props) => {
       isWheelStarted.current = false;
 
       const startSpinning = () => {
-        spinningWheelRef.current.startSpinning(30, 4);
+        spinningWheelRef.current?.startSpinning(30, 4);
         playWheel();
       };
 
@@ -239,7 +239,7 @@ const Tournament = ({ initialMovies }: Props) => {
       return;
     }
 
-    nextStep(selectedMovieId);
+    nextStep(selectedMovieId!);
     setSelectedMovieId(null);
   };
 
@@ -339,9 +339,11 @@ const Tournament = ({ initialMovies }: Props) => {
           size={540}
           segments={wheelSegments}
           wheelColors={WHEEL_COLORS}
+          // TODO: fix this
+          // @ts-expect-error
           spinningWheelRef={spinningWheelRef}
           onSpinEnd={(index) => {
-            setSelectedMovieId(wheelSegments[index].id);
+            setSelectedMovieId(wheelSegments[index as number].id);
             playNoNoNo();
           }}
           timingFunction={timingFunction}

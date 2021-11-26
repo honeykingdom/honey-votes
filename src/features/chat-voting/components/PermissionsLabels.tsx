@@ -17,7 +17,7 @@ const PermissionsLabels = ({
   if (vip) badges.push({ title: 'Випы', name: 'vip' });
 
   if (sub) {
-    let title: string;
+    let title = '';
 
     if (subTierRequired === SubTier.Tier1) {
       title = 'Сабы';

@@ -12,14 +12,14 @@ const getCanVote = (voting?: Voting, me?: User, meRoles?: UserRoles) => {
   if (
     voting.permissions.sub.canVote &&
     meRoles.sub &&
-    meRoles.subTier >= voting.permissions.sub.subTierRequiredToVote
+    meRoles.subTier! >= voting.permissions.sub.subTierRequiredToVote
   ) {
     return true;
   }
   if (
     voting.permissions.follower.canVote &&
     meRoles.follower &&
-    meRoles.minutesFollowed >=
+    meRoles.minutesFollowed! >=
       voting.permissions.follower.minutesToFollowRequiredToVote
   ) {
     return true;

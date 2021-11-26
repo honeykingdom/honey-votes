@@ -63,8 +63,10 @@ const ChatGoalOptions = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
-  const goal = useChatGoalQuery(channel.data?.id, { skip: !channel.data });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
+  const goal = useChatGoalQuery(channel.data?.id as string, {
+    skip: !channel.data,
+  });
 
   const [updateChatGoal, updateChatGoalResult] = useUpdateChatGoalMutation();
 
@@ -99,7 +101,7 @@ const ChatGoalOptions = () => {
     isDisabled || R.equals(values, currentGoalOptions);
 
   const handleSaveOptions = handleSubmit(async (data, e) => {
-    e.preventDefault();
+    e!.preventDefault();
 
     const timerDuration = (data.timerDuration || 0) * 60 * 1000;
 
@@ -112,9 +114,9 @@ const ChatGoalOptions = () => {
       }).unwrap();
 
       enqueueSnackbar('Настройки успешно сохранены', { variant: 'success' });
-    } catch (e) {
+    } catch (err: any) {
       enqueueSnackbar(
-        API_ERRORS[e.data?.message] || 'Не удалось обновить настройки',
+        API_ERRORS[err.data?.message] || 'Не удалось обновить настройки',
         { variant: 'error' },
       );
     }

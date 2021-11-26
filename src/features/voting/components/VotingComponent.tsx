@@ -48,12 +48,12 @@ const VotingComponent = () => {
   const votingId = useVotingId();
   const { enqueueSnackbar } = useSnackbar();
 
-  const channel = useUserQuery({ login }, { skip: !login });
-  const voting = useVotingQuery(votingId, { skip: !votingId });
-  const votingOptions = useVotingOptionsQuery(votingId, { skip: !votingId });
-  const votes = useVotesQuery(votingId, { skip: !votingId });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
+  const voting = useVotingQuery(votingId!, { skip: !votingId });
+  const votingOptions = useVotingOptionsQuery(votingId!, { skip: !votingId });
+  const votes = useVotesQuery(votingId!, { skip: !votingId });
   const me = useMeQuery();
-  const meRoles = useMeRolesQuery({ login }, { skip: !login });
+  const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
 
   const [updateVoting, updateVotingResult] = useUpdateVotingMutation();
   const [createVotingOption] = useCreateVotingOptionMutation();
@@ -63,7 +63,7 @@ const VotingComponent = () => {
     useState(false);
 
   const renderedVotingOptions = useAppSelector((state) =>
-    renderedVotingOptionsSelector(state, votingId),
+    renderedVotingOptionsSelector(state, votingId!),
   );
 
   if (!voting.data) return null;
@@ -91,7 +91,7 @@ const VotingComponent = () => {
       await updateVoting(arg).unwrap();
 
       enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] || 'Не удалось обновить голосование',
         { variant: 'error' },
@@ -101,30 +101,30 @@ const VotingComponent = () => {
 
   const handleToggleCanManageVotes = () =>
     updateVotingAndNotify({
-      votingId,
+      votingId: votingId!,
       body: { canManageVotes: !voting.data?.canManageVotes },
     });
 
   const handleToggleCanManageVotingOptions = () =>
     updateVotingAndNotify({
-      votingId,
+      votingId: votingId!,
       body: { canManageVotingOptions: !voting.data?.canManageVotingOptions },
     });
 
   const handleToggleShowValues = () =>
     updateVotingAndNotify({
-      votingId,
+      votingId: votingId!,
       body: { showValues: !voting.data?.showValues },
     });
 
   const handleCreateVotingOption = async (body: VotingOptionDefaultValues) => {
     try {
-      await createVotingOption({ votingId, ...body }).unwrap();
+      await createVotingOption({ votingId: votingId!, ...body }).unwrap();
 
       enqueueSnackbar('Вариант добавлен', { variant: 'success' });
 
       setIsVotingOptionModalOpened(false);
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(
         API_ERRORS[e.data?.message] || 'Не удалось добавить вариант',
         { variant: 'error' },
@@ -170,7 +170,7 @@ const VotingComponent = () => {
               <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
-                    voting.data.permissions,
+                    voting.data!.permissions,
                     'canVote',
                   )}
                   channelId={channel.data?.id}
@@ -185,7 +185,7 @@ const VotingComponent = () => {
               <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
-                    voting.data.permissions,
+                    voting.data!.permissions,
                     'canAddOptions',
                   )}
                   channelId={channel.data?.id}
@@ -208,7 +208,7 @@ const VotingComponent = () => {
         </Table>
       </TableContainer>
 
-      <VotingActions voting={voting.data} buttons={['edit', 'delete']} />
+      <VotingActions voting={voting.data!} buttons={['edit', 'delete']} />
     </Box>
   );
 

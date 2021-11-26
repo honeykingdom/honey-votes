@@ -4,7 +4,7 @@ import { FilmSearchByFiltersResponse } from './kinopoiskApiTypes';
 
 const prepareHeaders = (headers: Headers) => {
   headers.set('Accept', 'application/json');
-  headers.set('X-API-KEY', process.env.NEXT_PUBLIC_KINOPOISK_API_KEY);
+  headers.set('X-API-KEY', process.env.NEXT_PUBLIC_KINOPOISK_API_KEY!);
 
   return headers;
 };

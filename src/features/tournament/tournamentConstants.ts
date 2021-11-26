@@ -22,7 +22,14 @@ export const DEFAULT_PERMISSIONS: Permissions = {
   [TwitchUserType.Viewer]: true,
 };
 
-export const USER_TYPES = [
+export const USER_TYPES: {
+  label: string;
+  name:
+    | TwitchUserType.Mod
+    | TwitchUserType.Vip
+    | TwitchUserType.Sub
+    | TwitchUserType.Viewer;
+}[] = [
   { label: 'Модеры', name: TwitchUserType.Mod },
   { label: 'Випы', name: TwitchUserType.Vip },
   { label: 'Сабы', name: TwitchUserType.Sub },

@@ -29,12 +29,12 @@ const KP = {
     `${option.nameRu || option.nameEn}${
       option.year ? ` (${option.year})` : ''
     }`,
-  getOptionTitle: (option: Film) => option.nameRu || option.nameEn,
+  getOptionTitle: (option: Film) => option.nameRu || option.nameEn || '',
   getOptionDescription: (option: Film) =>
     `${[option.year, option.genres?.map((g) => g.genre).join(', ')]
       .filter(Boolean)
       .join(' - ')}`,
-  getOptionImage: (option: Film) => option.posterUrlPreview,
+  getOptionImage: (option: Film) => option.posterUrlPreview || '',
   isOptionEqualToValue: (option: Film, value: Film) =>
     option.filmId === value.filmId,
 };
@@ -46,10 +46,12 @@ const IGDB = {
         ? ` (${getYear(option.first_release_date * 1000)})`
         : ''
     }`,
-  getOptionTitle: (option: IgdbGame) => option.name,
+  getOptionTitle: (option: IgdbGame) => option.name || '',
   getOptionDescription: (option: IgdbGame) =>
     `${[
-      getYear(option.first_release_date * 1000),
+      option.first_release_date
+        ? getYear(option.first_release_date * 1000)
+        : null,
       option.genres?.map((g) => g.name).join(', '),
     ]
       .filter(Boolean)
@@ -64,6 +66,7 @@ const IGDB = {
 
 enum FieldType {
   Search = 'search',
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   Link = 'link',
 }
 

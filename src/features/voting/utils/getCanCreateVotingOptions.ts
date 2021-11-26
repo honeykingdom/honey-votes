@@ -37,14 +37,14 @@ const getCanCreateVotingOptions = (
   if (
     voting.permissions.sub.canAddOptions &&
     meRoles.sub &&
-    meRoles.subTier >= voting.permissions.sub.subTierRequiredToAddOptions
+    meRoles.subTier! >= voting.permissions.sub.subTierRequiredToAddOptions
   ) {
     return [true];
   }
   if (
     voting.permissions.follower.canAddOptions &&
     meRoles.follower &&
-    meRoles.minutesFollowed >=
+    meRoles.minutesFollowed! >=
       voting.permissions.follower.minutesToFollowRequiredToAddOptions
   ) {
     return [true];

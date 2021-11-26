@@ -45,7 +45,7 @@ const getVotingPermissionsBadges = (
 
   if (sub[mode]) {
     const requiredTier = sub[SUB_TIER[mode]];
-    let title: string;
+    let title = '';
     let version = '0';
 
     if (requiredTier === SubTier.Tier1) {

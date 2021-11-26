@@ -34,7 +34,7 @@ const getRandomChoiceStep = (movies: Movie[]): Step => {
 const getNextStep = (
   prevStep: Step,
   selectedMovieId?: number | string,
-): Step => {
+): Step | null => {
   if (prevStep.type === StepType.SHOW_WINNER) return null;
 
   if (prevStep.type === StepType.ADD_MOVIES) {
