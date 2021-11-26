@@ -5,8 +5,6 @@ type Props = {
   tags: any;
 };
 
-const TwitchChatMessage = ({ message, tags }: Props) => {
-  return <Box>{message}</Box>;
-};
+const TwitchChatMessage = ({ message, tags }: Props) => <Box>{message}</Box>;
 
 export default TwitchChatMessage;

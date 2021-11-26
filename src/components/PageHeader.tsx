@@ -9,26 +9,24 @@ type Props = {
   breadcrumbs: Parameters<typeof Breadcrumbs>[0]['items'];
 };
 
-const PageHeader = ({ title, pageTitle, breadcrumbs }: Props) => {
-  return (
-    <>
-      <Head>
-        <title>{`${title} | HoneyVotes`}</title>
-      </Head>
+const PageHeader = ({ title, pageTitle, breadcrumbs }: Props) => (
+  <>
+    <Head>
+      <title>{`${title} | HoneyVotes`}</title>
+    </Head>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-        <Typography component="div" variant="h4">
-          {pageTitle}
-        </Typography>
-      </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+      <Typography component="div" variant="h4">
+        {pageTitle}
+      </Typography>
+    </Box>
 
-      <Box sx={{ mb: 2 }}>
-        <Breadcrumbs items={breadcrumbs} />
-      </Box>
+    <Box sx={{ mb: 2 }}>
+      <Breadcrumbs items={breadcrumbs} />
+    </Box>
 
-      <Divider sx={{ mb: 2 }} />
-    </>
-  );
-};
+    <Divider sx={{ mb: 2 }} />
+  </>
+);
 
 export default PageHeader;

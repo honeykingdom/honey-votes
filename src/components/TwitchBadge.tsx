@@ -23,7 +23,7 @@ type Props = {
 
 const TwitchBadge = ({ channelId, name, version = '1', children }: Props) => {
   const globalBadges = useGlobalBadgesQuery();
-  const channelBadges = useChannelBadgesQuery(channelId, { skip: !channelId });
+  const channelBadges = useChannelBadgesQuery(channelId!, { skip: !channelId });
 
   let badge = getBadge(name, version, globalBadges.data, channelBadges.data);
 

@@ -23,14 +23,14 @@ type Props = {
 
 const DropdownButton = ({ button, options = [] }: Props) => {
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<HTMLDivElement | null>(null);
 
   const handleToggle = () => {
     setOpen((v) => !v);
   };
 
-  const handleClose = (event) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+  const handleClose = (e: MouseEvent | TouchEvent) => {
+    if (anchorRef.current && anchorRef.current.contains(e.target as Node)) {
       return;
     }
 
@@ -75,6 +75,7 @@ const DropdownButton = ({ button, options = [] }: Props) => {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="dropdown-button-menu">
                   {options.map(({ title, onClick }, key) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <MenuItem key={key} onClick={onClick}>
                       {title}
                     </MenuItem>

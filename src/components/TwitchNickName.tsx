@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import TwitchBadge from './TwitchBadge';
 
 type Props = {
-  channelId: string;
+  channelId?: string;
   userName: string;
   // TODO: add types
   tags: any;

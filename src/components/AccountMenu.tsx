@@ -28,12 +28,13 @@ import PurpleButton from './PurpleButton';
 
 const AccountMenu = () => {
   const dispatch = useAppDispatch();
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = !!anchorEl;
 
   const me = useMeQuery();
 
-  const handleClick = (e) => setAnchorEl(e.currentTarget);
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   const handleSignIn = () => {
