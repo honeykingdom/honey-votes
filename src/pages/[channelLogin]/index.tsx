@@ -10,7 +10,7 @@ import TwitchUsername from 'components/TwitchUsername';
 
 const ChannelPage = () => {
   const login = useChannelLogin();
-  const channel = useUserQuery({ login }, { skip: !login });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
   const username = useUsername();
 
   return (

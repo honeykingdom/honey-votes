@@ -3,7 +3,7 @@ import ThumbsUpDownIcon from '@mui/icons-material/ThumbsUpDown';
 import { BroadcasterType } from 'features/api/apiConstants';
 import { User } from 'features/api/apiTypes';
 
-const ADMINS = process.env.NEXT_PUBLIC_ADMINS.split(';');
+const ADMINS = process.env.NEXT_PUBLIC_ADMINS!.split(';');
 
 const getMainMenuLinks = (user: Pick<User, 'login' | 'broadcasterType'>) => {
   if (!user) return [];

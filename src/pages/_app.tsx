@@ -24,8 +24,14 @@ const App = (props: MyAppProps) => {
   const notistackRef = useRef<SnackbarProvider>(null);
 
   const onClickDismiss = (key: SnackbarKey) => () => {
-    notistackRef.current.closeSnackbar(key);
+    notistackRef.current?.closeSnackbar(key);
   };
+
+  const snackbarAction = (key: SnackbarKey) => (
+    <IconButton onClick={onClickDismiss(key)}>
+      <CloseIcon />
+    </IconButton>
+  );
 
   return (
     <CacheProvider value={emotionCache}>
@@ -36,11 +42,7 @@ const App = (props: MyAppProps) => {
             maxSnack={2}
             autoHideDuration={3000}
             preventDuplicate
-            action={(key) => (
-              <IconButton onClick={onClickDismiss(key)}>
-                <CloseIcon />
-              </IconButton>
-            )}
+            action={snackbarAction}
           >
             <DefaultSeo {...SEO} />
             <CssBaseline />

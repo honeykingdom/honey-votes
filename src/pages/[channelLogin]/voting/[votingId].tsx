@@ -15,8 +15,8 @@ const VotingPage = () => {
   const username = useUsername();
   const votingId = useVotingId();
 
-  const channel = useUserQuery({ login }, { skip: !login });
-  const voting = useVotingQuery(votingId, { skip: !votingId });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
+  const voting = useVotingQuery(votingId!, { skip: !votingId });
 
   const isLoading =
     voting.isLoading ||

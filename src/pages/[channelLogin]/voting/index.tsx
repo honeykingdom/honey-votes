@@ -25,9 +25,9 @@ const VotingListPage = () => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const channel = useUserQuery({ login }, { skip: !login });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
   const me = useMeQuery();
-  const votingList = useVotingListQuery(channel.data?.id, {
+  const votingList = useVotingListQuery(channel.data?.id as string, {
     skip: !channel.data,
   });
   const [createVoting] = useCreateVotingMutation();
@@ -40,23 +40,20 @@ const VotingListPage = () => {
   const toggleVotingForm = () => setIsVotingFormOpened((v) => !v);
 
   const handleCreateVoting = async (body: UpdateVotingDto) => {
-    const newVoting = await createVoting({
-      channelId: channel.data.id,
-      ...body,
-    });
+    if (!channel.data) return;
 
-    // @ts-expect-error
-    if (newVoting.error) {
-      enqueueSnackbar('Не удалось создать голосование', { variant: 'error' });
-    } else {
+    try {
+      const newVoting = await createVoting({
+        channelId: channel.data.id,
+        ...body,
+      }).unwrap();
+
       enqueueSnackbar('Голосование успешно создано', { variant: 'success' });
-    }
 
-    // TODO:
-    // @ts-expect-error
-    if (newVoting.data) {
-      // @ts-expect-error
-      router.push(`/${login}/voting/${newVoting.data.id}`);
+      router.push(`/${login}/voting/${newVoting.id}`);
+    } catch (e) {
+      // TODO: show error
+      enqueueSnackbar('Не удалось создать голосование', { variant: 'error' });
     }
   };
 
@@ -95,7 +92,7 @@ const VotingListPage = () => {
         <VotingList
           canManage={canManage}
           votingList={votingList.data}
-          channelLogin={login}
+          channelLogin={login || ''}
         />
       )}
 

@@ -11,7 +11,7 @@ const ChatVotesPage = () => {
   const login = useChannelLogin();
   const username = useUsername();
 
-  const channel = useUserQuery({ login }, { skip: !login });
+  const channel = useUserQuery({ login: login! }, { skip: !login });
 
   return (
     <Layout>
