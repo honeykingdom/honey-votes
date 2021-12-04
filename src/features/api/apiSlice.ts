@@ -59,7 +59,7 @@ export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: apiQuery,
-  tagTypes: ['Voting', 'ChatVote'],
+  tagTypes: ['Voting', 'Vote', 'ChatVote'],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -222,6 +222,7 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?votingId=eq.${votingId}&select=authorId,votingId,votingOptionId,value`,
       }),
+      providesTags: [{ type: 'Vote', id: 'LIST' }],
       transformResponse: (response: Vote[]) =>
         votesAdapter.addMany(votesAdapter.getInitialState(), response),
       onCacheEntryAdded: async (
@@ -263,6 +264,7 @@ export const api = createApi({
         method: 'POST',
         body: { votingOptionId } as CreateVoteDto,
       }),
+      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -270,6 +272,7 @@ export const api = createApi({
         method: 'DELETE',
         body: { votingOptionId } as DeleteVoteDto,
       }),
+      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
