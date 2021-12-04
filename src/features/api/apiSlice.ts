@@ -96,6 +96,7 @@ export const api = createApi({
         params: { id: `eq.${votingId}` },
       }),
       transformResponse: (response: Voting[]) => response[0],
+      providesTags: (result, error, arg) => [{ type: 'Voting', id: arg }],
       onCacheEntryAdded: async (
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -139,14 +140,20 @@ export const api = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Voting', id: 'LIST' },
+        { type: 'Voting', id: arg.votingId },
+      ],
     }),
     deleteVoting: builder.mutation<void, number>({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'Voting', id: 'LIST' },
+        { type: 'Voting', id: arg },
+      ],
     }),
 
     votingOptions: builder.query<EntityState<VotingOption>, number>({
