@@ -50,8 +50,14 @@ const VotingComponent = () => {
 
   const channel = useUserQuery({ login: login! }, { skip: !login });
   const voting = useVotingQuery(votingId!, { skip: !votingId });
-  const votingOptions = useVotingOptionsQuery(votingId!, { skip: !votingId });
-  const votes = useVotesQuery(votingId!, { skip: !votingId });
+  const votingOptions = useVotingOptionsQuery(votingId!, {
+    skip: !votingId,
+    pollingInterval: 3 * 60 * 1000, // 3 min
+  });
+  const votes = useVotesQuery(votingId!, {
+    skip: !votingId,
+    pollingInterval: 3 * 60 * 1000, // 3 min
+  });
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
 
