@@ -1,0 +1,26 @@
+{
+  "common": {
+    "changeLanguage": "Изменить язык на Русский"
+  },
+  "home": {
+    "title": "HoneyVotes",
+    "subtitle": "Voting on Twitch",
+    "features": [
+      {
+        "name": "voting",
+        "title": "Voting",
+        "description": "Viewers can add movies, games, or their own text as options. <br /> Can be limited to subs/followers only."
+      },
+      {
+        "name": "chat-voting",
+        "title": "Chat Voting",
+        "description": "Viewers enter their options directly in the twitch chat. The streamer sees them on the site and can choose the winner."
+      },
+      {
+        "name": "chat-goal",
+        "title": "Chat Goal",
+        "description": "Vote for or against until you get the required number of votes. <br /> There is a widget for OBS."
+      }
+    ]
+  }
+}
