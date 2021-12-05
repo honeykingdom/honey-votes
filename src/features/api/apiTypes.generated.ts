@@ -272,20 +272,14 @@ export interface components {
       broadcasterId: string;
     };
     ChatGoalEventType: "upvote" | "downvote";
-    ChatVoteEventPayload: {
-      userId: string;
-      userLogin: string;
-      userDisplayName: string;
-      votesCount: number;
-    };
-    ChatVoteEvent: {
-      type: components["schemas"]["ChatGoalEventType"];
-      payload: components["schemas"]["ChatVoteEventPayload"];
-    };
     ChatGoalEvent: {
       chatGoalId: string;
-      seed: number;
-      action: components["schemas"]["ChatVoteEvent"];
+      version: number;
+      type: components["schemas"]["ChatGoalEventType"];
+      userId: string;
+      userLogin: string;
+      votesCount: number;
+      userDisplayName: string;
     };
     ChatGoal: {
       broadcasterId: string;
