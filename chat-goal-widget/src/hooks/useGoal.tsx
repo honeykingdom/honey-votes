@@ -41,10 +41,10 @@ const useGoal = () => {
         setVotes((prev) => {
           let value: GoalVote["value"] = 1;
 
-          if (payload.new.action.type === GoalEventType.Upvote) value = 1;
-          if (payload.new.action.type === GoalEventType.Downvote) value = -1;
+          if (payload.new.type === GoalEventType.Upvote) value = 1;
+          if (payload.new.type === GoalEventType.Downvote) value = -1;
 
-          const vote = { ...payload.new.action.payload, value };
+          const vote = { ...payload.new, value };
           const newVotes = [...prev, vote];
 
           if (newVotes.length === MAX_VOTES_COUNT) newVotes.shift();
@@ -60,7 +60,7 @@ const useGoal = () => {
     };
   }, []);
 
-  return { goal, votes };
+  return { goal, votes, setVotes };
 };
 
 export default useGoal;

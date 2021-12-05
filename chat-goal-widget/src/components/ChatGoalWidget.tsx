@@ -104,7 +104,7 @@ const ChatGoalWidget = (): any => {
   const [timer, setTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const isTimerRunningRef = useRef(false);
-  const { goal, votes } = useGoal();
+  const { goal, votes, setVotes } = useGoal();
 
   isTimerRunningRef.current = isTimerRunning;
 
@@ -114,6 +114,7 @@ const ChatGoalWidget = (): any => {
     if (goal.status === GoalStatus.TimerIdle) {
       setIsTimerRunning(false);
       setTimer(goal.timerDuration);
+      setVotes([]);
     }
 
     if (goal.status === GoalStatus.TimerRunning) {
@@ -127,6 +128,7 @@ const ChatGoalWidget = (): any => {
 
     if (goal.status === GoalStatus.VotingIdle) {
       setIsTimerRunning(false);
+      setVotes([]);
     }
 
     if (goal.status === GoalStatus.VotingRunning) {
