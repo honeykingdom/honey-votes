@@ -59,7 +59,7 @@ export const chatVotesSelectors = chatVotesAdapter.getSelectors();
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: apiQuery,
-  tagTypes: ['Voting', 'Vote', 'ChatVoting', 'ChatVote'],
+  tagTypes: ['Voting', 'VotingOption', 'Vote', 'ChatVoting', 'ChatVote'],
   endpoints: (builder) => ({
     me: builder.query<User, void>({
       query: () => ({
@@ -160,6 +160,7 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
+      providesTags: [{ type: 'VotingOption', id: 'LIST' }],
       transformResponse: (response: VotingOption[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
@@ -210,12 +211,14 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
+      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
     deleteVotingOption: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
 
     votes: builder.query<EntityState<Vote>, number>({
