@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { I18nextProvider } from 'react-i18next';
 import { AppProps, NextWebVitalsMetric } from 'next/app';
 import { DefaultSeo } from 'next-seo';
 import { ThemeProvider } from '@mui/material/styles';
@@ -10,6 +11,7 @@ import { SnackbarKey, SnackbarProvider } from 'notistack';
 import createEmotionCache from 'utils/createEmotionCache';
 import theme from 'app/theme';
 import store from 'app/store';
+import i18n from 'app/i18n';
 import SEO from '../../next-seo.config';
 
 // Client-side cache, shared for the whole session of the user in the browser.
@@ -37,17 +39,19 @@ const App = (props: MyAppProps) => {
     <CacheProvider value={emotionCache}>
       <ThemeProvider theme={theme}>
         <ReduxProvider store={store}>
-          <SnackbarProvider
-            ref={notistackRef}
-            maxSnack={2}
-            autoHideDuration={3000}
-            preventDuplicate
-            action={snackbarAction}
-          >
-            <DefaultSeo {...SEO} />
-            <CssBaseline />
-            <Component {...pageProps} />
-          </SnackbarProvider>
+          <I18nextProvider i18n={i18n}>
+            <SnackbarProvider
+              ref={notistackRef}
+              maxSnack={2}
+              autoHideDuration={3000}
+              preventDuplicate
+              action={snackbarAction}
+            >
+              <DefaultSeo {...SEO} />
+              <CssBaseline />
+              <Component {...pageProps} />
+            </SnackbarProvider>
+          </I18nextProvider>
         </ReduxProvider>
       </ThemeProvider>
     </CacheProvider>
