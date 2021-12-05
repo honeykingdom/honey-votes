@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import {
   AppBar,
@@ -11,12 +12,14 @@ import {
 } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import PersonIcon from '@mui/icons-material/Person';
+import Flags from 'country-flag-icons/react/3x2';
 import getMainMenuLinks from 'utils/getMainMenuLinks';
 import { useMeQuery } from 'features/api/apiSlice';
 import { useAuthRedirect } from 'features/auth/useAuthRedirect';
 import AccountMenu from './AccountMenu';
 
 const Layout = ({ children }: any) => {
+  const [t, l18n] = useTranslation();
   const me = useMeQuery();
 
   useAuthRedirect();
@@ -72,6 +75,23 @@ const Layout = ({ children }: any) => {
                 rel="noreferrer noopener"
               >
                 <GitHubIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={t('changeLanguage') as string}>
+              <IconButton
+                color="inherit"
+                sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
+                onClick={() => {
+                  l18n.changeLanguage(l18n.language === 'ru' ? 'en' : 'ru');
+                }}
+              >
+                {l18n.language === 'ru' ? (
+                  // @ts-expect-error
+                  <Flags.RU style={{ width: 24, height: 24 }} />
+                ) : (
+                  // @ts-expect-error
+                  <Flags.US style={{ width: 24, height: 24 }} />
+                )}
               </IconButton>
             </Tooltip>
 
