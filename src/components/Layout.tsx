@@ -77,7 +77,7 @@ const Layout = ({ children }: any) => {
                 <GitHubIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title={t('changeLanguage') as string}>
+            {/* <Tooltip title={t('changeLanguage') as string}>
               <IconButton
                 color="inherit"
                 sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
@@ -93,7 +93,7 @@ const Layout = ({ children }: any) => {
                   <Flags.US style={{ width: 24, height: 24 }} />
                 )}
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <AccountMenu />
           </Box>
