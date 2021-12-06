@@ -10,7 +10,7 @@ i18n
   .use(initReactI18next)
   .init({
     debug: process.env.NODE_ENV === 'development',
-    ns: ['common', 'home'],
+    ns: ['common', 'home', 'voting', 'chatVoting', 'chatGoal'],
     defaultNS: 'common',
     fallbackLng: 'en',
     interpolation: {
