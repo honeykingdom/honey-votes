@@ -1,7 +1,7 @@
+import type { TFunction } from 'react-i18next';
 import { SubTier } from 'features/api/apiConstants';
 import { Voting } from 'features/api/apiTypes';
 import type { Badge } from '../components/UserBadges';
-import { FollowedTime } from '../votingConstants';
 
 type Mode = 'canVote' | 'canAddOptions';
 
@@ -18,30 +18,33 @@ const MINUTES_FOLLOWED: Record<
   canAddOptions: 'minutesToFollowRequiredToAddOptions',
 };
 
-const FOLLOWED_TIME_VALUES = {
-  [FollowedTime.TenMinutes]: 'от 10 минут',
-  [FollowedTime.ThirtyMinutes]: 'от 30 минут',
-  [FollowedTime.OneHour]: 'от 1 часа',
-  [FollowedTime.OneDay]: 'от 1 дня',
-  [FollowedTime.OneWeek]: 'от 1 недели',
-  [FollowedTime.OneMonth]: 'от 1 месяца',
-  [FollowedTime.ThreeMonths]: 'от 3 месяцев',
-};
+const T_OPTIONS = { ns: 'common' };
 
 const getVotingPermissionsBadges = (
   { mod, vip, sub, follower, viewer }: Voting['permissions'],
   mode: Mode,
+  t: TFunction,
 ): Badge[] => {
   const badges: Badge[] = [];
 
   if (viewer[mode]) {
-    badges.push({ title: 'Все зрители', name: 'glhf-pledge' });
+    badges.push({
+      title: t('userType.all', T_OPTIONS),
+      name: 'glhf-pledge',
+    });
 
     return badges;
   }
 
-  if (mod[mode]) badges.push({ title: 'Модеры', name: 'moderator' });
-  // if (vip[mode]) badges.push({ title: "Випы", name: "vip" });
+  if (mod[mode])
+    badges.push({
+      title: t('userType.mod_many', T_OPTIONS),
+      name: 'moderator',
+    });
+
+  if (vip[mode]) {
+    badges.push({ title: t('userType.vip_many', T_OPTIONS), name: 'vip' });
+  }
 
   if (sub[mode]) {
     const requiredTier = sub[SUB_TIER[mode]];
@@ -49,12 +52,16 @@ const getVotingPermissionsBadges = (
     let version = '0';
 
     if (requiredTier === SubTier.Tier1) {
-      title = 'Сабы';
+      title = t('userType.sub_many', T_OPTIONS);
     } else if (requiredTier === SubTier.Tier2) {
-      title = 'Сабы (Уровень 2+)';
+      const tier = t('subTier.2', T_OPTIONS);
+
+      title = `${t('userType.sub_many', T_OPTIONS)} (${tier}+)`;
       version = '2000';
     } else if (requiredTier === SubTier.Tier3) {
-      title = 'Сабы (Уровень 3)';
+      const tier = t('subTier.3', T_OPTIONS);
+
+      title = `${t('userType.sub_many', T_OPTIONS)} (${tier} 3)`;
       version = '3000';
     }
 
@@ -63,10 +70,10 @@ const getVotingPermissionsBadges = (
 
   if (follower[mode]) {
     const requiredMinutes = follower[MINUTES_FOLLOWED[mode]];
-    const requiredMinutesText = FOLLOWED_TIME_VALUES[requiredMinutes];
+    const requiredMinutesText = t(`followedTime.${requiredMinutes}`, T_OPTIONS);
     const title = requiredMinutesText
-      ? `Фоллоферы (${requiredMinutesText})`
-      : 'Фоллоферы';
+      ? `${t('userType.follower_many', T_OPTIONS)} (${requiredMinutesText}+)`
+      : t('userType.follower_many', T_OPTIONS);
 
     badges.push({ title, name: 'glitchcon2020' });
   }

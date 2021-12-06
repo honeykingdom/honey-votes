@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { getYear } from 'date-fns';
 import {
   Box,
@@ -15,13 +16,8 @@ import { VotingOptionType } from 'features/api/apiConstants';
 import apiSchema from 'features/api/apiSchema.json';
 import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
 import { IgdbGame } from 'features/igdb-api/igdbApiSlice';
+import { VOTING_OPTION_TYPES } from 'features/voting/votingConstants';
 import VotingOptionAutocomplete from './VotingOptionAutocomplete';
-
-const VOTING_OPTION_TYPES = [
-  { label: 'Пользовательский вариант', name: VotingOptionType.Custom },
-  { label: 'Фильм (kinopoisk.ru)', name: VotingOptionType.KinopoiskMovie },
-  { label: 'Игра (IGDB.com)', name: VotingOptionType.IgdbGame },
-] as const;
 
 // TODO: sync with backend
 const KP = {
@@ -81,13 +77,14 @@ const VotingOptionForm = ({
   useFormReturn,
   allowedVotingOptionTypes,
 }: Props) => {
+  const [t] = useTranslation(['voting', 'common']);
   const [fieldType, setFieldType] = useState(FieldType.Search);
 
   const { control, register, watch, setValue } = useFormReturn;
 
   const watchType = watch('type');
 
-  const renderedVotingOptionTypes = VOTING_OPTION_TYPES.filter(({ name }) =>
+  const renderedVotingOptionTypes = VOTING_OPTION_TYPES.filter((name) =>
     allowedVotingOptionTypes.includes(name),
   );
 
@@ -116,13 +113,13 @@ const VotingOptionForm = ({
                 field.onChange(...args);
               }}
             >
-              {renderedVotingOptionTypes.map(({ label, name }) => (
+              {renderedVotingOptionTypes.map((name) => (
                 <ToggleButton
                   key={name}
                   value={name}
                   sx={{ textTransform: 'none' }}
                 >
-                  {label}
+                  {t(`votingOption.${name}.label_one`)}
                 </ToggleButton>
               ))}
             </ToggleButtonGroup>
@@ -142,11 +139,12 @@ const VotingOptionForm = ({
               value={FieldType.Search}
               sx={{ textTransform: 'none' }}
             >
-              Поиск
+              {t('search', { ns: 'common' })}
             </ToggleButton>
             <ToggleButton value={FieldType.Link} sx={{ textTransform: 'none' }}>
-              Ссылка на{' '}
-              {watchType === VotingOptionType.KinopoiskMovie ? 'фильм' : 'игру'}
+              {watchType === VotingOptionType.KinopoiskMovie
+                ? t('votingOptionForm.movieLink')
+                : t('votingOptionForm.gameLink')}
             </ToggleButton>
           </ToggleButtonGroup>
         )}
@@ -157,7 +155,7 @@ const VotingOptionForm = ({
           <FormGroup sx={{ mb: 2 }}>
             <TextField
               id="title"
-              label="Заголовок"
+              label={t('title', { ns: 'common' })}
               variant="outlined"
               inputProps={{
                 maxLength: apiSchema.VotingOption.cardTitle.maxLength,
@@ -169,7 +167,7 @@ const VotingOptionForm = ({
           <FormGroup sx={{ mb: 2 }}>
             <TextField
               id="description"
-              label="Описание"
+              label={t('description', { ns: 'common' })}
               multiline
               rows={2}
               variant="outlined"
@@ -193,7 +191,7 @@ const VotingOptionForm = ({
                   <VotingOptionAutocomplete
                     id="movieId"
                     name={name}
-                    label="Название фильма"
+                    label={t('votingOptionForm.movieName')}
                     type={VotingOptionType.KinopoiskMovie}
                     onBlur={onBlur}
                     onChange={(e, value) => setValue(name, value?.filmId)}
@@ -203,8 +201,7 @@ const VotingOptionForm = ({
               />
 
               <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Начните вводить название фильма и выберите вариант из
-                предложенных
+                {t('votingOptionForm.movieNameTooltip')}
               </Typography>
             </>
           )}
@@ -213,7 +210,7 @@ const VotingOptionForm = ({
             <>
               <TextField
                 id="movieLink"
-                label="Ссылка на фильм с сайта kinopoisk.ru"
+                label={t('votingOptionForm.movieLinkKinopoisk')}
                 variant="outlined"
                 sx={{ mb: 2 }}
                 {...register(`${VotingOptionType.KinopoiskMovie}.id`, {
@@ -235,7 +232,8 @@ const VotingOptionForm = ({
                   https://www.kinopoisk.ru
                 </Link>
                 <br />
-                Пример: https://www.kinopoisk.ru/film/258687/
+                {t('example', { ns: 'common' })}:
+                https://www.kinopoisk.ru/film/258687/
               </Typography>
             </>
           )}
@@ -253,7 +251,7 @@ const VotingOptionForm = ({
                   <VotingOptionAutocomplete
                     id="gameSlug"
                     name={name}
-                    label="Название игры"
+                    label={t('votingOptionForm.gameName')}
                     type={VotingOptionType.IgdbGame}
                     onBlur={onBlur}
                     onChange={(e, value) => setValue(name, value?.slug)}
@@ -263,7 +261,7 @@ const VotingOptionForm = ({
               />
 
               <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Начните вводить название игры и выберите вариант из предложенных
+                {t('votingOptionForm.gameNameTooltip')}
               </Typography>
             </>
           )}
@@ -272,7 +270,7 @@ const VotingOptionForm = ({
             <>
               <TextField
                 id="gameLink"
-                label="Ссылка на игру с сайта IGDB.com"
+                label={t('votingOptionForm.gameLinkIgdb')}
                 variant="outlined"
                 sx={{ mb: 2 }}
                 {...register(`${VotingOptionType.IgdbGame}.slug`, {
@@ -289,7 +287,8 @@ const VotingOptionForm = ({
                   https://www.igdb.com
                 </Link>
                 <br />
-                Пример: https://www.igdb.com/games/metal-gear-solid
+                {t('example', { ns: 'common' })}:
+                https://www.igdb.com/games/metal-gear-solid
               </Typography>
             </>
           )}

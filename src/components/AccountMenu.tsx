@@ -1,5 +1,6 @@
 // https://mui.com/components/menus/#account-menu
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import {
   Avatar,
@@ -27,6 +28,7 @@ import { clearTokens } from 'features/auth/authSlice';
 import PurpleButton from './PurpleButton';
 
 const AccountMenu = () => {
+  const [t] = useTranslation(['common', 'voting', 'chatVoting', 'chatGoal']);
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = !!anchorEl;
@@ -55,14 +57,14 @@ const AccountMenu = () => {
 
   if (!hasUser)
     return (
-      <Tooltip title="Войти через твич">
+      <Tooltip title={t('signInTwitch') as string}>
         <PurpleButton
           variant="contained"
           startIcon={<TwitchIcon style={{ width: 16 }} />}
           href={AUTH_URL}
           onClick={handleSignIn}
         >
-          Войти
+          {t('signIn')}
         </PurpleButton>
       </Tooltip>
     );
@@ -123,13 +125,13 @@ const AccountMenu = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {getMainMenuLinks(me.data).map(({ label, href, IconComponent }) => (
+        {getMainMenuLinks(me.data).map(({ name, href, IconComponent }) => (
           <Link key={href} href={href} passHref>
             <MenuItem component="a">
               <ListItemIcon>
                 <IconComponent fontSize="small" />
               </ListItemIcon>
-              {label}
+              {t('title', { ns: name })}
             </MenuItem>
           </Link>
         ))}
@@ -140,7 +142,7 @@ const AccountMenu = () => {
           <ListItemIcon>
             <LogoutIcon fontSize="small" />
           </ListItemIcon>
-          Выйти
+          {t('signOut')}
         </MenuItem>
       </Menu>
     </>

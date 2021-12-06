@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Layout from 'components/Layout';
 import PageHeader from 'components/PageHeader';
 import TwitchUsername from 'components/TwitchUsername';
@@ -8,9 +9,8 @@ import { useUserQuery, useVotingQuery } from 'features/api/apiSlice';
 import useVotingId from 'features/voting/hooks/useVotingId';
 import VotingComponent from 'features/voting/components/VotingComponent';
 
-const NO_TITLE = <em style={{ fontWeight: 300 }}>Без названия</em>;
-
 const VotingPage = () => {
+  const [t] = useTranslation(['voting', 'common']);
   const login = useChannelLogin();
   const username = useUsername();
   const votingId = useVotingId();
@@ -31,16 +31,20 @@ const VotingPage = () => {
 
   const isVotingVisible = isVotingExists && isVotingBelongsToChannel;
 
-  const getTitle = () => {
-    if (!voting.data || !isVotingVisible) return 'Голосование';
+  const renderNoTitle = () => (
+    <em style={{ fontWeight: 300 }}>{t('noTitle', { ns: 'common' })}</em>
+  );
 
-    return voting.data?.title || NO_TITLE;
+  const getTitle = () => {
+    if (!voting.data || !isVotingVisible) return t('title');
+
+    return voting.data?.title || renderNoTitle();
   };
 
   const title =
     isVotingVisible && username
-      ? `${username} - ${voting.data?.title || 'Без названия'}`
-      : 'Голосование';
+      ? `${username} - ${voting.data?.title || t('noTitle', { ns: 'common' })}`
+      : t('title');
 
   const breadcrumbs: Parameters<typeof PageHeader>[0]['breadcrumbs'] = [
     {
@@ -53,13 +57,13 @@ const VotingPage = () => {
       href: `/${login}`,
     },
     {
-      title: 'Голосование',
+      title: t('title'),
       href: `/${login}/voting`,
     },
   ];
 
   if (isVotingVisible) {
-    breadcrumbs.push({ title: voting.data?.title || NO_TITLE });
+    breadcrumbs.push({ title: voting.data?.title || renderNoTitle() });
   }
 
   return (
@@ -72,9 +76,7 @@ const VotingPage = () => {
 
       {!isLoading && isVotingVisible && <VotingComponent />}
 
-      {!isLoading && !isVotingVisible && (
-        <>Голосование удалено или не существует.</>
-      )}
+      {!isLoading && !isVotingVisible && <>{t('votingDeleted')}</>}
     </Layout>
   );
 };

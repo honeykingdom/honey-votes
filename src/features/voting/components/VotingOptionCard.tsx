@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import {
   Avatar,
@@ -21,7 +22,7 @@ import {
   useVotingQuery,
 } from 'features/api/apiSlice';
 import { VotingOption } from 'features/api/apiTypes';
-import getErrorMessage from 'features/api/utils/getErrorMessage';
+import getErrorMessageKey from 'features/api/utils/getErrorMessageKey';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import useChannelLogin from 'hooks/useChannelLogin';
 import getCanDeleteVotingOption from '../utils/getCanDeleteVotingOption';
@@ -66,6 +67,7 @@ const VotingOptionCard = ({
     cardUrl,
   } = votingOption;
 
+  const [t] = useTranslation('voting');
   const [isDeleteVoteDialogOpen, setIsDeleteVoteDialogOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -99,7 +101,9 @@ const VotingOptionCard = ({
 
   const handleCardClick = async () => {
     if (lastVoteTimestampRef.current + VOTE_INTERVAL > Date.now()) {
-      enqueueSnackbar('Вы голосуете слишком быстро', { variant: 'error' });
+      enqueueSnackbar(t('message.voteCreateTooQuickly'), {
+        variant: 'error',
+      });
 
       return;
     }
@@ -110,11 +114,14 @@ const VotingOptionCard = ({
       try {
         await deleteVote(id).unwrap();
 
-        enqueueSnackbar('Голос удалён', { variant: 'success' });
-      } catch (e) {
-        enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить голос', {
-          variant: 'error',
+        enqueueSnackbar(t('message.voteDeleteSuccess'), {
+          variant: 'success',
         });
+      } catch (e) {
+        enqueueSnackbar(
+          t([`message.${getErrorMessageKey(e)}`, 'message.voteDeleteFailure']),
+          { variant: 'error' },
+        );
       }
     } else {
       try {
@@ -123,11 +130,14 @@ const VotingOptionCard = ({
         // eslint-disable-next-line no-param-reassign
         lastVoteTimestampRef.current = Date.now();
 
-        enqueueSnackbar('Ваш голос защитан', { variant: 'success' });
-      } catch (e) {
-        enqueueSnackbar(getErrorMessage(e) || 'Не удалось проголосовать', {
-          variant: 'error',
+        enqueueSnackbar(t('message.voteCreateSuccess'), {
+          variant: 'success',
         });
+      } catch (e) {
+        enqueueSnackbar(
+          t([`message.${getErrorMessageKey(e)}`, 'message.voteCreateFailure']),
+          { variant: 'error' },
+        );
       }
     }
   };
@@ -136,11 +146,17 @@ const VotingOptionCard = ({
     try {
       await deleteVotingOption(id).unwrap();
 
-      enqueueSnackbar('Вариант удалён', { variant: 'success' });
-    } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить вариант', {
-        variant: 'error',
+      enqueueSnackbar(t('message.votingOptionDeleteSuccess'), {
+        variant: 'success',
       });
+    } catch (e) {
+      enqueueSnackbar(
+        t([
+          `message.${getErrorMessageKey(e)}`,
+          'message.votingOptionDeleteFailure',
+        ]),
+        { variant: 'error' },
+      );
     }
   };
 
@@ -221,7 +237,7 @@ const VotingOptionCard = ({
           mt: 'auto',
         }}
       >
-        Предложил:
+        {t('suggestedBy')}:
         <Box sx={{ ml: 0.5, display: 'inline-flex', alignItems: 'center' }}>
           <Avatar
             src={votingOption.authorData?.avatarUrl}
@@ -303,8 +319,8 @@ const VotingOptionCard = ({
 
       <ConfirmationDialog
         open={isDeleteVoteDialogOpen}
-        title="Удалить вариант для голосования"
-        description="Вы действительно хотите удалить этот вариант для голосования?"
+        title={t('deleteVotingOption')}
+        description={t('deleteVotingOptionDialog')}
         handleClose={() => setIsDeleteVoteDialogOpen(false)}
         handleYes={handleDeleteVotingOption}
       />

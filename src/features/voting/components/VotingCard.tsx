@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import {
   Card,
@@ -11,30 +12,6 @@ import { format } from 'date-fns';
 import { Voting } from 'features/api/apiTypes';
 import VotingActions from './VotingActions';
 
-const NO_TITLE = (
-  <Typography
-    component="span"
-    variant="h5"
-    color="text.secondary"
-    fontStyle="italic"
-    fontWeight="300"
-  >
-    Без названия
-  </Typography>
-);
-
-const CLOSED = (
-  <Typography
-    component="span"
-    color="text.secondary"
-    display="flex"
-    alignItems="center"
-    sx={{ mr: 1 }}
-  >
-    <LockIcon />
-  </Typography>
-);
-
 const formatDate = (date: string) => format(new Date(date), 'PPp');
 
 type Props = {
@@ -44,7 +21,32 @@ type Props = {
 };
 
 const VotingCard = ({ voting, canManage, href }: Props) => {
+  const [t] = useTranslation('voting');
   const { title, description, canManageVotes, createdAt } = voting;
+
+  const renderClosed = () => (
+    <Typography
+      component="span"
+      color="text.secondary"
+      display="flex"
+      alignItems="center"
+      sx={{ mr: 1 }}
+    >
+      <LockIcon />
+    </Typography>
+  );
+
+  const renderNoTitle = () => (
+    <Typography
+      component="span"
+      variant="h5"
+      color="text.secondary"
+      fontStyle="italic"
+      fontWeight="300"
+    >
+      {t('noTitle', { ns: 'common' })}
+    </Typography>
+  );
 
   return (
     <Card>
@@ -59,8 +61,8 @@ const VotingCard = ({ voting, canManage, href }: Props) => {
               alignItems="center"
               sx={{ flexGrow: 1 }}
             >
-              {!canManageVotes && CLOSED}
-              {title || NO_TITLE}
+              {!canManageVotes && renderClosed()}
+              {title || renderNoTitle()}
             </Typography>
             <Typography variant="subtitle1" color="text.secondary">
               {formatDate(createdAt)}

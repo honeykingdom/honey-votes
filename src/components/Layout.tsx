@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import {
@@ -19,12 +20,23 @@ import { useAuthRedirect } from 'features/auth/useAuthRedirect';
 import AccountMenu from './AccountMenu';
 
 const Layout = ({ children }: any) => {
-  const [t, l18n] = useTranslation();
+  const [t, l18n] = useTranslation([
+    'common',
+    'voting',
+    'chatVoting',
+    'chatGoal',
+  ]);
+  const [language, setLanguage] = useState('');
+
   const me = useMeQuery();
 
   useAuthRedirect();
 
   const isMenuVisible = me.data && !me.isError;
+
+  useEffect(() => {
+    setLanguage(l18n.language);
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -46,9 +58,9 @@ const Layout = ({ children }: any) => {
 
           {isMenuVisible && (
             <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-              {getMainMenuLinks(me.data).map(({ label, href }) => (
+              {getMainMenuLinks(me.data).map(({ name, href }) => (
                 <Link key={href} href={href} passHref>
-                  <Button color="inherit">{label}</Button>
+                  <Button color="inherit">{t('title', { ns: name })}</Button>
                 </Link>
               ))}
             </Box>
@@ -77,23 +89,26 @@ const Layout = ({ children }: any) => {
                 <GitHubIcon />
               </IconButton>
             </Tooltip>
-            {/* <Tooltip title={t('changeLanguage') as string}>
-              <IconButton
-                color="inherit"
-                sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
-                onClick={() => {
-                  l18n.changeLanguage(l18n.language === 'ru' ? 'en' : 'ru');
-                }}
-              >
-                {l18n.language === 'ru' ? (
-                  // @ts-expect-error
-                  <Flags.RU style={{ width: 24, height: 24 }} />
-                ) : (
-                  // @ts-expect-error
-                  <Flags.US style={{ width: 24, height: 24 }} />
-                )}
-              </IconButton>
-            </Tooltip> */}
+            {language && (
+              <Tooltip title={t('changeLanguage') as string}>
+                <IconButton
+                  color="inherit"
+                  sx={{ display: { xs: 'none', sm: 'inline-flex' }, mr: 1 }}
+                  onClick={() => {
+                    l18n.changeLanguage(l18n.language === 'ru' ? 'en' : 'ru');
+                    setLanguage(l18n.language);
+                  }}
+                >
+                  {language === 'ru' ? (
+                    // @ts-expect-error
+                    <Flags.RU style={{ width: 24, height: 24 }} />
+                  ) : (
+                    // @ts-expect-error
+                    <Flags.US style={{ width: 24, height: 24 }} />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
 
             <AccountMenu />
           </Box>

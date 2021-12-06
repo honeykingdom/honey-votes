@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import NextLink from 'next/link';
 import { Box, Button } from '@mui/material';
 import Layout from 'components/Layout';
@@ -9,6 +10,7 @@ import getMainMenuLinks from 'utils/getMainMenuLinks';
 import TwitchUsername from 'components/TwitchUsername';
 
 const ChannelPage = () => {
+  const [t] = useTranslation(['common', 'voting', 'chatVoting', 'chatGoal']);
   const login = useChannelLogin();
   const channel = useUserQuery({ login: login! }, { skip: !login });
   const username = useUsername();
@@ -33,10 +35,12 @@ const ChannelPage = () => {
       {channel.data && (
         <>
           {getMainMenuLinks(channel.data).map(
-            ({ href, label, IconComponent }) => (
+            ({ name, href, IconComponent }) => (
               <Box key={href}>
                 <NextLink href={href} passHref>
-                  <Button startIcon={<IconComponent />}>{label}</Button>
+                  <Button startIcon={<IconComponent />}>
+                    {t('title', { ns: name })}
+                  </Button>
                 </NextLink>
               </Box>
             ),

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import { Button, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -17,9 +18,10 @@ import {
   useVotingListQuery,
 } from 'features/api/apiSlice';
 import { UpdateVotingDto } from 'features/api/apiTypes';
-import getErrorMessage from 'features/api/utils/getErrorMessage';
+import getErrorMessageKey from 'features/api/utils/getErrorMessageKey';
 
 const VotingListPage = () => {
+  const [t] = useTranslation(['voting', 'common']);
   const router = useRouter();
   const login = useChannelLogin();
   const username = useUsername();
@@ -49,21 +51,22 @@ const VotingListPage = () => {
         ...body,
       }).unwrap();
 
-      enqueueSnackbar('Голосование успешно создано', { variant: 'success' });
+      enqueueSnackbar(t('message.votingCreateSuccess'), { variant: 'success' });
 
       router.push(`/${login}/voting/${newVoting.id}`);
     } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось создать голосование', {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        t([`message.${getErrorMessageKey(e)}`, 'message.votingCreateFailure']),
+        { variant: 'error' },
+      );
     }
   };
 
   return (
     <Layout>
       <PageHeader
-        title={username ? `${username} - Голосование` : 'Голосование'}
-        pageTitle="Голосование"
+        title={username ? `${username} - ${t('title')}` : t('title')}
+        pageTitle={t('title')}
         breadcrumbs={[
           {
             title: (
@@ -74,7 +77,7 @@ const VotingListPage = () => {
             ),
             href: `/${login}`,
           },
-          { title: 'Голосование' },
+          { title: t('title') },
         ]}
       />
 
@@ -85,7 +88,7 @@ const VotingListPage = () => {
             startIcon={<AddIcon />}
             onClick={toggleVotingForm}
           >
-            Создать голосование
+            {t('createVoting')}
           </Button>
         </Box>
       )}
@@ -100,9 +103,9 @@ const VotingListPage = () => {
 
       <VotingFormModal
         open={isVotingFormOpened}
-        title="Создать голосование"
-        cancelButtonText="Отмена"
-        submitButtonText="Создать"
+        title={t('createVoting')}
+        cancelButtonText={t('cancel', { ns: 'common' })}
+        submitButtonText={t('create', { ns: 'common' })}
         onClose={toggleVotingForm}
         onSubmit={handleCreateVoting}
       />

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -21,7 +22,8 @@ import apiSchema from 'features/api/apiSchema.json';
 import {
   FOLLOWED_TIME_VALUES,
   SUB_TIERS,
-  USER_TYPES_ITEMS,
+  SWITCHES,
+  USER_TYPES,
   VOTING_OPTION_TYPES,
 } from 'features/voting/votingConstants';
 import FormControlSelect from './FormControlSelect';
@@ -31,29 +33,6 @@ const VOTING_OPTIONS_LIMIT_MARKS = Array.from({ length: 10 }, (_, i) => ({
   value: (i + 1) * 20,
   label: `${(i + 1) * 20}`,
 }));
-
-const SUB_TIER_MENU_ITEMS = SUB_TIERS.map(({ value, label }) => (
-  <MenuItem key={value} value={value}>
-    {label}
-  </MenuItem>
-));
-
-const FOLLOWED_TIME_MENU_ITEMS = FOLLOWED_TIME_VALUES.map(
-  ({ value, label }) => (
-    <MenuItem key={value} value={value}>
-      {label}
-    </MenuItem>
-  ),
-);
-
-const SWITCHES: { label: string; name: keyof UpdateVotingDto }[] = [
-  { label: 'Открыть голосование', name: 'canManageVotes' },
-  {
-    label: 'Открыть добавление вариантов для голосования',
-    name: 'canManageVotingOptions',
-  },
-  { label: 'Показывать голоса', name: 'showValues' },
-];
 
 const getInitialIsExtended = (values?: UpdateVotingDto) => {
   if (!values || !values.permissions) return false;
@@ -72,17 +51,32 @@ type Props = {
 };
 
 const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
+  const [t] = useTranslation(['voting', 'common']);
   const [isExtended, setIsExtended] = useState(
     getInitialIsExtended(defaultValues),
   );
   const { control, register } = useFormReturn;
+
+  const renderSubTierMenuItems = () =>
+    SUB_TIERS.map((value) => (
+      <MenuItem key={value} value={value}>
+        {t(`subTier.${value}`, { ns: 'common' })}
+      </MenuItem>
+    ));
+
+  const renderFollowedTimeMenuItems = () =>
+    FOLLOWED_TIME_VALUES.map((value) => (
+      <MenuItem key={value} value={value}>
+        {t(`followedTime.${value}`, { ns: 'common' })}
+      </MenuItem>
+    ));
 
   return (
     <>
       <FormGroup sx={{ mb: 2 }}>
         <TextField
           id="title"
-          label="Заголовок"
+          label={t('title', { ns: 'common' })}
           variant="outlined"
           inputProps={{ maxLength: apiSchema.Voting.title.maxLength }}
           {...register('title')}
@@ -92,7 +86,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
       <FormGroup sx={{ mb: 2 }}>
         <TextField
           id="description"
-          label="Описание"
+          label={t('description', { ns: 'common' })}
           multiline
           rows={2}
           variant="outlined"
@@ -103,7 +97,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Box mb={2}>
         <FormGroup>
-          {SWITCHES.map(({ label, name }) => (
+          {SWITCHES.map((name) => (
             <FormControlLabel
               key={name}
               control={
@@ -115,7 +109,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                   )}
                 />
               }
-              label={label}
+              label={t(`votingForm.${name}`) as string}
             />
           ))}
         </FormGroup>
@@ -123,9 +117,11 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Box mb={2}>
         <FormControl component="fieldset">
-          <FormLabel component="legend">Типы вариантов</FormLabel>
+          <FormLabel component="legend">
+            {t('votingForm.votingOptionTypes')}
+          </FormLabel>
           <FormGroup>
-            {VOTING_OPTION_TYPES.map(({ label, name }) => (
+            {VOTING_OPTION_TYPES.map((name) => (
               <FormControlLabel
                 key={name}
                 control={
@@ -141,7 +137,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                     )}
                   />
                 }
-                label={label}
+                label={t(`votingOption.${name}.label_many`) as string}
                 value={name}
               />
             ))}
@@ -151,9 +147,9 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Box mb={2}>
         <FormControl component="fieldset">
-          <FormLabel component="legend">Кто может голосовать</FormLabel>
+          <FormLabel component="legend">{t('votingForm.whoCanVote')}</FormLabel>
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-            {USER_TYPES_ITEMS.map(({ label, type }) => (
+            {USER_TYPES.map((type) => (
               <FormControlLabel
                 key={type}
                 control={
@@ -169,7 +165,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                     )}
                   />
                 }
-                label={label}
+                label={t(`userType.${type}_many`, { ns: 'common' }) as string}
               />
             ))}
           </FormGroup>
@@ -180,20 +176,20 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             <FormControlSelect
               id="subTierRequiredToVote"
               name={`permissions.${TwitchUserType.Sub}.subTierRequiredToVote`}
-              label="Минимальный уровень подписки"
+              label={t('votingForm.subTierRequired')}
               control={control}
             >
-              {SUB_TIER_MENU_ITEMS}
+              {renderSubTierMenuItems()}
             </FormControlSelect>
           </Box>
           <Box width={240}>
             <FormControlSelect
               id="minutesToFollowRequiredToVote"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToVote`}
-              label="Минимальное время фоллова"
+              label={t('votingForm.minutesToFollowRequired')}
               control={control}
             >
-              {FOLLOWED_TIME_MENU_ITEMS}
+              {renderFollowedTimeMenuItems()}
             </FormControlSelect>
           </Box>
         </Box>
@@ -202,15 +198,15 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
       <Box mb={2}>
         <FormControl component="fieldset">
           <FormLabel component="legend">
-            Кто может добавлять варианты для голосования
-            <Tooltip title="Владелец канала и редакторы всегда могут создавать и удалять варианты для голосования">
+            {t('votingForm.whoCanAddOptions')}
+            <Tooltip title={t('votingForm.whoCanAddOptionsTooltip') as string}>
               <InfoIcon
                 sx={{ verticalAlign: 'middle', fontSize: '1.2rem', ml: 1 }}
               />
             </Tooltip>
           </FormLabel>
           <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
-            {USER_TYPES_ITEMS.map(({ label, type }) => (
+            {USER_TYPES.map((type) => (
               <FormControlLabel
                 key={type}
                 control={
@@ -226,7 +222,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
                     )}
                   />
                 }
-                label={label}
+                label={t(`userType.${type}_many`, { ns: 'common' }) as string}
               />
             ))}
           </FormGroup>
@@ -237,36 +233,34 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
             <FormControlSelect
               id="subTierRequiredToAddOptions"
               name={`permissions.${TwitchUserType.Sub}.subTierRequiredToAddOptions`}
-              label="Минимальный уровень подписки"
+              label={t('votingForm.subTierRequired')}
               control={control}
             >
-              {SUB_TIER_MENU_ITEMS}
+              {renderSubTierMenuItems()}
             </FormControlSelect>
           </Box>
           <Box width={240}>
             <FormControlSelect
               id="minutesToFollowRequiredToAddOptions"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToAddOptions`}
-              label="Минимальное время фоллова"
+              label={t('votingForm.minutesToFollowRequired')}
               control={control}
             >
-              {FOLLOWED_TIME_MENU_ITEMS}
+              {renderFollowedTimeMenuItems()}
             </FormControlSelect>
           </Box>
         </Box>
       </Box>
 
       <Box mb={2}>
-        <FormControl>
-          <FormLabel>
-            Максимальное количество вариантов для голосования
-          </FormLabel>
+        <FormControl sx={{ minWidth: 420 }}>
+          <FormLabel>{t('votingForm.votingOptionsLimit')}</FormLabel>
           <Controller
             name="votingOptionsLimit"
             control={control}
             render={({ field }) => (
               <Slider
-                aria-label="Максимальное количество вариантов для голосования"
+                aria-label={t('votingForm.votingOptionsLimit')}
                 valueLabelDisplay="auto"
                 step={2}
                 min={apiSchema.Voting.votingOptionsLimit.minimum}
@@ -283,8 +277,8 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
 
       <Button onClick={() => setIsExtended((v) => !v)}>
         {isExtended
-          ? 'Скрыть расширенные настройки'
-          : 'Показать расширенные настройки'}
+          ? t('votingForm.hideExtendedOptions')
+          : t('votingForm.showExtendedOptions')}
       </Button>
     </>
   );

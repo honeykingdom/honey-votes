@@ -15,17 +15,17 @@ const getMainMenuLinks = (user: Pick<User, 'login' | 'broadcasterType'>) => {
 
   return [
     {
-      label: 'Голосование',
+      name: 'voting',
       href: `/${user.login}/voting`,
       IconComponent: PollIcon,
     },
     {
-      label: 'Голосование в чате',
+      name: 'chatVoting',
       href: `/${user.login}/chat-voting`,
       IconComponent: PollIcon,
     },
     {
-      label: 'Чатгол',
+      name: 'chatGoal',
       href: `/${user.login}/chat-goal`,
       IconComponent: ThumbsUpDownIcon,
     },

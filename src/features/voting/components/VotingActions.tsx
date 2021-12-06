@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import { Box, Button } from '@mui/material';
@@ -12,7 +13,7 @@ import {
   useUpdateVotingMutation,
 } from 'features/api/apiSlice';
 import { Voting } from 'features/api/apiTypes';
-import getErrorMessage from 'features/api/utils/getErrorMessage';
+import getErrorMessageKey from 'features/api/utils/getErrorMessageKey';
 import ConfirmationDialog from 'components/ConfirmationDialog';
 import useChannelLogin from 'hooks/useChannelLogin';
 import VotingFormModal from './VotingFormModal/VotingFormModal';
@@ -39,6 +40,7 @@ const VotingActions = ({
   voting,
   buttons = ['close', 'edit', 'delete'],
 }: Props) => {
+  const [t] = useTranslation(['voting', 'common']);
   const router = useRouter();
   const login = useChannelLogin();
 
@@ -58,11 +60,14 @@ const VotingActions = ({
     try {
       await updateVoting(data).unwrap();
 
-      enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось обновить голосование', {
-        variant: 'error',
+      enqueueSnackbar(t('message.votingUpdateSuccess'), {
+        variant: 'success',
       });
+    } catch (e) {
+      enqueueSnackbar(
+        t([`message.${getErrorMessageKey(e)}`, 'message.votingUpdateFailure']),
+        { variant: 'error' },
+      );
     }
   };
 
@@ -82,13 +87,16 @@ const VotingActions = ({
     try {
       await deleteVoting(votingId).unwrap();
 
-      enqueueSnackbar('Голосование успешно удалено', { variant: 'success' });
+      enqueueSnackbar(t('message.votingDeleteSuccess'), {
+        variant: 'success',
+      });
 
       router.push(`/${login}/voting`);
     } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось удалить голосование', {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        t([`message.${getErrorMessageKey(e)}`, 'message.votingDeleteFailure']),
+        { variant: 'error' },
+      );
     }
   };
 
@@ -109,7 +117,7 @@ const VotingActions = ({
           disabled={disabled}
           onClick={handleToggleVoting}
         >
-          {canManageVotes ? 'Закрыть голосование' : 'Открыть голосование'}
+          {canManageVotes ? t('closeVoting') : t('openVoting')}
         </Button>
       )}
 
@@ -119,7 +127,7 @@ const VotingActions = ({
           disabled={disabled}
           onClick={() => setIsVotingFormOpened(true)}
         >
-          Редактировать
+          {t('edit', { ns: 'common' })}
         </Button>
       )}
 
@@ -129,15 +137,15 @@ const VotingActions = ({
           disabled={disabled}
           onClick={() => setIsDeleteDialogOpen(true)}
         >
-          Удалить
+          {t('delete', { ns: 'common' })}
         </Button>
       )}
 
       <VotingFormModal
         open={isVotingFormOpened}
-        title="Редактировать голосование"
-        cancelButtonText="Отмена"
-        submitButtonText="Сохранить"
+        title={t('editVoting')}
+        cancelButtonText={t('cancel', { ns: 'common' })}
+        submitButtonText={t('save', { ns: 'common' })}
         defaultValues={getVotingFormValues(voting)}
         onClose={() => setIsVotingFormOpened(false)}
         onSubmit={handleEditVoting}
@@ -145,8 +153,8 @@ const VotingActions = ({
 
       <ConfirmationDialog
         open={isDeleteDialogOpen}
-        title="Удаление голосования"
-        description="Вы действительно хотите удалить голосование?"
+        title={t('deleteVoting')}
+        description={t('deleteVotingDialog')}
         handleClose={() => setIsDeleteDialogOpen(false)}
         handleYes={handleDeleteVoting}
       />

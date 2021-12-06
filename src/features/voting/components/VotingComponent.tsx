@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import {
   Alert,
@@ -34,7 +35,7 @@ import {
 } from 'features/api/apiSlice';
 import { renderedVotingOptionsSelector } from 'features/api/apiSelectors';
 import apiSchema from 'features/api/apiSchema.json';
-import getErrorMessage from 'features/api/utils/getErrorMessage';
+import getErrorMessageKey from 'features/api/utils/getErrorMessageKey';
 import UserBadges from 'features/voting/components/UserBadges';
 import useVotingId from 'features/voting/hooks/useVotingId';
 import getCanManageVoting from 'features/voting/utils/getCanManageVoting';
@@ -44,6 +45,7 @@ import getMeBadges from 'features/voting/utils/getMeBadges';
 import getCanVote from 'features/voting/utils/getCanVote';
 
 const VotingComponent = () => {
+  const [t] = useTranslation(['voting', 'common']);
   const login = useChannelLogin();
   const votingId = useVotingId();
   const { enqueueSnackbar } = useSnackbar();
@@ -96,11 +98,14 @@ const VotingComponent = () => {
     try {
       await updateVoting(arg).unwrap();
 
-      enqueueSnackbar('Голосование успешно обновлено', { variant: 'success' });
-    } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось обновить голосование', {
-        variant: 'error',
+      enqueueSnackbar(t('message.votingUpdateSuccess'), {
+        variant: 'success',
       });
+    } catch (e) {
+      enqueueSnackbar(
+        t([`message.${getErrorMessageKey(e)}`, 'message.votingUpdateFailure']),
+        { variant: 'error' },
+      );
     }
   };
 
@@ -126,13 +131,19 @@ const VotingComponent = () => {
     try {
       await createVotingOption({ votingId: votingId!, ...body }).unwrap();
 
-      enqueueSnackbar('Вариант добавлен', { variant: 'success' });
+      enqueueSnackbar(t('message.votingOptionCreateSuccess'), {
+        variant: 'success',
+      });
 
       setIsVotingOptionModalOpened(false);
     } catch (e) {
-      enqueueSnackbar(getErrorMessage(e) || 'Не удалось добавить вариант', {
-        variant: 'error',
-      });
+      enqueueSnackbar(
+        t([
+          `message.${getErrorMessageKey(e)}`,
+          'message.votingOptionCreateFailure',
+        ]),
+        { variant: 'error' },
+      );
     }
   };
 
@@ -143,7 +154,7 @@ const VotingComponent = () => {
           <TableBody>
             <TableRow>
               <TableCell sx={{ color: 'inherit', width: { sm: 270 } }}>
-                Голосование открыто
+                {t('votingForm.canManageVotes')}
               </TableCell>
               <TableCell>
                 <Switch
@@ -157,7 +168,7 @@ const VotingComponent = () => {
 
             <TableRow>
               <TableCell sx={{ color: 'inherit' }}>
-                Добавление вариантов открыто
+                {t('votingForm.canManageVotingOptions')}
               </TableCell>
               <TableCell>
                 <Switch
@@ -170,12 +181,15 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: 'inherit' }}>Голосовать могут</TableCell>
+              <TableCell sx={{ color: 'inherit' }}>
+                {t('votingForm.whoCanVote')}
+              </TableCell>
               <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
                     voting.data!.permissions,
                     'canVote',
+                    t,
                   )}
                   channelId={channel.data?.id}
                 />
@@ -184,13 +198,14 @@ const VotingComponent = () => {
 
             <TableRow>
               <TableCell sx={{ color: 'inherit' }}>
-                Добавлять варианты могут
+                {t('votingForm.whoCanAddOptions')}
               </TableCell>
               <TableCell sx={{ color: 'inherit' }}>
                 <UserBadges
                   badges={getVotingPermissionsBadges(
                     voting.data!.permissions,
                     'canAddOptions',
+                    t,
                   )}
                   channelId={channel.data?.id}
                 />
@@ -198,7 +213,9 @@ const VotingComponent = () => {
             </TableRow>
 
             <TableRow>
-              <TableCell sx={{ color: 'inherit' }}>Показывать голоса</TableCell>
+              <TableCell sx={{ color: 'inherit' }}>
+                {t('votingForm.showValues')}
+              </TableCell>
               <TableCell>
                 <Switch
                   size="small"
@@ -222,19 +239,20 @@ const VotingComponent = () => {
         {me.data && meRoles.data && voting.data?.canManageVotes && !canVote && (
           <Box mt={1}>
             <Alert severity="warning">
-              Вы не можете участвовать в этом голосовании. <br />
-              Голосовать могут:{' '}
+              {t('youCannotParticipateInThisVoting')} <br />
+              {t('votingForm.whoCanVote')}:{' '}
               <UserBadges
                 badges={getVotingPermissionsBadges(
                   voting.data.permissions,
                   'canVote',
+                  t,
                 )}
                 channelId={channel.data?.id}
               />
               <br />
-              Вы:{' '}
+              {t('you', { ns: 'common' })}:{' '}
               <UserBadges
-                badges={getMeBadges(me.data, meRoles.data)}
+                badges={getMeBadges(me.data, meRoles.data, t)}
                 channelId={channel.data?.id}
               />
             </Alert>
@@ -242,7 +260,7 @@ const VotingComponent = () => {
         )}
         {!voting.data?.canManageVotes && (
           <Box mt={1}>
-            <Alert severity="error">Голосование закрыто.</Alert>
+            <Alert severity="error">{t('votingClosed')}</Alert>
           </Box>
         )}
       </Box>
@@ -261,7 +279,7 @@ const VotingComponent = () => {
         sx={{ display: { sm: 'flex' }, mb: 1 }}
       >
         <Box>
-          Варианты&nbsp;({renderedVotingOptions.length}/
+          {t('options')}&nbsp;({renderedVotingOptions.length}/
           {voting.data?.votingOptionsLimit ||
             apiSchema.Voting.votingOptionsLimit.default}
           )
@@ -275,13 +293,13 @@ const VotingComponent = () => {
                 disabled={!canCreateVotingOptions}
                 onClick={() => setIsVotingOptionModalOpened(true)}
               >
-                Добавить
+                {t('add', { ns: 'common' })}
               </Button>
             </Box>
           </Tooltip>
         </Box>
         <Box sx={{ ml: 'auto' }}>
-          Голосов:&nbsp;{votes.data?.ids.length || 0}
+          {t('votes')}:&nbsp;{votes.data?.ids.length || 0}
         </Box>
       </Typography>
 
@@ -306,14 +324,14 @@ const VotingComponent = () => {
       )}
       {votingOptions.data && renderedVotingOptions.length === 0 && (
         <Typography variant="body1" color="text.secondary">
-          В этом голосовании пока нет ни одного варианта
+          {t('noOptions')}
         </Typography>
       )}
       <VotingOptionFormModal
         open={isVotingOptionModalOpened}
-        title="Создать новый вариант для голосования"
-        cancelButtonText="Отмена"
-        submitButtonText="Создать"
+        title={t('createOption')}
+        cancelButtonText={t('cancel', { ns: 'common' })}
+        submitButtonText={t('create', { ns: 'common' })}
         // @ts-expect-error
         allowedVotingOptionTypes={voting.data?.allowedVotingOptionTypes || []}
         onClose={() => setIsVotingOptionModalOpened(false)}

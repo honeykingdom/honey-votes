@@ -1,32 +1,49 @@
+import { TFunction } from 'react-i18next';
 import { SubTier } from 'features/api/apiConstants';
-import { User, UserRoles, Voting } from 'features/api/apiTypes';
+import { User, UserRoles } from 'features/api/apiTypes';
 import type { Badge } from '../components/UserBadges';
 
-const getMeBadges = (me: User, meRoles: UserRoles): Badge[] => {
+const T_OPTIONS = { ns: 'common' };
+
+const getMeBadges = (me: User, meRoles: UserRoles, t: TFunction): Badge[] => {
   const badges: Badge[] = [];
 
   if (!me || !meRoles) return badges;
 
   if (meRoles.broadcaster) {
-    badges.push({ name: 'broadcaster', title: 'Стример' });
+    badges.push({
+      name: 'broadcaster',
+      title: t('userType.broadcaster', T_OPTIONS),
+    });
   }
 
   if (meRoles.editor) {
-    badges.push({ name: 'moderator', title: 'Редактор' });
+    badges.push({ name: 'moderator', title: t('userType.editor', T_OPTIONS) });
   }
 
-  if (meRoles.mod) badges.push({ title: 'Модер', name: 'moderator' });
-  // if (meRoles.vip) badges.push({ title: "Вип", name: "vip" });
+  if (meRoles.mod) {
+    badges.push({ title: t('userType.mod_one', T_OPTIONS), name: 'moderator' });
+  }
+
+  if (meRoles.vip) {
+    badges.push({ title: t('userType.vip_one', T_OPTIONS), name: 'vip' });
+  }
 
   if (meRoles.sub) {
-    let title = 'Саб';
+    let title = t('userType.sub_one', T_OPTIONS);
     let version = '0';
 
     if (meRoles.subTier === SubTier.Tier2) {
-      title = 'Саб (Уровень 2)';
+      const tier = t(`subTier.${meRoles.subTier}`, T_OPTIONS);
+
+      title = `${t('userType.sub_one', T_OPTIONS)} (${tier})`;
       version = '2000';
-    } else if (meRoles.subTier === SubTier.Tier2) {
-      title = 'Саб (Уровень 3)';
+    }
+
+    if (meRoles.subTier === SubTier.Tier2) {
+      const tier = t(`subTier.${meRoles.subTier}`, T_OPTIONS);
+
+      title = `${t('userType.sub_one', T_OPTIONS)} (${tier} 3)`;
       version = '3000';
     }
 
@@ -34,7 +51,10 @@ const getMeBadges = (me: User, meRoles: UserRoles): Badge[] => {
   }
 
   if (meRoles.follower) {
-    badges.push({ title: 'Фоллофер', name: 'glitchcon2020' });
+    badges.push({
+      title: t('userType.follower_one', T_OPTIONS),
+      name: 'glitchcon2020',
+    });
   }
 
   return badges;
