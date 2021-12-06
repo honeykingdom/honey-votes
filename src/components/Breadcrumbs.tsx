@@ -20,7 +20,7 @@ const Breadcrumbs = ({ items }: Props) => (
           </Link>
         </NextLink>
       ) : (
-        <Typography color="text.primary" key={key}>
+        <Typography component="div" color="text.primary" key={key}>
           {title}
         </Typography>
       ),
