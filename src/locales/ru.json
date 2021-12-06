@@ -1,6 +1,55 @@
 {
   "common": {
-    "changeLanguage": "Change language to English"
+    "changeLanguage": "Change language to English",
+    "signIn": "Войти",
+    "signOut": "Выйти",
+    "signInTwitch": "Войти через Twitch",
+    "yes": "Да",
+    "no": "Нет",
+    "add": "Добавить",
+    "edit": "Редактировать",
+    "cancel": "Отмена",
+    "create": "Создать",
+    "delete": "Удалить",
+    "save": "Сохранить",
+    "search": "Поиск",
+    "example": "Пример",
+    "author": "Автор",
+    "you": "Вы",
+    "title": "Заголовок",
+    "noTitle": "Без названия",
+    "description": "Описание",
+    "githubRepo": "Репозиторий на GitHub",
+    "subTier": {
+      "1": "Тир 1",
+      "2": "Тир 2",
+      "3": "Тир 3"
+    },
+    "userType": {
+      "broadcaster": "Стример",
+      "editor": "Редактор",
+      "mod_one": "Модер",
+      "mod_many": "Модеры",
+      "vip_one": "Вип",
+      "vip_many": "Випы",
+      "sub_one": "Саб",
+      "sub_many": "Сабы",
+      "follower_one": "Фолловер",
+      "follower_many": "Фолловеры",
+      "viewer_one": "Зритель",
+      "viewer_many": "Зрители",
+      "all": "Все зрители"
+    },
+    "followedTime": {
+      "0": "Нет",
+      "10": "10 минут",
+      "30": "30 минут",
+      "60": "1 час",
+      "1440": "1 день",
+      "10080": "1 неделя",
+      "43200": "1 месяц",
+      "129600": "3 месяца"
+    }
   },
   "home": {
     "title": "HoneyVotes",
@@ -22,5 +71,108 @@
         "description": "Голосование за или против пока не наберётся нужное количество голосов. <br /> Есть виджет для OBS."
       }
     ]
+  },
+  "voting": {
+    "title": "Голосование",
+    "openVoting": "Открыть голосование",
+    "closeVoting": "Закрыть голосование",
+    "createVoting": "Создать голосование",
+    "votingClosed": "Голосование закрыто",
+    "editVoting": "Редактировать голосование",
+    "deleteVoting": "Удалить голосование",
+    "deleteVotingDialog": "Вы действительно хотите удалить голосование?",
+    "deleteVotingOption": "Удалить вариант для голосования",
+    "deleteVotingOptionDialog": "Вы действительно хотите удалить этот вариант для голосования?",
+    "options": "Варианты",
+    "votes": "Голосов",
+    "noOptions": "В этом голосовании пока нет ни одного варианта",
+    "suggestedBy": "Предложил",
+    "createOption": "Создать новый вариант для голосования",
+    "votingDeleted": "Голосование удалено или не существует",
+    "youCannotParticipateInThisVoting": "Вы не можете участвовать в этом голосовании",
+    "votingOption": {
+      "custom": {
+        "label_one": "Пользовательский вариант",
+        "label_many": "Пользовательские варианты",
+        "description": "Пользователи могут ввести свой текст"
+      },
+      "kinopoiskMovie": {
+        "label_one": "Фильм (kinopoisk.ru)",
+        "label_many": "Фильмы (kinopoisk.ru)",
+        "description": "Пользователи могут предложить фильм из сайта kinopoisk.ru"
+      },
+      "igdbGame": {
+        "label_one": "Игра (IGDB.com)",
+        "label_many": "Игры (IGDB.com)",
+        "description": "Пользователи могут предложить игру из базы IGDB.com"
+      }
+    },
+    "votingForm": {
+      "title": "Заголовок",
+      "description": "Описание",
+      "canManageVotes": "Голосование открыто",
+      "canManageVotingOptions": "Добавление вариантов открыто",
+      "showValues": "Показывать голоса",
+      "votingOptionTypes": "Типы вариантов",
+      "whoCanVote": "Голосовать могут",
+      "subTierRequired": "Минимальный уровень подписки",
+      "minutesToFollowRequired": "Минимальное время фоллова",
+      "whoCanAddOptions": "Добавлять варианты могут",
+      "whoCanAddOptionsTooltip": "Владелец канала и редакторы всегда могут создавать и удалять варианты для голосования",
+      "votingOptionsLimit": "Максимальное количество вариантов для голосования",
+      "showExtendedOptions": "Показать расширенные настройки",
+      "hideExtendedOptions": "Скрыть расширенные настройки"
+    },
+    "votingOptionForm": {
+      "movieName": "Название фильма",
+      "movieNameTooltip": "Начните вводить название фильма и выберите вариант из предложенных",
+      "movieLink": "Ссылка на фильм",
+      "movieLinkKinopoisk": "Ссылка на фильм с сайта kinopoisk.ru",
+      "gameName": "Название игры",
+      "gameNameTooltip": "Начните вводить название игры и выберите вариант из предложенных",
+      "gameLink": "Ссылка на игру",
+      "gameLinkIgdb": "Ссылка на игру с сайта IGDB.com"
+    },
+    "message": {
+      "votingCreateSuccess": "Голосование успешно создано",
+      "votingCreateFailure": "Не удалось создать голосование",
+      "votingUpdateSuccess": "Голосование успешно обновлено",
+      "votingUpdateFailure": "Не удалось обновить голосование",
+      "votingDeleteSuccess": "Голосование успешно удалено",
+      "votingDeleteFailure": "Не удалось удалить голосование",
+      "votingOptionCreateSuccess": "Вариант добавлен",
+      "votingOptionCreateFailure": "Не удалось добавить вариант",
+      "votingOptionDeleteSuccess": "Вариант удалён",
+      "votingOptionDeleteFailure": "Не удалось удалить вариант",
+      "voteCreateSuccess": "Ваш голос защитан",
+      "voteCreateFailure": "Не удалось проголосовать",
+      "voteDeleteSuccess": "Голос удалён",
+      "voteDeleteFailure": "Не удалось удалить голос",
+
+      "votingCreateNoPermission": "У вас недостаточно прав чтобы создать голосование",
+      "votingCreateLimitReached": "Вы создали слишком много голосований",
+      "votingOptionCreateDisabled": "Добавление/удаление вариантов для голосования отключено",
+      "votingOptionCreateLimitReached": "Достигнут лимит вариантов для голосования",
+      "votingOptionCreateAlreadyCreatedByUser": "Вы уже добавили вариант для голосования",
+      "votingOptionCreateNoPermission": "У вас недостаточно прав чтобы добавить вариант для голосования",
+      "votingOptionCreateAlreadyExists": "Такой вариант уже существует",
+      "votingOptionCreateKinopoiskMovieNotFound": "Не удалось найти такой фильм на kinopoisk.ru",
+      "votingOptionCreateIgdbGameNotFound": "Не удалось найти такую игру на IGDB.com",
+      "votingOptionDeleteDisabled": "Добавление/удаление вариантов для голосования отключено",
+      "votingOptionDeleteNotOwner": "Вы пытаетесь удалить чужой вариант для голосования",
+      "votingOptionDeleteHasVotes": "Невозможно удалить вариант для голосования, за который уже кто-то проголосовал",
+      "voteCreateDisabled": "Голосование отключено",
+      "voteCreateTooQuickly": "Вы голосуете слишком быстро",
+      "voteCreateNoPermission": "У вас недостаточно прав чтобы голосовать",
+      "voteDeleteDisabled": "Голосование отключено",
+      "voteDeleteNotOwner": "Вы пытаетесь удалить чужой голос",
+      "voteDeleteTooQuickly": "Вы голосуете слишком быстро"
+    }
+  },
+  "chatVoting": {
+    "title": "Голосование в чате"
+  },
+  "chatGoal": {
+    "title": "Чатгол"
   }
 }

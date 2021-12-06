@@ -1,6 +1,55 @@
 {
   "common": {
-    "changeLanguage": "Изменить язык на Русский"
+    "changeLanguage": "Изменить язык на Русский",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signInTwitch": "Sign In with Twitch",
+    "yes": "Yes",
+    "no": "No",
+    "add": "Add",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "save": "Save",
+    "search": "Search",
+    "example": "Example",
+    "author": "Author",
+    "you": "You",
+    "title": "Title",
+    "noTitle": "No Title",
+    "description": "Description",
+    "githubRepo": "Repository on GitHub",
+    "subTier": {
+      "1": "Tier 1",
+      "2": "Tier 2",
+      "3": "Tier 3"
+    },
+    "userType": {
+      "broadcaster": "Broadcaster",
+      "editor": "Editor",
+      "mod_one": "Mod",
+      "mod_many": "Mods",
+      "vip_one": "Vip",
+      "vip_many": "Vips",
+      "sub_one": "Sub",
+      "sub_many": "Subs",
+      "follower_one": "Follower",
+      "follower_many": "Followers",
+      "viewer_one": "Viewer",
+      "viewer_many": "Viewers",
+      "all": "All viewers"
+    },
+    "followedTime": {
+      "0": "None",
+      "10": "10 minutes",
+      "30": "30 minutes",
+      "60": "1 hour",
+      "1440": "1 day",
+      "10080": "1 week",
+      "43200": "1 month",
+      "129600": "3 months"
+    }
   },
   "home": {
     "title": "HoneyVotes",
@@ -22,5 +71,104 @@
         "description": "Vote for or against until you get the required number of votes. <br /> There is a widget for OBS."
       }
     ]
+  },
+  "voting": {
+    "title": "Voting",
+    "openVoting": "Open voting",
+    "closeVoting": "Close voting",
+    "createVoting": "Create voting",
+    "votingClosed": "Voting closed",
+    "editVoting": "Edit voting",
+    "deleteVoting": "Delete voting",
+    "deleteVotingDialog": "Do you really want to delete this voting?",
+    "deleteVotingOption": "Delete voting option",
+    "deleteVotingOptionDialog": "Do you really want to delete this voting option?",
+    "options": "Options",
+    "votes": "Votes",
+    "noOptions": "В этом голосовании пока нет ни одного варианта",
+    "suggestedBy": "Suggested by",
+    "createOption": "Create new voting option",
+    "votingDeleted": "Voting deleted or not exists",
+    "youCannotParticipateInThisVoting": "You cannot participate in this voting",
+    "votingOption": {
+      "custom": {
+        "label_one": "Custom option",
+        "label_many": "Custom options",
+        "description": "Users can enter their own text"
+      },
+      "kinopoiskMovie": {
+        "label_one": "Movie (kinopoisk.ru)",
+        "label_many": "Movies (kinopoisk.ru)",
+        "description": "Users can suggest a movie from kinopoisk.ru"
+      },
+      "igdbGame": {
+        "label_one": "Game (IGDB.com)",
+        "label_many": "Games (IGDB.com)",
+        "description": "Users can suggest a game from IGDB.com"
+      }
+    },
+    "votingForm": {
+      "canManageVotes": "Voting opened",
+      "canManageVotingOptions": "Adding options opened",
+      "showValues": "Show vote values",
+      "votingOptionTypes": "Option types",
+      "whoCanVote": "Who can vote",
+      "subTierRequired": "Sub tier required",
+      "minutesToFollowRequired": "Minutes to follow required",
+      "whoCanAddOptions": "Who can add options",
+      "whoCanAddOptionsTooltip": "Channel owner and editors always can add and delete voting options",
+      "votingOptionsLimit": "Voting options limit",
+      "showExtendedOptions": "Show extended options",
+      "hideExtendedOptions": "Hide extended options"
+    },
+    "votingOptionForm": {
+      "movieName": "Movie title",
+      "movieNameTooltip": "Start typing a movie title and choose one from suggested",
+      "movieLink": "Movie link",
+      "movieLinkKinopoisk": "Movie link from kinopoisk.ru",
+      "gameName": "Game title",
+      "gameNameTooltip": "Start typing a game title and choose one from suggested",
+      "gameLink": "Game link",
+      "gameLinkIgdb": "Game link from IGDB.com"
+    },
+    "message": {
+      "votingUpdateSuccess": "Voting updated",
+      "votingUpdateFailure": "Can't update voting",
+      "votingDeleteSuccess": "Voting deleted",
+      "votingDeleteFailure": "Can't delete voting",
+      "votingOptionCreateSuccess": "Option created",
+      "votingOptionCreateFailure": "Can't create option",
+      "votingOptionDeleteSuccess": "Option deleted",
+      "votingOptionDeleteFailure": "Can't delete option",
+      "voteCreateSuccess": "Your vote is accepted",
+      "voteCreateFailure": "Can't vote",
+      "voteDeleteSuccess": "Your vote is deleted",
+      "voteDeleteFailure": "Can't delete vote",
+
+      "votingCreateNoPermission": "You don't have permissions to create a voting",
+      "votingCreateLimitReached": "You have created too many votings",
+      "votingOptionCreateDisabled": "Adding/deleting voting options is disabled",
+      "votingOptionCreateLimitReached": "Voting options limit reached",
+      "votingOptionCreateAlreadyCreatedByUser": "You have already added a voting option",
+      "votingOptionCreateNoPermission": "You don't have permissions to create a voting option",
+      "votingOptionCreateAlreadyExists": "Such option already exists",
+      "votingOptionCreateKinopoiskMovieNotFound": "Couldn't find such a movie on kinopoisk.ru",
+      "votingOptionCreateIgdbGameNotFound": "Couldn't find such a game on IGDB.com",
+      "votingOptionDeleteDisabled": "Adding/deleting voting options is disabled",
+      "votingOptionDeleteNotOwner": "You are trying to delete someone else's voting option",
+      "votingOptionDeleteHasVotes": "Unable to delete a voting option that has already been voted on",
+      "voteCreateDisabled": "Voting is disabled",
+      "voteCreateTooQuickly": "You are voting too fast",
+      "voteCreateNoPermission": "You don't have permissions to vote",
+      "voteDeleteDisabled": "Voting is disabled",
+      "voteDeleteNotOwner": "You are trying to remove someone else's vote",
+      "voteDeleteTooQuickly": "You are voting too fast"
+    }
+  },
+  "chatVoting": {
+    "title": "Chat Voting"
+  },
+  "chatGoal": {
+    "title": "Chat Goal"
   }
 }
