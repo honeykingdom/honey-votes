@@ -58,7 +58,7 @@
       {
         "name": "voting",
         "title": "Voting",
-        "description": "Viewers can add movies, games, or their own text as options. <br /> Can be limited to subs/followers only."
+        "description": "Viewers can add movies, games, or their own text as options. Can be limited to subs/followers only."
       },
       {
         "name": "chat-voting",
@@ -68,7 +68,7 @@
       {
         "name": "chat-goal",
         "title": "Chat Goal",
-        "description": "Vote for or against until you get the required number of votes. <br /> There is a widget for OBS."
+        "description": "Vote for or against something until you get the required number of votes. There is a widget for OBS."
       }
     ]
   },
