@@ -15,8 +15,8 @@ const Permissions = ({
   canManage,
   disabled = false,
   onChange,
-}: Props) => {
-  return canManage ? (
+}: Props) =>
+  canManage ? (
     <PermissionsForm
       permissions={permissions}
       disabled={disabled}
@@ -25,6 +25,5 @@ const Permissions = ({
   ) : (
     <PermissionsLabels permissions={permissions} />
   );
-};
 
 export default Permissions;
