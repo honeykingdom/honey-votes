@@ -69,8 +69,9 @@ const Home = () => {
                     variant="body1"
                     component="p"
                     color="text.secondary"
-                    dangerouslySetInnerHTML={{ __html: description }}
-                  />
+                  >
+                    {description}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
