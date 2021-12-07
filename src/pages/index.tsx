@@ -6,8 +6,8 @@ import Layout from 'components/Layout';
 
 const FEATURE_ICONS = {
   voting: PollIcon,
-  'chat-voting': PollIcon,
-  'chat-goal': ThumbsUpDownIcon,
+  chatVoting: PollIcon,
+  chatGoal: ThumbsUpDownIcon,
 };
 
 type Feature = {
