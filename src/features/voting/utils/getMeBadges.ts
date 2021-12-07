@@ -25,9 +25,9 @@ const getMeBadges = (me: User, meRoles: UserRoles, t: TFunction): Badge[] => {
     badges.push({ title: t('userType.mod_one', T_OPTIONS), name: 'moderator' });
   }
 
-  if (meRoles.vip) {
-    badges.push({ title: t('userType.vip_one', T_OPTIONS), name: 'vip' });
-  }
+  // if (meRoles.vip) {
+  //   badges.push({ title: t('userType.vip_one', T_OPTIONS), name: 'vip' });
+  // }
 
   if (meRoles.sub) {
     let title = t('userType.sub_one', T_OPTIONS);

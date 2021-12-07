@@ -42,9 +42,9 @@ const getVotingPermissionsBadges = (
       name: 'moderator',
     });
 
-  if (vip[mode]) {
-    badges.push({ title: t('userType.vip_many', T_OPTIONS), name: 'vip' });
-  }
+  // if (vip[mode]) {
+  //   badges.push({ title: t('userType.vip_many', T_OPTIONS), name: 'vip' });
+  // }
 
   if (sub[mode]) {
     const requiredTier = sub[SUB_TIER[mode]];
