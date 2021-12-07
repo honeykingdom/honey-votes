@@ -144,7 +144,7 @@
       "votingOptionCreateFailure": "Не удалось добавить вариант",
       "votingOptionDeleteSuccess": "Вариант удалён",
       "votingOptionDeleteFailure": "Не удалось удалить вариант",
-      "voteCreateSuccess": "Ваш голос защитан",
+      "voteCreateSuccess": "Ваш голос засчитан",
       "voteCreateFailure": "Не удалось проголосовать",
       "voteDeleteSuccess": "Голос удалён",
       "voteDeleteFailure": "Не удалось удалить голос",
