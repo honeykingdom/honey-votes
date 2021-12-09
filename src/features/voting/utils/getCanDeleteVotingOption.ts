@@ -17,7 +17,11 @@ const getCanDeleteVotingOption = (
   if (!voting.canManageVotingOptions) return false;
   if (!votingOption) return false;
 
-  return me.id === votingOption.authorId && fullVotesValue === 0;
+  const isOwner = me.id === votingOption.authorId;
+
+  if (!isOwner) return false;
+
+  return voting.showValues ? true : fullVotesValue === 0;
 };
 
 export default getCanDeleteVotingOption;
