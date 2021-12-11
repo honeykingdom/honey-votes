@@ -100,10 +100,8 @@ const Layout = ({ children }: any) => {
                   }}
                 >
                   {language === 'ru' ? (
-                    // @ts-expect-error
                     <Flags.RU style={{ width: 24, height: 24 }} />
                   ) : (
-                    // @ts-expect-error
                     <Flags.US style={{ width: 24, height: 24 }} />
                   )}
                 </IconButton>
