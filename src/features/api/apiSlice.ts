@@ -169,17 +169,11 @@ export const api = createApi({
         try {
           await cacheDataLoaded;
 
-          // TODO: `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`
           subscription = supabase
-            .from<VotingOption>(VOTING_OPTION_TABLE_NAME)
-            .on('*', (payload) => {
-              if (
-                payload.new?.votingId !== arg &&
-                payload.old?.votingId !== arg
-              ) {
-                return;
-              }
-
+            .from<VotingOption>(
+              `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`,
+            )
+            .on('*', (payload) =>
               updateCachedData((draft) => {
                 if (payload.eventType === 'INSERT') {
                   votingOptionsAdapter.addOne(draft, payload.new);
@@ -195,8 +189,8 @@ export const api = createApi({
                 if (payload.eventType === 'DELETE') {
                   votingOptionsAdapter.removeOne(draft, payload.old.id);
                 }
-              });
-            })
+              }),
+            )
             .subscribe();
         } catch {}
 
