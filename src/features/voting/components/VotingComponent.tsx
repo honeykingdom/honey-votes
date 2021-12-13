@@ -51,18 +51,9 @@ const VotingComponent = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const channel = useUserQuery({ login: login! }, { skip: !login });
-  const voting = useVotingQuery(votingId!, {
-    skip: !votingId,
-    pollingInterval: 60 * 1000, // 1 min
-  });
-  const votingOptions = useVotingOptionsQuery(votingId!, {
-    skip: !votingId,
-    pollingInterval: 60 * 1000, // 1 min
-  });
-  const votes = useVotesQuery(votingId!, {
-    skip: !votingId,
-    pollingInterval: 60 * 1000, // 1 min
-  });
+  const voting = useVotingQuery(votingId!, { skip: !votingId });
+  const votingOptions = useVotingOptionsQuery(votingId!, { skip: !votingId });
+  const votes = useVotesQuery(votingId!, { skip: !votingId });
   const me = useMeQuery();
   const meRoles = useMeRolesQuery({ login: login! }, { skip: !login });
 

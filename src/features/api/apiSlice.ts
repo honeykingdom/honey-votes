@@ -140,20 +140,14 @@ export const api = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Voting', id: 'LIST' },
-        { type: 'Voting', id: arg.votingId },
-      ],
+      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
     deleteVoting: builder.mutation<void, number>({
       query: (votingId) => ({
         url: `${API_BASE}/voting/${votingId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, arg) => [
-        { type: 'Voting', id: 'LIST' },
-        { type: 'Voting', id: arg },
-      ],
+      invalidatesTags: [{ type: 'Voting', id: 'LIST' }],
     }),
 
     votingOptions: builder.query<EntityState<VotingOption>, number>({
@@ -211,14 +205,12 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
     deleteVotingOption: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
 
     votes: builder.query<EntityState<Vote>, number>({
@@ -267,7 +259,6 @@ export const api = createApi({
         method: 'POST',
         body: { votingOptionId } as CreateVoteDto,
       }),
-      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -275,7 +266,6 @@ export const api = createApi({
         method: 'DELETE',
         body: { votingOptionId } as DeleteVoteDto,
       }),
-      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
@@ -319,7 +309,6 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     updateChatVoting: builder.mutation<
       ChatVoting,
@@ -330,7 +319,6 @@ export const api = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
@@ -343,7 +331,6 @@ export const api = createApi({
         url: `${API_BASE}/chat-votes/${chatVotingId}/clear`,
         method: 'POST',
       }),
-      invalidatesTags: [{ type: 'ChatVote', id: 'LIST' }],
     }),
 
     chatVotes: builder.query<EntityState<ChatVote>, string>({

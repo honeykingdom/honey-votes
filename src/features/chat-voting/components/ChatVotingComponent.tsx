@@ -56,7 +56,6 @@ const ChatVotingComponent = () => {
   });
   const chatVotes = useChatVotesQuery(channel.data?.id as string, {
     skip: !channel.data,
-    pollingInterval: 60 * 1000, // 1 min
   });
 
   const [createChatVoting, createChatVotingResult] =
