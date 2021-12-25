@@ -95,6 +95,7 @@ export enum HoneyError {
 }
 
 // prettier-ignore
+/** @deprecated */
 export const API_ERRORS: Record<HoneyError | string, string> = {
   [HoneyError.VotingNoPermission]: 'У вас недостаточно прав чтобы создать голосование.',
   // TODO:
