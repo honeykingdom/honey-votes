@@ -39,6 +39,7 @@ type RefreshTokenQueryReturnValue = QueryReturnValue<
   FetchBaseQueryMeta
 >;
 
+// TODO: multiple requests in parallel are trying to refresh token
 const apiQuery: BaseQueryFn<
   string | FetchArgs,
   unknown,
