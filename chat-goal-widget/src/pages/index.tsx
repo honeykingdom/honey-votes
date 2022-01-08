@@ -1,7 +1,7 @@
 // https://github.com/vercel/next.js/tree/canary/examples/with-emotion
-import type { NextPage } from "next";
-import { css, Global } from "@emotion/react";
-import ChatGoalWidget from "../components/ChatGoalWidget";
+import type { NextPage } from 'next';
+import { css, Global } from '@emotion/react';
+import ChatGoalWidget from '../components/ChatGoalWidget';
 
 const globalStyles = css`
   * {

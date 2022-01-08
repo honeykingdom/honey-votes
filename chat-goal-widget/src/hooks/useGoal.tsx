@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import supabase from "../utils/supabase";
-import parseSearchParams from "../utils/parseSearchParams";
-import { Goal, GoalEvent, GoalVote } from "../utils/types";
-import { GoalEventType } from "../utils/constants";
+import { useEffect, useState } from 'react';
+import supabase from '../utils/supabase';
+import parseSearchParams from '../utils/parseSearchParams';
+import { Goal, GoalEvent, GoalVote } from '../utils/types';
+import { GoalEventType } from '../utils/constants';
 
 const MAX_VOTES_COUNT = 6;
 
@@ -17,17 +17,17 @@ const useGoal = () => {
 
     (async () => {
       const response = await supabase
-        .from<Goal>("hv_chat_goal")
+        .from<Goal>('hv_chat_goal')
         .select()
-        .eq("broadcasterId", id);
+        .eq('broadcasterId', id);
 
       if (response.data) setGoal(response.data[0]);
     })();
 
     const goalSubscription = supabase
       .from<Goal>(`hv_chat_goal:broadcasterId=eq.${id}`)
-      .on("*", (payload) => {
-        if (payload.eventType === "DELETE") return;
+      .on('*', (payload) => {
+        if (payload.eventType === 'DELETE') return;
 
         setGoal(payload.new);
       })
@@ -35,11 +35,11 @@ const useGoal = () => {
 
     const eventSubscription = supabase
       .from<GoalEvent>(`hv_chat_goal_event:chatGoalId=eq.${id}`)
-      .on("*", (payload) => {
-        if (payload.eventType === "DELETE") return;
+      .on('*', (payload) => {
+        if (payload.eventType === 'DELETE') return;
 
         setVotes((prev) => {
-          let value: GoalVote["value"] = 1;
+          let value: GoalVote['value'] = 1;
 
           if (payload.new.type === GoalEventType.Upvote) value = 1;
           if (payload.new.type === GoalEventType.Downvote) value = -1;

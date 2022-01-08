@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import styled from "@emotion/styled";
-import useGoal from "../hooks/useGoal";
-import { Goal } from "../utils/types";
-import { GoalStatus } from "../utils/constants";
+import { useEffect, useRef, useState } from 'react';
+import styled from '@emotion/styled';
+import useGoal from '../hooks/useGoal';
+import { Goal } from '../utils/types';
+import { GoalStatus } from '../utils/constants';
 
 const ChatGoalWidgetIndex = styled.div`
   padding: 16px;
@@ -61,7 +61,7 @@ const ProgressBar = styled.div<{ $width: number; $completed: boolean }>`
   background-color: #757575;
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -82,22 +82,22 @@ const Title = styled.div`
 `;
 
 const parseTime = (time: number) => {
-  const m = `${Math.floor(time / 60000)}`.padStart(2, "0");
-  const s = `${Math.floor((time % 60000) / 1000)}`.padStart(2, "0");
+  const m = `${Math.floor(time / 60000)}`.padStart(2, '0');
+  const s = `${Math.floor((time % 60000) / 1000)}`.padStart(2, '0');
   const ms = `${Math.floor(((time % 60000) % 1000) / 100)}`;
 
   return { m, s, ms };
 };
 
 const getGoalStatusText = (goal: Goal) => {
-  if (!goal) return "";
+  if (!goal) return '';
 
-  if (!goal.listening) return "Disabled";
-  if (goal.status === GoalStatus.VotingIdle) return "Stopped";
-  if (goal.status === GoalStatus.VotingPaused) return "Paused";
-  if (goal.status === GoalStatus.VotingFinished) return "Completed";
+  if (!goal.listening) return 'Disabled';
+  if (goal.status === GoalStatus.VotingIdle) return 'Stopped';
+  if (goal.status === GoalStatus.VotingPaused) return 'Paused';
+  if (goal.status === GoalStatus.VotingFinished) return 'Completed';
 
-  return "";
+  return '';
 };
 
 const ChatGoalWidget = (): any => {
@@ -158,7 +158,7 @@ const ChatGoalWidget = (): any => {
     return () => clearInterval(interval);
   }, [isTimerRunning]);
 
-  if (!goal) return "Loading...";
+  if (!goal) return 'Loading...';
 
   if (goal.status === GoalStatus.Uninitialized) return null;
 
@@ -184,7 +184,7 @@ const ChatGoalWidget = (): any => {
     <Votes>
       {votes.map(({ value, votesCount, userLogin, userDisplayName }) => (
         <Vote key={userDisplayName}>
-          <span style={{ fontSize: 16 }}>{value > 0 ? "✅" : "❌"}</span>{" "}
+          <span style={{ fontSize: 16 }}>{value > 0 ? '✅' : '❌'}</span>{' '}
           {userDisplayName || userLogin} {votesCount > 1 && `x${votesCount}`}
         </Vote>
       ))}
@@ -208,7 +208,7 @@ const ChatGoalWidget = (): any => {
     >
       <ProgressBarText>
         {goal.votesValue}/{goal.maxVotesValue}
-        {goalStatusText ? ` (${goalStatusText})` : ""}
+        {goalStatusText ? ` (${goalStatusText})` : ''}
       </ProgressBarText>
     </ProgressBar>
   );
@@ -218,7 +218,7 @@ const ChatGoalWidget = (): any => {
       {isVotesVisible && renderVotes()}
       {isTimerVisible && renderTimer()}
       {isVotingVisible && renderProgressBar()}
-      <Title>{goal.title || "Chat Goal"}</Title>
+      <Title>{goal.title || 'Chat Goal'}</Title>
     </ChatGoalWidgetIndex>
   );
 };
