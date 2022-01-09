@@ -5,6 +5,8 @@ import { Goal, GoalEvent, GoalVote } from '../utils/types';
 import { GoalEventType } from '../utils/constants';
 
 const MAX_VOTES_COUNT = 6;
+const CHAT_GOAL_TABLE_NAME = 'hv_chat_goal';
+const CHAT_GOAL_EVENT_TABLE_NAME = 'hv_chat_goal_event';
 
 const useGoal = () => {
   const [goal, setGoal] = useState<Goal | null>(null);
@@ -17,7 +19,7 @@ const useGoal = () => {
 
     (async () => {
       const response = await supabase
-        .from<Goal>('hv_chat_goal')
+        .from<Goal>(CHAT_GOAL_TABLE_NAME)
         .select()
         .eq('broadcasterId', id);
 
@@ -25,7 +27,7 @@ const useGoal = () => {
     })();
 
     const goalSubscription = supabase
-      .from<Goal>(`hv_chat_goal:broadcasterId=eq.${id}`)
+      .from<Goal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${id}`)
       .on('*', (payload) => {
         if (payload.eventType === 'DELETE') return;
 
@@ -34,7 +36,7 @@ const useGoal = () => {
       .subscribe();
 
     const eventSubscription = supabase
-      .from<GoalEvent>(`hv_chat_goal_event:chatGoalId=eq.${id}`)
+      .from<GoalEvent>(`${CHAT_GOAL_EVENT_TABLE_NAME}:chatGoalId=eq.${id}`)
       .on('*', (payload) => {
         if (payload.eventType === 'DELETE') return;
 
