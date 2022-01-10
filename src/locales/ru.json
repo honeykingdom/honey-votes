@@ -170,7 +170,23 @@
     }
   },
   "chatVoting": {
-    "title": "Голосование в чате"
+    "title": "Голосование в чате",
+    "openVoting": "Открыть голосование",
+    "closeVoting": "Закрыть голосование",
+    "whoCanVote": "Голосовать могут",
+    "text": "текст",
+    "clearAllVotes": "очистить все голоса",
+    "onlyOwnerAndEditors": "Только владелец канала и редакторы",
+    "winners": "Победители",
+    "chooseWinner": "Выбрать победителя",
+    "createTournament": "Создать турнир",
+    "createTournamentDescription": "Создать фильмовый турнир с победителями",
+    "remove": "Убрать",
+    "allVotes": "Все голоса",
+    "clearVotes": "Очистить голоса",
+    "clearVotesDialog": "Вы действительно хотите удалить все голоса?",
+    "nickname": "Ник",
+    "date": "Дата"
   },
   "chatGoal": {
     "title": "Чатгол"
