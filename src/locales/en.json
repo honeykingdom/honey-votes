@@ -166,7 +166,23 @@
     }
   },
   "chatVoting": {
-    "title": "Chat Voting"
+    "title": "Chat Voting",
+    "openVoting": "Open Voting",
+    "closeVoting": "Close Voting",
+    "whoCanVote": "Who can vote",
+    "text": "text",
+    "clearAllVotes": "clear all votes",
+    "onlyOwnerAndEditors": "Only channel owner and editors",
+    "winners": "Winners",
+    "chooseWinner": "Choose the winner",
+    "createTournament": "Create tournament",
+    "createTournamentDescription": "Create movie tournament with winners",
+    "remove": "remove",
+    "allVotes": "All votes",
+    "clearVotes": "Clear votes",
+    "clearVotesDialog": "Do you really want to clear all votes?",
+    "nickname": "Nickname",
+    "date": "Date"
   },
   "chatGoal": {
     "title": "Chat Goal"
