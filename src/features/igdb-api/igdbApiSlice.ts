@@ -35,6 +35,8 @@ export const igdbApi = createApi({
           body: `search "${query}"; fields cover.image_id,first_release_date,genres.name,name,release_dates,slug;`,
         },
       }),
+      transformResponse: (response) =>
+        Array.isArray(response) ? response : [],
     }),
   }),
 });
