@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityState } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-// import type { RealtimeSubscription } from '@supabase/realtime-js';
-// import supabase from 'utils/supabase';
+import type { RealtimeSubscription } from '@supabase/realtime-js';
+import supabase from 'utils/supabase';
 import apiQuery from './apiQuery';
 import {
   API_BASE,
@@ -96,32 +96,32 @@ export const api = createApi({
         params: { id: `eq.${votingId}` },
       }),
       transformResponse: (response: Voting[]) => response[0],
-      providesTags: (result, error, arg) => [{ type: 'Voting', id: arg }],
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      // providesTags: (result, error, arg) => [{ type: 'Voting', id: arg }],
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<Voting>(`${VOTING_TABLE_NAME}:id=eq.${arg}`)
-      //       .on('*', (payload) =>
-      //         updateCachedData((): any => {
-      //           if (payload.eventType === 'INSERT') return payload.new;
-      //           if (payload.eventType === 'UPDATE') return payload.new;
-      //           if (payload.eventType === 'DELETE') return null;
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+          subscription = supabase
+            .from<Voting>(`${VOTING_TABLE_NAME}:id=eq.${arg}`)
+            .on('*', (payload) =>
+              updateCachedData((): any => {
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVoting: builder.mutation<Voting, CreateVotingDto>({
       query: (body) => ({
@@ -142,7 +142,7 @@ export const api = createApi({
       }),
       invalidatesTags: (result, error, arg) => [
         { type: 'Voting', id: 'LIST' },
-        { type: 'Voting', id: arg.votingId },
+        // { type: 'Voting', id: arg.votingId },
       ],
     }),
     deleteVoting: builder.mutation<void, number>({
@@ -152,7 +152,7 @@ export const api = createApi({
       }),
       invalidatesTags: (result, error, arg) => [
         { type: 'Voting', id: 'LIST' },
-        { type: 'Voting', id: arg },
+        // { type: 'Voting', id: arg },
       ],
     }),
 
@@ -160,50 +160,50 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
-      providesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      // providesTags: [{ type: 'VotingOption', id: 'LIST' }],
       transformResponse: (response: VotingOption[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
           response.map(transformVotingOption),
         ),
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<VotingOption>(
-      //         `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`,
-      //       )
-      //       .on('*', (payload) =>
-      //         updateCachedData((draft) => {
-      //           if (payload.eventType === 'INSERT') {
-      //             votingOptionsAdapter.addOne(draft, payload.new);
-      //           }
+          subscription = supabase
+            .from<VotingOption>(
+              `${VOTING_OPTION_TABLE_NAME}:votingId=eq.${arg}`,
+            )
+            .on('*', (payload) =>
+              updateCachedData((draft) => {
+                if (payload.eventType === 'INSERT') {
+                  votingOptionsAdapter.addOne(draft, payload.new);
+                }
 
-      //           if (payload.eventType === 'UPDATE') {
-      //             votingOptionsAdapter.updateOne(draft, {
-      //               id: payload.new.id,
-      //               changes: payload.new,
-      //             });
-      //           }
+                if (payload.eventType === 'UPDATE') {
+                  votingOptionsAdapter.updateOne(draft, {
+                    id: payload.new.id,
+                    changes: payload.new,
+                  });
+                }
 
-      //           if (payload.eventType === 'DELETE') {
-      //             votingOptionsAdapter.removeOne(draft, payload.old.id);
-      //           }
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+                if (payload.eventType === 'DELETE') {
+                  votingOptionsAdapter.removeOne(draft, payload.old.id);
+                }
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVotingOption: builder.mutation<VotingOption, CreateVotingOptionDto>({
       query: (body) => ({
@@ -211,55 +211,55 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
     deleteVotingOption: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: 'DELETE',
       }),
-      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
 
     votes: builder.query<EntityState<Vote>, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?votingId=eq.${votingId}&select=authorId,votingId,votingOptionId,value`,
       }),
-      providesTags: [{ type: 'Vote', id: 'LIST' }],
+      // providesTags: [{ type: 'Vote', id: 'LIST' }],
       transformResponse: (response: Vote[]) =>
         votesAdapter.addMany(votesAdapter.getInitialState(), response),
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<Vote>(`${VOTE_TABLE_NAME}:votingId=eq.${arg}`)
-      //       .on('*', (payload) =>
-      //         updateCachedData((draft) => {
-      //           if (
-      //             payload.eventType === 'INSERT' ||
-      //             payload.eventType === 'UPDATE'
-      //           ) {
-      //             votesAdapter.upsertOne(draft, payload.new);
-      //           }
+          subscription = supabase
+            .from<Vote>(`${VOTE_TABLE_NAME}:votingId=eq.${arg}`)
+            .on('*', (payload) =>
+              updateCachedData((draft) => {
+                if (
+                  payload.eventType === 'INSERT' ||
+                  payload.eventType === 'UPDATE'
+                ) {
+                  votesAdapter.upsertOne(draft, payload.new);
+                }
 
-      //           if (payload.eventType === 'DELETE') {
-      //             votesAdapter.removeOne(draft, payload.old.authorId);
-      //           }
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+                if (payload.eventType === 'DELETE') {
+                  votesAdapter.removeOne(draft, payload.old.authorId);
+                }
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -267,7 +267,7 @@ export const api = createApi({
         method: 'POST',
         body: { votingOptionId } as CreateVoteDto,
       }),
-      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -275,7 +275,7 @@ export const api = createApi({
         method: 'DELETE',
         body: { votingOptionId } as DeleteVoteDto,
       }),
-      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
@@ -283,35 +283,35 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}`,
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
-      providesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      // providesTags: [{ type: 'ChatVoting', id: 'ONE' }],
       transformResponse: (response: ChatVoting[]) => response[0],
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<ChatVoting>(
-      //         `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`,
-      //       )
-      //       .on('*', (payload) =>
-      //         updateCachedData((): any => {
-      //           if (payload.eventType === 'INSERT') return payload.new;
-      //           if (payload.eventType === 'UPDATE') return payload.new;
-      //           if (payload.eventType === 'DELETE') return null;
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+          subscription = supabase
+            .from<ChatVoting>(
+              `${CHAT_VOTING_TABLE_NAME}:broadcasterId=eq.${arg}`,
+            )
+            .on('*', (payload) =>
+              updateCachedData((): any => {
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createChatVoting: builder.mutation<ChatVoting, CreateChatVotingDto>({
       query: (body) => ({
@@ -319,7 +319,7 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      // invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     updateChatVoting: builder.mutation<
       ChatVoting,
@@ -330,7 +330,7 @@ export const api = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      // invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
@@ -354,42 +354,42 @@ export const api = createApi({
       providesTags: [{ type: 'ChatVote', id: 'LIST' }],
       transformResponse: (response: ChatVote[]) =>
         chatVotesAdapter.addMany(chatVotesAdapter.getInitialState(), response),
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<ChatVote>(`${CHAT_VOTE_TABLE_NAME}:chatVotingId=eq.${arg}`)
-      //       .on('*', (payload) =>
-      //         updateCachedData((draft) => {
-      //           if (payload.eventType === 'INSERT') {
-      //             chatVotesAdapter.addOne(draft, payload.new);
-      //           }
+          subscription = supabase
+            .from<ChatVote>(`${CHAT_VOTE_TABLE_NAME}:chatVotingId=eq.${arg}`)
+            .on('*', (payload) =>
+              updateCachedData((draft) => {
+                if (payload.eventType === 'INSERT') {
+                  chatVotesAdapter.addOne(draft, payload.new);
+                }
 
-      //           if (payload.eventType === 'UPDATE') {
-      //             chatVotesAdapter.updateOne(draft, {
-      //               id: payload.new.userId,
-      //               changes: payload.new,
-      //             });
-      //           }
+                if (payload.eventType === 'UPDATE') {
+                  chatVotesAdapter.updateOne(draft, {
+                    id: payload.new.userId,
+                    changes: payload.new,
+                  });
+                }
 
-      //           if (payload.eventType === 'DELETE') {
-      //             chatVotesAdapter.removeOne(draft, payload.old.userId);
-      //           }
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+                if (payload.eventType === 'DELETE') {
+                  chatVotesAdapter.removeOne(draft, payload.old.userId);
+                }
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
 
     chatGoal: builder.query<ChatGoal, string>({
@@ -398,31 +398,31 @@ export const api = createApi({
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
       transformResponse: (response: ChatGoal[]) => response[0],
-      // onCacheEntryAdded: async (
-      //   arg,
-      //   { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
-      // ) => {
-      //   let subscription: RealtimeSubscription | null = null;
+      onCacheEntryAdded: async (
+        arg,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
+      ) => {
+        let subscription: RealtimeSubscription | null = null;
 
-      //   try {
-      //     await cacheDataLoaded;
+        try {
+          await cacheDataLoaded;
 
-      //     subscription = supabase
-      //       .from<ChatGoal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${arg}`)
-      //       .on('*', (payload) =>
-      //         updateCachedData((): any => {
-      //           if (payload.eventType === 'INSERT') return payload.new;
-      //           if (payload.eventType === 'UPDATE') return payload.new;
-      //           if (payload.eventType === 'DELETE') return null;
-      //         }),
-      //       )
-      //       .subscribe();
-      //   } catch {}
+          subscription = supabase
+            .from<ChatGoal>(`${CHAT_GOAL_TABLE_NAME}:broadcasterId=eq.${arg}`)
+            .on('*', (payload) =>
+              updateCachedData((): any => {
+                if (payload.eventType === 'INSERT') return payload.new;
+                if (payload.eventType === 'UPDATE') return payload.new;
+                if (payload.eventType === 'DELETE') return null;
+              }),
+            )
+            .subscribe();
+        } catch {}
 
-      //   await cacheEntryRemoved;
+        await cacheEntryRemoved;
 
-      //   if (subscription) supabase.removeSubscription(subscription);
-      // },
+        if (subscription) supabase.removeSubscription(subscription);
+      },
     }),
     createChatGoal: builder.mutation<ChatGoal, CreateChatGoalDto>({
       query: (body) => ({
