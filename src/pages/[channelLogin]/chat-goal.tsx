@@ -31,8 +31,8 @@ const ChatGoalPage = () => {
         ]}
       />
 
-      {/* <ChatGoalComponent /> */}
-      <Alert severity="error">Чатгол временно не работает!</Alert>
+      <ChatGoalComponent />
+      {/* <Alert severity="error">Чатгол временно не работает!</Alert> */}
     </Layout>
   );
 };
