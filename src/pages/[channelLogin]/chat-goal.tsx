@@ -1,4 +1,3 @@
-import { Alert } from '@mui/material';
 import Layout from 'components/Layout';
 import PageHeader from 'components/PageHeader';
 import TwitchUsername from 'components/TwitchUsername';
@@ -32,7 +31,6 @@ const ChatGoalPage = () => {
       />
 
       <ChatGoalComponent />
-      {/* <Alert severity="error">Чатгол временно не работает!</Alert> */}
     </Layout>
   );
 };
