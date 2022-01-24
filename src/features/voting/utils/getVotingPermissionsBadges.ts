@@ -61,7 +61,7 @@ const getVotingPermissionsBadges = (
     } else if (requiredTier === SubTier.Tier3) {
       const tier = t('subTier.3', T_OPTIONS);
 
-      title = `${t('userType.sub_many', T_OPTIONS)} (${tier} 3)`;
+      title = `${t('userType.sub_many', T_OPTIONS)} (${tier})`;
       version = '3000';
     }
 
@@ -71,7 +71,7 @@ const getVotingPermissionsBadges = (
   if (follower[mode]) {
     const requiredMinutes = follower[MINUTES_FOLLOWED[mode]];
     const requiredMinutesText = t(`followedTime.${requiredMinutes}`, T_OPTIONS);
-    const title = requiredMinutesText
+    const title = requiredMinutes
       ? `${t('userType.follower_many', T_OPTIONS)} (${requiredMinutesText}+)`
       : t('userType.follower_many', T_OPTIONS);
 

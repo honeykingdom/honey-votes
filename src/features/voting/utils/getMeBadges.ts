@@ -40,10 +40,10 @@ const getMeBadges = (me: User, meRoles: UserRoles, t: TFunction): Badge[] => {
       version = '2000';
     }
 
-    if (meRoles.subTier === SubTier.Tier2) {
+    if (meRoles.subTier === SubTier.Tier3) {
       const tier = t(`subTier.${meRoles.subTier}`, T_OPTIONS);
 
-      title = `${t('userType.sub_one', T_OPTIONS)} (${tier} 3)`;
+      title = `${t('userType.sub_one', T_OPTIONS)} (${tier})`;
       version = '3000';
     }
 
