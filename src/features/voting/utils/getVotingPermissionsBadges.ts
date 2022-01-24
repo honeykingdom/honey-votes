@@ -72,8 +72,8 @@ const getVotingPermissionsBadges = (
     const requiredMinutes = follower[MINUTES_FOLLOWED[mode]];
     const requiredMinutesText = t(`followedTime.${requiredMinutes}`, T_OPTIONS);
     const title = requiredMinutes
-      ? t('userType.follower_many', T_OPTIONS)
-      : `${t('userType.follower_many', T_OPTIONS)} (${requiredMinutesText}+)`;
+      ? `${t('userType.follower_many', T_OPTIONS)} (${requiredMinutesText}+)`
+      : t('userType.follower_many', T_OPTIONS);
 
     badges.push({ title, name: 'glitchcon2020' });
   }
