@@ -96,7 +96,7 @@ export const api = createApi({
         params: { id: `eq.${votingId}` },
       }),
       transformResponse: (response: Voting[]) => response[0],
-      // providesTags: (result, error, arg) => [{ type: 'Voting', id: arg }],
+      providesTags: (result, error, arg) => [{ type: 'Voting', id: arg }],
       onCacheEntryAdded: async (
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -142,7 +142,7 @@ export const api = createApi({
       }),
       invalidatesTags: (result, error, arg) => [
         { type: 'Voting', id: 'LIST' },
-        // { type: 'Voting', id: arg.votingId },
+        { type: 'Voting', id: arg.votingId },
       ],
     }),
     deleteVoting: builder.mutation<void, number>({
@@ -152,7 +152,7 @@ export const api = createApi({
       }),
       invalidatesTags: (result, error, arg) => [
         { type: 'Voting', id: 'LIST' },
-        // { type: 'Voting', id: arg },
+        { type: 'Voting', id: arg },
       ],
     }),
 
@@ -160,7 +160,7 @@ export const api = createApi({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTING_OPTION_TABLE_NAME}?votingId=eq.${votingId}&select=*,authorId(id,login,displayName,avatarUrl)`,
       }),
-      // providesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      providesTags: [{ type: 'VotingOption', id: 'LIST' }],
       transformResponse: (response: VotingOption[]) =>
         votingOptionsAdapter.addMany(
           votingOptionsAdapter.getInitialState(),
@@ -211,21 +211,21 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      // invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
     deleteVotingOption: builder.mutation<void, number>({
       query: (votingOptionId) => ({
         url: `${API_BASE}/voting-options/${votingOptionId}`,
         method: 'DELETE',
       }),
-      // invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
+      invalidatesTags: [{ type: 'VotingOption', id: 'LIST' }],
     }),
 
     votes: builder.query<EntityState<Vote>, number>({
       query: (votingId) => ({
         url: `${API_BASE_POSTGREST}/${VOTE_TABLE_NAME}?votingId=eq.${votingId}&select=authorId,votingId,votingOptionId,value`,
       }),
-      // providesTags: [{ type: 'Vote', id: 'LIST' }],
+      providesTags: [{ type: 'Vote', id: 'LIST' }],
       transformResponse: (response: Vote[]) =>
         votesAdapter.addMany(votesAdapter.getInitialState(), response),
       onCacheEntryAdded: async (
@@ -267,7 +267,7 @@ export const api = createApi({
         method: 'POST',
         body: { votingOptionId } as CreateVoteDto,
       }),
-      // invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
     deleteVote: builder.mutation<void, number>({
       query: (votingOptionId) => ({
@@ -275,7 +275,7 @@ export const api = createApi({
         method: 'DELETE',
         body: { votingOptionId } as DeleteVoteDto,
       }),
-      // invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
+      invalidatesTags: [{ type: 'Vote', id: 'LIST' }],
     }),
 
     chatVoting: builder.query<ChatVoting, string>({
@@ -283,7 +283,7 @@ export const api = createApi({
         url: `${API_BASE_POSTGREST}/${CHAT_VOTING_TABLE_NAME}`,
         params: { broadcasterId: `eq.${broadcasterId}` },
       }),
-      // providesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      providesTags: [{ type: 'ChatVoting', id: 'ONE' }],
       transformResponse: (response: ChatVoting[]) => response[0],
       onCacheEntryAdded: async (
         arg,
@@ -319,7 +319,7 @@ export const api = createApi({
         method: 'POST',
         body,
       }),
-      // invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     updateChatVoting: builder.mutation<
       ChatVoting,
@@ -330,7 +330,7 @@ export const api = createApi({
         method: 'PUT',
         body,
       }),
-      // invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
+      invalidatesTags: [{ type: 'ChatVoting', id: 'ONE' }],
     }),
     deleteChatVoting: builder.mutation<void, string>({
       query: (chatVotingId) => ({
