@@ -11,7 +11,7 @@ import { AppState } from 'app/store';
 import storeTokens from 'features/auth/storeTokens';
 import { updateTokens } from 'features/auth/authSlice';
 import { API_BASE, API_BASE_POSTGREST, SUPABASE_HEADERS } from './apiConstants';
-import { Jwt, RefreshTokenResponse } from './apiTypes';
+import type { Jwt, RefreshTokenResponse } from './apiTypes';
 
 const baseQuery = fetchBaseQuery({ baseUrl: '' });
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LS_ACCESS_TOKEN, LS_REFRESH_TOKEN } from './authConstants';
 
