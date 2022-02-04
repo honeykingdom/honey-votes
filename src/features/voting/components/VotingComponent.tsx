@@ -74,7 +74,6 @@ const VotingComponent = () => {
     useState(false);
 
   const renderedVotingOptions = useAppSelector((state) =>
-    // @ts-expect-error
     renderedVotingOptionsSelector(state, votingId!),
   );
 
