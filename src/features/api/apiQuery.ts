@@ -8,7 +8,7 @@ import {
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import jwtDecode from 'jwt-decode';
 import { AppState } from 'app/store';
-import storeTokens from 'features/auth/storeTokens';
+import { storeTokens } from 'features/auth/tokensStorage';
 import { updateTokens } from 'features/auth/authSlice';
 import { API_BASE, API_BASE_POSTGREST, SUPABASE_HEADERS } from './apiConstants';
 import type { Jwt, RefreshTokenResponse } from './apiTypes';

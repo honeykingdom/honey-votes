@@ -18,13 +18,9 @@ import { useAppDispatch } from 'app/hooks';
 import getMainMenuLinks from 'utils/getMainMenuLinks';
 import TwitchIcon from 'icons/twitch.svg';
 import { useMeQuery } from 'features/api/apiSlice';
-import {
-  AUTH_URL,
-  LS_ACCESS_TOKEN,
-  LS_REFRESH_TOKEN,
-  LS_REDIRECT_PATH,
-} from 'features/auth/authConstants';
+import { AUTH_URL, LS_REDIRECT_PATH } from 'features/auth/authConstants';
 import { clearTokens } from 'features/auth/authSlice';
+import { removeTokens } from 'features/auth/tokensStorage';
 import PurpleButton from './PurpleButton';
 
 const AccountMenu = () => {
@@ -47,8 +43,7 @@ const AccountMenu = () => {
     dispatch(clearTokens());
     me.refetch();
 
-    localStorage.removeItem(LS_ACCESS_TOKEN);
-    localStorage.removeItem(LS_REFRESH_TOKEN);
+    removeTokens();
   };
 
   if (me.isLoading || me.isUninitialized) return null;

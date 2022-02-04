@@ -16,7 +16,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import Flags from 'country-flag-icons/react/3x2';
 import getMainMenuLinks from 'utils/getMainMenuLinks';
 import { useMeQuery } from 'features/api/apiSlice';
-import { useAuthRedirect } from 'features/auth/useAuthRedirect';
+import { useAuth } from 'features/auth/useAuth';
 import AccountMenu from './AccountMenu';
 
 const Layout = ({ children }: any) => {
@@ -30,7 +30,7 @@ const Layout = ({ children }: any) => {
 
   const me = useMeQuery();
 
-  useAuthRedirect();
+  useAuth();
 
   const isMenuVisible = me.data && !me.isError;
 
