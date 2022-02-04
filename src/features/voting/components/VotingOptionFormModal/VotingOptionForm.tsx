@@ -228,7 +228,11 @@ const VotingOptionForm = ({
               />
 
               <Typography color="text.secondary">
-                <Link href="https://www.kinopoisk.ru" target="_blank">
+                <Link
+                  href="https://www.kinopoisk.ru"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
                   https://www.kinopoisk.ru
                 </Link>
                 <br />
@@ -283,7 +287,11 @@ const VotingOptionForm = ({
               />
 
               <Typography color="text.secondary">
-                <Link href="https://www.igdb.com" target="_blank">
+                <Link
+                  href="https://www.igdb.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
                   https://www.igdb.com
                 </Link>
                 <br />

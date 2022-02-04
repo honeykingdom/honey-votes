@@ -165,6 +165,7 @@ const VotingOptionCard = ({
       <CardActionArea
         component="a"
         target="_blank"
+        rel="noreferrer noopener"
         href={cardUrl}
         sx={{ width: 'auto' }}
       >
