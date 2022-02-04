@@ -68,7 +68,11 @@ const AccountMenu = () => {
     <>
       <Button
         startIcon={
-          <Avatar sx={{ width: 32, height: 32 }} src={me.data.avatarUrl}>
+          <Avatar
+            sx={{ width: 32, height: 32 }}
+            src={me.data.avatarUrl}
+            alt={me.data.displayName}
+          >
             {me.data.displayName.slice(0, 1)}
           </Avatar>
         }

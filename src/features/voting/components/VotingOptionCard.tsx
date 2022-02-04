@@ -241,6 +241,7 @@ const VotingOptionCard = ({
         <Box sx={{ ml: 0.5, display: 'inline-flex', alignItems: 'center' }}>
           <Avatar
             src={votingOption.authorData?.avatarUrl}
+            alt={authorName}
             sx={{ width: 24, height: 24 }}
           >
             {authorName[0].toUpperCase()}
