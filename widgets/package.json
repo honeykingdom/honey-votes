@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "chat-goal-widget",
+  "name": "widgets",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",

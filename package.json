@@ -3,16 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "chat-goal-widget"
+    "widgets"
   ],
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "concurrently \"next build\" \"yarn build:widget\"",
-    "postbuild": "rm -rf public/chat-goal-widget && mv chat-goal-widget/out public/chat-goal-widget",
+    "build": "concurrently \"next build\" \"yarn build:widgets\"",
+    "postbuild": "rm -rf public/widgets && mv widgets/out public/widgets",
     "start": "next start",
     "export": "next export",
     "lint": "next lint",
-    "build:widget": "cd ./chat-goal-widget && yarn build && yarn export",
+    "build:widgets": "cd ./widgets && yarn build && yarn export",
     "generate:types": "npx openapi-typescript http://localhost:3000/api-json --output src/features/api/apiTypes.generated.ts",
     "generate:kinopoisk-types": "npx openapi-typescript https://kinopoiskapiunofficial.tech/documentation/api/openapi.json --output src/features/kinopoisk-api/kinopoiskApiTypes.generated.ts",
     "generate:schema": "node ./scripts/generateApiSchema.js http://localhost:3000/api-json src/features/api/apiSchema.json",
