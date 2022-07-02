@@ -33,6 +33,8 @@ export type ChatGoalEvent = components['schemas']['ChatGoalEvent'];
 export type CreateChatGoalDto = components['schemas']['CreateChatGoalDto'];
 export type UpdateChatGoalDto = components['schemas']['UpdateChatGoalDto'];
 
+export type IgdbGame = components['schemas']['IgdbGame'];
+
 export type Jwt = {
   sub: string;
   login: string;

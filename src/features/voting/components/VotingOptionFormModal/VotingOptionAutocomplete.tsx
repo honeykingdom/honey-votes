@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { VotingOptionType } from 'features/api/apiConstants';
 import { useLazySearchMoviesQuery } from 'features/kinopoisk-api/kinopoiskApiSlice';
-import { useLazySearchGamesQuery } from 'features/igdb-api/igdbApiSlice';
+import { useLazySearchGamesQuery } from 'features/api/apiSlice';
 
 type Props = {
   id: string;

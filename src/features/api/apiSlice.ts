@@ -32,6 +32,7 @@ import {
   ChatGoal,
   CreateChatGoalDto,
   UpdateChatGoalDto,
+  IgdbGame,
 } from './apiTypes';
 import transformVotingOption from './utils/transformVotingOption';
 
@@ -472,6 +473,13 @@ export const api = createApi({
         method: 'POST',
       }),
     }),
+
+    searchGames: builder.query<IgdbGame, string>({
+      query: (s) => ({
+        url: `${API_BASE}/games/search?s=${s}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -511,4 +519,6 @@ export const {
   usePauseChatGoalMutation,
   useResetChatGoalMutation,
   useResetChatGoalVotesMutation,
+
+  useLazySearchGamesQuery,
 } = api;
