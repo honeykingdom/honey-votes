@@ -64,6 +64,12 @@ export interface paths {
   "/api/honey-votes/chat-goal/{goalId}/reset-votes": {
     post: operations["ChatGoalController_resetVotes"];
   };
+  "/api/honey-votes/games/search": {
+    get: operations["GamesController_searchGames"];
+  };
+  "/api/instagram/{nickname}/last-post-url": {
+    get: operations["InstagramController_getLastPostUrl"];
+  };
 }
 
 export interface components {
@@ -278,8 +284,8 @@ export interface components {
       type: components["schemas"]["ChatGoalEventType"];
       userId: string;
       userLogin: string;
-      votesCount: number;
       userDisplayName: string;
+      votesCount: number;
     };
     ChatGoal: {
       broadcasterId: string;
@@ -311,6 +317,23 @@ export interface components {
       timerDuration?: number;
       maxVotesValue?: number;
     };
+    IgdbCover: {
+      id: number;
+      image_id?: string;
+    };
+    IgdbGenre: {
+      id: number;
+      name?: string;
+    };
+    IgdbGame: {
+      id: number;
+      name?: string;
+      first_release_date?: number;
+      slug?: string;
+      cover?: components["schemas"]["IgdbCover"];
+      genres?: components["schemas"]["IgdbGenre"][];
+      release_dates?: number[];
+    };
   };
 }
 
@@ -326,8 +349,6 @@ export interface operations {
       };
       /** Bad Request */
       400: unknown;
-      /** Unauthorized */
-      401: unknown;
     };
     requestBody: {
       content: {
@@ -757,6 +778,37 @@ export interface operations {
       401: unknown;
       /** Forbidden */
       403: unknown;
+    };
+  };
+  GamesController_searchGames: {
+    parameters: {
+      query: {
+        s: string;
+      };
+    };
+    responses: {
+      /** Created */
+      200: {
+        content: {
+          "application/json": components["schemas"]["IgdbGame"][];
+        };
+      };
+      /** Bad request */
+      400: unknown;
+    };
+  };
+  InstagramController_getLastPostUrl: {
+    parameters: {
+      path: {
+        nickname: string;
+      };
+    };
+    responses: {
+      200: {
+        content: {
+          "application/json": string;
+        };
+      };
     };
   };
 }

@@ -22,6 +22,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Фильм не найден */
         404: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
@@ -47,6 +49,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
@@ -70,6 +74,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
@@ -93,6 +99,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
@@ -116,6 +124,33 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v2.2/films/{id}/awards": {
+    /** Данный эндпоинт возвращает данные о наградах и премиях фильма. */
+    get: {
+      parameters: {
+        path: {
+          /** kinopoisk film id */
+          id: number;
+        };
+      };
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["AwardResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
@@ -139,6 +174,109 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v2.2/films/{id}/similars": {
+    get: {
+      parameters: {
+        path: {
+          /** kinopoisk film id */
+          id: number;
+        };
+      };
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["RelatedFilmResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v2.2/films/{id}/images": {
+    /** Данный эндпоинт возвращает изображения связанные с фильмом с пагинацией. Каждая страница содержит <b>не более чем 20 фильмов</b>.</br> Доступные изображения:</br> <ul> <li>STILL - кадры</li> <li>SHOOTING - изображения со съемок</li> <li>POSTER - постеры</li> <li>FAN_ART - фан-арты</li> <li>PROMO - промо</li> <li>CONCEPT - концепт-арты</li> <li>WALLPAPER - обои</li> <li>COVER - обложки</li> <li>SCREENSHOT - скриншоты</li> </ul> */
+    get: {
+      parameters: {
+        path: {
+          /** kinopoisk film id */
+          id: number;
+        };
+        query: {
+          /** тип изображения */
+          type?:
+            | "STILL"
+            | "SHOOTING"
+            | "POSTER"
+            | "FAN_ART"
+            | "PROMO"
+            | "CONCEPT"
+            | "WALLPAPER"
+            | "COVER"
+            | "SCREENSHOT";
+          /** номер страницы */
+          page?: number;
+        };
+      };
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ImageResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v2.2/films/{id}/reviews": {
+    /** Возвращает список рецензии зрителей с пагинацией. Каждая страница содержит не более чем 20 рецензий. */
+    get: {
+      parameters: {
+        path: {
+          /** kinopoisk film id */
+          id: number;
+        };
+        query: {
+          /** номер страницы */
+          page?: number;
+          /** тип сортировки */
+          order?:
+            | "DATE_ASC"
+            | "DATE_DESC"
+            | "USER_POSITIVE_RATING_ASC"
+            | "USER_POSITIVE_RATING_DESC"
+            | "USER_NEGATIVE_RATING_ASC"
+            | "USER_NEGATIVE_RATING_DESC";
+        };
+      };
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["ReviewResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
@@ -167,29 +305,9 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Лимит 5 запроса в секунду */
-        429: unknown;
-      };
-    };
-  };
-  "/api/v2.2/films/{id}/similars": {
-    get: {
-      parameters: {
-        path: {
-          /** kinopoisk film id */
-          id: number;
-        };
-      };
-      responses: {
-        /** Запрос выполнен успешно */
-        200: {
-          content: {
-            "application/json": components["schemas"]["RelatedFilmResponse"];
-          };
-        };
-        /** Пустой или неправильный токен */
-        401: unknown;
-        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
     };
@@ -226,32 +344,73 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Слишком много запросов. Лимит 5 запросов в секунду */
         429: unknown;
       };
     };
   };
-  "/api/v2.1/films/{id}/frames": {
-    /** Данный эндпоинт возвращает кадры из фильма. */
+  "/api/v2.2/films/filters": {
+    /** Возвращает список id стран и жанров, которые могут быть использованы в /api/v2.2/films */
+    get: {
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["FiltersResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v2.2/films": {
+    /** Возвращает список фильмов с пагинацией. Каждая страница содержит не более чем 20 фильмов. Данный эндпоинт не возращает более 400 фильмов. <i>Используй /api/v2.2/films/filters чтобы получить id стран и жанров.</i> */
     get: {
       parameters: {
-        path: {
-          /** kinopoisk film id */
-          id: number;
+        query: {
+          /** список id стран разделенные запятой. Например <i>countries=1,2,3</i>. На данный момент можно указать не более одной страны. */
+          countries?: number[];
+          /** список id жанров разделенные запятой. Например <i>genres=1,2,3</i>. На данный момент можно указать не более одного жанра. */
+          genres?: number[];
+          /** сортировка */
+          order?: "RATING" | "NUM_VOTE" | "YEAR";
+          /** тип фильма */
+          type?: "FILM" | "TV_SHOW" | "TV_SERIES" | "MINI_SERIES" | "ALL";
+          /** минимальный рейтинг */
+          ratingFrom?: number;
+          /** максимальный рейтинг */
+          ratingTo?: number;
+          /** минимальный год */
+          yearFrom?: number;
+          /** максимальный год */
+          yearTo?: number;
+          /** imdb id */
+          imdbId?: string;
+          /** ключевое слово, которое встречается в названии фильма */
+          keyword?: string;
+          /** номер страницы */
+          page?: number;
         };
       };
       responses: {
         /** Запрос выполнен успешно */
         200: {
           content: {
-            "application/json": components["schemas"]["FilmFrameResponse"];
+            "application/json": components["schemas"]["FilmSearchByFiltersResponse"];
           };
         };
         /** Пустой или неправильный токен */
         401: unknown;
-        /** Кадры не найдены */
-        404: unknown;
-        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Лимит 5 запросов в секунду */
         429: unknown;
       };
     };
@@ -274,6 +433,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Фильм не найден */
         404: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
@@ -301,66 +462,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
-        /** Фильмы не найдены */
-        404: unknown;
-        /** Слишком много запросов. Лимит 5 запросов в секунду */
-        429: unknown;
-      };
-    };
-  };
-  "/api/v2.1/films/filters": {
-    /** Возвращает список id стран и жанров, которые могут быть использованы в /api/v2.1/films/search-by-filters */
-    get: {
-      responses: {
-        /** Запрос выполнен успешно */
-        200: {
-          content: {
-            "application/json": components["schemas"]["FiltersResponse"];
-          };
-        };
-        /** Пустой или неправильный токен */
-        401: unknown;
-        /** Фильмы не найдены */
-        404: unknown;
-        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
-        429: unknown;
-      };
-    };
-  };
-  "/api/v2.1/films/search-by-filters": {
-    /** Возвращает список фильмов с пагинацией. Каждая страница содержит не более чем 20 фильмов. <i>Используй /api/v2.1/films/filters чтобы получить id стран и жанров.</i> */
-    get: {
-      parameters: {
-        query: {
-          /** список id стран разделенные запятой. Например <i>country=1,2,3</i> */
-          country?: number[];
-          /** список id жанров разделенные запятой. Например <i>genre=1,2,3</i> */
-          genre?: number[];
-          /** сортировка */
-          order?: "RATING" | "NUM_VOTE" | "YEAR";
-          /** тип фильма */
-          type?: "FILM" | "TV_SHOW" | "ALL";
-          /** минимальный рейтинг */
-          ratingFrom?: number;
-          /** максимальный рейтинг */
-          ratingTo?: number;
-          /** минимальный год */
-          yearFrom?: number;
-          /** максимальный год */
-          yearTo?: number;
-          /** номер страницы */
-          page?: number;
-        };
-      };
-      responses: {
-        /** Запрос выполнен успешно */
-        200: {
-          content: {
-            "application/json": components["schemas"]["FilmSearchByFiltersResponse"];
-          };
-        };
-        /** Пустой или неправильный токен */
-        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Фильмы не найдены */
         404: unknown;
         /** Слишком много запросов. Лимит 5 запросов в секунду */
@@ -402,61 +505,11 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Фильмы не найдены */
         404: unknown;
         /** Слишком много запросов. Лимит 5 запросов в секунду */
-        429: unknown;
-      };
-    };
-  };
-  "/api/v1/reviews": {
-    /** Возвращает список рецензий с пагинацией. Каждая страница содержит не более чем 20 рецензий. Поле <b>description</b> содержит не полный текст рецензии. Полный текст может быть получен из /api/v1/reviews/details */
-    get: {
-      parameters: {
-        query: {
-          /** kinopoisk film id */
-          filmId: number;
-          /** номер страницы */
-          page?: number;
-        };
-      };
-      responses: {
-        /** Запрос выполнен успешно */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ReviewsResponse"];
-          };
-        };
-        /** Пустой или неправильный токен */
-        401: unknown;
-        /** Рецензии не найдены */
-        404: unknown;
-        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
-        429: unknown;
-      };
-    };
-  };
-  "/api/v1/reviews/details": {
-    /** Возвращает полную информацию о рецензии. */
-    get: {
-      parameters: {
-        query: {
-          /** kinopoisk review id */
-          reviewId: number;
-        };
-      };
-      responses: {
-        /** Запрос выполнен успешно */
-        200: {
-          content: {
-            "application/json": components["schemas"]["ReviewDetailsResponse"];
-          };
-        };
-        /** Пустой или неправильный токен */
-        401: unknown;
-        /** Рецензия не найдена */
-        404: unknown;
-        /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
         429: unknown;
       };
     };
@@ -478,6 +531,8 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Данные не найдены */
         404: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
@@ -502,9 +557,38 @@ export interface paths {
         };
         /** Пустой или неправильный токен */
         401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
         /** Данные не найдены */
         404: unknown;
         /** Слишком много запросов. Общий лимит - 20 запросов в секунду */
+        429: unknown;
+      };
+    };
+  };
+  "/api/v1/persons": {
+    /** Одна страница может содержать до 50 элементов в items. */
+    get: {
+      parameters: {
+        query: {
+          /** имя человека */
+          name: string;
+          /** номер страницы */
+          page?: number;
+        };
+      };
+      responses: {
+        /** Запрос выполнен успешно */
+        200: {
+          content: {
+            "application/json": components["schemas"]["PersonByNameResponse"];
+          };
+        };
+        /** Пустой или неправильный токен */
+        401: unknown;
+        /** Превышен лимит запросов(или дневной, или общий) */
+        402: unknown;
+        /** Слишком много запросов. Общий лимит - 5 запросов в секунду */
         429: unknown;
       };
     };
@@ -515,53 +599,58 @@ export interface components {
   schemas: {
     Film: {
       kinopoiskId: number;
-      imdbId: string;
-      nameRu: string;
-      nameEn: string;
-      nameOriginal: string;
+      imdbId: string | null;
+      nameRu: string | null;
+      nameEn: string | null;
+      nameOriginal: string | null;
       posterUrl: string;
       posterUrlPreview: string;
+      coverUrl: string | null;
+      logoUrl: string | null;
       reviewsCount: number;
-      ratingGoodReview: number;
-      ratingGoodReviewVoteCount: number;
-      ratingKinopoisk: number;
-      ratingKinopoiskVoteCount: number;
-      ratingImdb: number;
-      ratingImdbVoteCount: number;
-      ratingFilmCritics: number;
-      ratingFilmCriticsVoteCount: number;
-      ratingAwait: number;
-      ratingAwaitCount: number;
-      ratingRfCritics: number;
-      ratingRfCriticsVoteCount: number;
+      ratingGoodReview: number | null;
+      ratingGoodReviewVoteCount: number | null;
+      ratingKinopoisk: number | null;
+      ratingKinopoiskVoteCount: number | null;
+      ratingImdb: number | null;
+      ratingImdbVoteCount: number | null;
+      ratingFilmCritics: number | null;
+      ratingFilmCriticsVoteCount: number | null;
+      ratingAwait: number | null;
+      ratingAwaitCount: number | null;
+      ratingRfCritics: number | null;
+      ratingRfCriticsVoteCount: number | null;
       webUrl: string;
-      year: number;
-      filmLength: number;
-      slogan: string;
-      description: string;
-      shortDescription: string;
-      editorAnnotation: string;
+      year: number | null;
+      filmLength: number | null;
+      slogan: string | null;
+      description: string | null;
+      shortDescription: string | null;
+      editorAnnotation: string | null;
       isTicketsAvailable: boolean;
       productionStatus:
-        | "FILMING"
-        | "PRE_PRODUCTION"
-        | "COMPLETED"
-        | "ANNOUNCED"
-        | "UNKNOWN"
-        | "POST_PRODUCTION";
+        | (
+            | "FILMING"
+            | "PRE_PRODUCTION"
+            | "COMPLETED"
+            | "ANNOUNCED"
+            | "UNKNOWN"
+            | "POST_PRODUCTION"
+          )
+        | null;
       type: "FILM" | "VIDEO" | "TV_SERIES" | "MINI_SERIES" | "TV_SHOW";
-      ratingMpaa: string;
-      ratingAgeLimits: string;
-      hasImax: boolean;
-      has3D: boolean;
+      ratingMpaa: string | null;
+      ratingAgeLimits: string | null;
+      hasImax: boolean | null;
+      has3D: boolean | null;
       lastSync: string;
       countries: components["schemas"]["Country"][];
       genres: components["schemas"]["Genre"][];
-      startYear: number;
-      endYear: number;
-      serial?: boolean;
-      shortFilm?: boolean;
-      completed?: boolean;
+      startYear: number | null;
+      endYear: number | null;
+      serial?: boolean | null;
+      shortFilm?: boolean | null;
+      completed?: boolean | null;
     };
     SeasonResponse: {
       total: number;
@@ -591,12 +680,40 @@ export interface components {
       name: string;
       symbol: string;
     };
+    AwardResponse: {
+      total: number;
+      items: components["schemas"]["Award"][];
+    };
+    Award: {
+      name: string;
+      win: boolean;
+      imageUrl: string | null;
+      nominationName: string;
+      year: number;
+      persons?: components["schemas"]["AwardPerson"][];
+    };
+    AwardPerson: {
+      kinopoiskId: number;
+      webUrl: string;
+      nameRu: string | null;
+      nameEn: string | null;
+      sex: string;
+      posterUrl: string;
+      growth: number | null;
+      birthday: string | null;
+      death: string | null;
+      age: number | null;
+      birthplace: string | null;
+      deathplace: string | null;
+      profession: string | null;
+    };
     Distribution: {
       type: "LOCAL" | "COUNTRY_SPECIFIC" | "PREMIERE" | "ALL" | "WORLD_PREMIER";
-      subType: "CINEMA" | "DVD" | "DIGITAL" | "BLURAY";
-      date: string;
-      reRelease: boolean;
-      country: components["schemas"]["Country"];
+      subType: ("CINEMA" | "DVD" | "DIGITAL" | "BLURAY") | null;
+      date: string | null;
+      reRelease: boolean | null;
+      country: components["schemas"]["Country"] &
+        ({ [key: string]: any } | null);
       companies: components["schemas"]["Company"][];
     };
     Company: {
@@ -609,10 +726,10 @@ export interface components {
     Episode: {
       seasonNumber: number;
       episodeNumber: number;
-      nameRu: string;
-      nameEn: string;
-      synopsis: string;
-      releaseDate: string;
+      nameRu: string | null;
+      nameEn: string | null;
+      synopsis: string | null;
+      releaseDate: string | null;
     };
     Country: {
       country: string;
@@ -631,8 +748,9 @@ export interface components {
       films: components["schemas"]["FilmSearchResponse_films"][];
     };
     FilmSearchByFiltersResponse: {
-      pagesCount: number;
-      films: components["schemas"]["FilmSearchResponse_films"][];
+      total: number;
+      totalPages: number;
+      items: components["schemas"]["FilmSearchByFiltersResponse_items"][];
     };
     FilmSequelsAndPrequelsResponse: {
       filmId: number;
@@ -647,35 +765,24 @@ export interface components {
       total: number;
       items: components["schemas"]["RelatedFilmResponse_items"][];
     };
+    ReviewResponse: {
+      /** Суммарное кол-во пользовательских рецензий */
+      total: number;
+      totalPages: number;
+      totalPositiveReviews: number;
+      totalNegativeReviews: number;
+      totalNeutralReviews: number;
+      items: components["schemas"]["ReviewResponse_items"][];
+    };
     FilmTopResponse: {
       pagesCount: number;
       films: components["schemas"]["FilmTopResponse_films"][];
     };
-    ReviewsResponse: {
-      page: number;
-      filmId: number;
-      reviewAllCount: number;
-      reviewAllPositiveRatio: string;
-      reviewPositiveCount: number;
-      reviewNegativeCount: number;
-      reviewNeutralCount: number;
-      pagesCount: number;
-      reviews: components["schemas"]["ReviewsResponse_reviews"][];
-    };
-    ReviewDetailsResponse: {
-      reviewId: number;
-      reviewType: "POSITIVE" | "NEGATIVE" | "NEUTRAL" | "UNKNOWN";
-      reviewData: string;
-      userPositiveRating: number;
-      userNegativeRating: number;
-      reviewAutor: string;
-      reviewTitle: string;
-      reviewDescription: number;
-    };
     StaffResponse: {
       staffId: number;
-      nameRu: string;
-      nameEn: string;
+      nameRu: string | null;
+      nameEn: string | null;
+      description: string | null;
       posterUrl: string;
       professionText: string;
       professionKey:
@@ -694,25 +801,33 @@ export interface components {
     };
     PersonResponse: {
       personId: number;
-      webUrl: string;
-      nameRu: string;
-      nameEn: string;
-      sex: "MALE" | "FEMALE";
+      webUrl: string | null;
+      nameRu: string | null;
+      nameEn: string | null;
+      sex: ("MALE" | "FEMALE") | null;
       posterUrl: string;
-      growth: string;
-      birthday: string;
-      death: string;
-      age: number;
-      birthplace: string;
-      deathplace: string;
-      hasAwards: number;
-      profession: string;
+      growth: string | null;
+      birthday: string | null;
+      death: string | null;
+      age: number | null;
+      birthplace: string | null;
+      deathplace: string | null;
+      hasAwards: number | null;
+      profession: string | null;
       facts: string[];
       spouses: components["schemas"]["PersonResponse_spouses"][];
       films: components["schemas"]["PersonResponse_films"][];
     };
-    FilmFrameResponse: {
-      frames: components["schemas"]["FilmFrameResponse_frames"][];
+    PersonByNameResponse: {
+      total: number;
+      items: components["schemas"]["PersonByNameResponse_items"][];
+    };
+    ImageResponse: {
+      /** Общее кол-во изображений */
+      total: number;
+      /** Код-во доступных страниц */
+      totalPages: number;
+      items: components["schemas"]["ImageResponse_items"][];
     };
     PremiereResponse: {
       total: number;
@@ -720,14 +835,14 @@ export interface components {
     };
     PremiereResponseItem: {
       kinopoiskId: number;
-      nameRu: string;
-      nameEn: string;
+      nameRu: string | null;
+      nameEn: string | null;
       year: number;
       posterUrl: string;
       posterUrlPreview: string;
       countries: components["schemas"]["Country"][];
       genres: components["schemas"]["Genre"][];
-      duration: number;
+      duration: number | null;
       premiereRu: string;
     };
     DigitalReleaseResponse: {
@@ -755,6 +870,9 @@ export interface components {
       total: number;
       items: components["schemas"]["VideoResponse_items"][];
     };
+    ApiError: {
+      message: string;
+    };
     FiltersResponse_genres: {
       id?: number;
       genre?: string;
@@ -778,43 +896,64 @@ export interface components {
       posterUrl?: string;
       posterUrlPreview?: string;
     };
+    FilmSearchByFiltersResponse_items: {
+      kinopoiskId?: number;
+      imdbId?: string | null;
+      nameRu?: string | null;
+      nameEn?: string | null;
+      nameOriginal?: string | null;
+      countries?: components["schemas"]["Country"][];
+      genres?: components["schemas"]["Genre"][];
+      ratingKinopoisk?: number | null;
+      ratingImdb?: number | null;
+      year?: number | null;
+      type?:
+        | "FILM"
+        | "TV_SHOW"
+        | "VIDEO"
+        | "MINI_SERIES"
+        | "TV_SERIES"
+        | "UNKNOWN";
+      posterUrl?: string;
+      posterUrlPreview?: string;
+    };
     RelatedFilmResponse_items: {
       filmId?: number;
-      nameRu?: string;
-      nameEn?: string;
-      nameOriginal?: string;
+      nameRu?: string | null;
+      nameEn?: string | null;
+      nameOriginal?: string | null;
       posterUrl?: string;
       posterUrlPreview?: string;
       relationType?: "SIMILAR";
     };
+    ReviewResponse_items: {
+      kinopoiskId?: number;
+      type?: "POSITIVE" | "NEGATIVE" | "NEUTRAL" | "UNKNOWN";
+      date?: string;
+      positiveRating?: number;
+      negativeRating?: number;
+      author?: string;
+      title?: string | null;
+      description?: string;
+    };
     FilmTopResponse_films: {
       filmId?: number;
-      nameRu?: string;
-      nameEn?: string;
-      year?: string;
-      filmLength?: string;
+      nameRu?: string | null;
+      nameEn?: string | null;
+      year?: string | null;
+      filmLength?: string | null;
       countries?: components["schemas"]["Country"][];
       genres?: components["schemas"]["Genre"][];
-      rating?: number;
-      ratingVoteCount?: number;
+      rating?: number | null;
+      ratingVoteCount?: number | null;
       posterUrl?: string;
       posterUrlPreview?: string;
     };
-    ReviewsResponse_reviews: {
-      reviewId?: number;
-      reviewType?: "POSITIVE" | "NEGATIVE" | "NEUTRAL" | "UNKNOWN";
-      reviewData?: string;
-      userPositiveRating?: string;
-      userNegativeRating?: string;
-      reviewAutor?: string;
-      reviewTitle?: string;
-      reviewDescription?: number;
-    };
     PersonResponse_spouses: {
       personId?: number;
-      name?: string;
+      name?: string | null;
       divorced?: boolean;
-      divorcedReason?: string;
+      divorcedReason?: string | null;
       sex?: "MALE" | "FEMALE";
       children?: number;
       webUrl?: string;
@@ -822,11 +961,11 @@ export interface components {
     };
     PersonResponse_films: {
       filmId?: number;
-      nameRu?: string;
-      nameEn?: string;
-      rating?: string;
+      nameRu?: string | null;
+      nameEn?: string | null;
+      rating?: string | null;
       general?: boolean;
-      description?: string;
+      description?: string | null;
       professionKey?:
         | "WRITER"
         | "OPERATOR"
@@ -845,9 +984,17 @@ export interface components {
         | "VOICE_DIRECTOR"
         | "UNKNOWN";
     };
-    FilmFrameResponse_frames: {
-      image?: string;
-      preview?: string;
+    PersonByNameResponse_items: {
+      kinopoiskId?: number;
+      webUrl?: string;
+      nameRu?: string | null;
+      nameEn?: string | null;
+      sex?: ("MALE" | "FEMALE" | "UNKNOWN") | null;
+      posterUrl?: string;
+    };
+    ImageResponse_items: {
+      imageUrl?: string;
+      previewUrl?: string;
     };
     VideoResponse_items: {
       url?: string;
