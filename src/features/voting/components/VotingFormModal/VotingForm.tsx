@@ -177,6 +177,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               id="subTierRequiredToVote"
               name={`permissions.${TwitchUserType.Sub}.subTierRequiredToVote`}
               label={t('votingForm.subTierRequired')}
+              // @ts-ignore
               control={control}
             >
               {renderSubTierMenuItems()}
@@ -187,6 +188,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               id="minutesToFollowRequiredToVote"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToVote`}
               label={t('votingForm.minutesToFollowRequired')}
+              // @ts-ignore
               control={control}
             >
               {renderFollowedTimeMenuItems()}
@@ -234,6 +236,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               id="subTierRequiredToAddOptions"
               name={`permissions.${TwitchUserType.Sub}.subTierRequiredToAddOptions`}
               label={t('votingForm.subTierRequired')}
+              // @ts-ignore
               control={control}
             >
               {renderSubTierMenuItems()}
@@ -244,6 +247,7 @@ const VotingForm = ({ defaultValues, useFormReturn }: Props) => {
               id="minutesToFollowRequiredToAddOptions"
               name={`permissions.${TwitchUserType.Follower}.minutesToFollowRequiredToAddOptions`}
               label={t('votingForm.minutesToFollowRequired')}
+              // @ts-ignore
               control={control}
             >
               {renderFollowedTimeMenuItems()}
