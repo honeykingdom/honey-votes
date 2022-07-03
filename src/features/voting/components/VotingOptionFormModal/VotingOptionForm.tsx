@@ -11,11 +11,10 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { CreateVotingOptionDto } from 'features/api/apiTypes';
+import { CreateVotingOptionDto, IgdbGame } from 'features/api/apiTypes';
 import { VotingOptionType } from 'features/api/apiConstants';
 import apiSchema from 'features/api/apiSchema.json';
 import { Film } from 'features/kinopoisk-api/kinopoiskApiTypes';
-import { IgdbGame } from 'features/igdb-api/igdbApiSlice';
 import { VOTING_OPTION_TYPES } from 'features/voting/votingConstants';
 import VotingOptionAutocomplete from './VotingOptionAutocomplete';
 

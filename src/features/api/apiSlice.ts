@@ -474,7 +474,7 @@ export const api = createApi({
       }),
     }),
 
-    searchGames: builder.query<IgdbGame, string>({
+    searchGames: builder.query<IgdbGame[], string>({
       query: (s) => ({
         url: `${API_BASE}/games/search?s=${s}`,
         method: 'POST',
