@@ -53,7 +53,7 @@ const MovieCard = ({
   // onInputChange = () => {},
   onChange = () => {},
 }: Props) => {
-  const { filmId, year } = movie.info || {};
+  const { kinopoiskId, year } = movie.info || {};
   const cardHeight = CARD_HEIGHT_MAP[size] || 'auto';
 
   // const [movieTitle, setMovieTitle] = useState("");
@@ -176,7 +176,7 @@ const MovieCard = ({
       }}
     >
       <a
-        href={filmId ? `//kinopoisk.ru/film/${filmId}/` : ''}
+        href={kinopoiskId ? `//kinopoisk.ru/film/${kinopoiskId}/` : ''}
         target="_blank"
         rel="noopener noreferrer"
         style={{

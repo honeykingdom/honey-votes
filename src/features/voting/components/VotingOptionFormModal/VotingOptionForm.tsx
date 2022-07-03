@@ -32,7 +32,7 @@ const KP = {
       .join(' - ')}`,
   getOptionImage: (option: Film) => option.posterUrlPreview || '',
   isOptionEqualToValue: (option: Film, value: Film) =>
-    option.filmId === value.filmId,
+    option.kinopoiskId === value.kinopoiskId,
 };
 
 const IGDB = {
