@@ -1,11 +1,15 @@
 {
-    "cSpell.words": [
-        "igdb",
-        "kinopoisk",
-        "postgrest",
-        "supabase",
-        "upsert",
-        "твич"
-    ],
-    "cSpell.language": "en,ru,ru-RU,en-US,en-GB"
+  "cSpell.words": [
+    "igdb",
+    "kinopoisk",
+    "notistack",
+    "postgrest",
+    "supabase",
+    "upsert",
+    "твич"
+  ],
+  "cSpell.language": "en,ru,ru-RU,en-US,en-GB",
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/deploy.yml"
+  }
 }
